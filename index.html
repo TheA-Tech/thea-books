@@ -6,32 +6,90 @@
 
     <title>THEA Books</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=4">
 </head>
 
 <body>
 
     <!-- Sidebar -->
-   <aside class="sidebar">
+    <aside class="sidebar">
 
-    <div class="brand-row">
-        <h2>THEA <span>Books</span></h2>
+        <div class="brand-row">
 
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            ☰
-        </button>
-    </div>
+            <h2>THEA <span>Books</span></h2>
 
-    <nav id="mainNavigation">
-            <button onclick="showPage('dashboard')">Dashboard</button>
-            <button onclick="showPage('sales')">Sales</button>
-            <button onclick="showPage('purchases')">Purchases</button>
-            <button onclick="showPage('expenses')">Expenses</button>
-            <button onclick="showPage('customers')">Customers</button>
-            <button onclick="showPage('vendors')">Vendors</button>
-            <button onclick="showPage('inventory')">Inventory</button>
-            <button onclick="showPage('accounting')">Accounting</button>
-            <button onclick="showPage('reports')">Reports</button>
+            <button
+                class="mobile-menu-btn"
+                onclick="toggleMobileMenu()"
+            >
+                ☰
+            </button>
+
+        </div>
+
+
+        <!-- Company Account -->
+        <div class="company-account">
+
+            <button
+                class="company-account-btn"
+                onclick="showCompanyAccount()"
+            >
+                <span class="company-icon">🏢</span>
+
+                <span>
+                    <strong id="currentCompanyName">
+                        Company Account
+                    </strong>
+
+                    <small id="currentCompanyStatus">
+                        Set up company
+                    </small>
+                </span>
+            </button>
+
+        </div>
+
+
+        <!-- Navigation -->
+        <nav id="mainNavigation">
+
+            <button onclick="showPage('dashboard')">
+                📊 Dashboard
+            </button>
+
+            <button onclick="showPage('sales')">
+                🧾 Sales
+            </button>
+
+            <button onclick="showPage('purchases')">
+                🛒 Purchases
+            </button>
+
+            <button onclick="showPage('expenses')">
+                💰 Expenses
+            </button>
+
+            <button onclick="showPage('customers')">
+                👥 Customers
+            </button>
+
+            <button onclick="showPage('vendors')">
+                🏢 Vendors
+            </button>
+
+            <button onclick="showPage('inventory')">
+                📦 Inventory
+            </button>
+
+            <button onclick="showPage('accounting')">
+                📚 Accounting
+            </button>
+
+            <button onclick="showPage('reports')">
+                📈 Reports
+            </button>
+
         </nav>
 
     </aside>
@@ -44,11 +102,22 @@
         <header>
 
             <div>
-                <h1 id="pageTitle">Dashboard</h1>
-                <p>Business Accounting System</p>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+                <p>
+                    Business Accounting System
+                </p>
+
             </div>
 
-            <button class="new-btn" onclick="openTransactionForm()">
+
+            <button
+                class="new-btn"
+                onclick="openTransactionForm()"
+            >
                 + New Transaction
             </button>
 
@@ -66,7 +135,7 @@
 
 
     <!-- JavaScript -->
-    <script src="app.js?v=2"></script>
+    <script src="app.js?v=4"></script>
 
 </body>
 </html>
