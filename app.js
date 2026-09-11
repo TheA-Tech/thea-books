@@ -610,122 +610,82 @@ function openInvoiceForm() {
    SAVE INVOICE
 ========================= */
 
-function openInvoiceForm() {
+function createInvoice(event) {
 
-    pageTitle.innerText = "Create Invoice";
+    event.preventDefault();
 
-    content.innerHTML = `
+    const customerId =
+        document.getElementById("invoiceCustomer").value;
 
-        <div class="panel">
+    const date =
+        document.getElementById("invoiceDate").value;
 
-            <h2>New Sales Invoice</h2>
+    const product =
+        document.getElementById("invoiceProduct").value.trim();
 
-            <form onsubmit="createInvoice(event)">
+    const quantity =
+        Number(document.getElementById("invoiceQuantity").value);
 
-                <label>Customer</label>
+    const rate =
+        Number(document.getElementById("invoiceRate").value);
 
-                <select id="invoiceCustomer" required>
+    const status =
+        document.getElementById("invoiceStatus").value;
 
-                    <option value="">
-                        Select Customer
-                    </option>
+    const selectedCustomer =
+        customers.find(
+            customer => String(customer.id) === String(customerId)
+        );
 
-                    ${
-                        customers.length === 0
-                            ? `<option value="" disabled>
-                                No customers added yet
-                               </option>`
-                            : customers.map(customer => `
-                                <option value="${customer.id}">
-                                    ${customer.name}
-                                </option>
-                            `).join("")
-                    }
+    if (
+        !selectedCustomer ||
+        !date ||
+        !product ||
+        quantity <= 0 ||
+        rate <= 0
+    ) {
+        alert("Please enter valid invoice details.");
+        return;
+    }
 
-                </select>
+    const total = quantity * rate;
 
+    const invoice = {
 
-                <label>Invoice Date</label>
+        id: Date.now(),
 
-                <input
-                    type="date"
-                    id="invoiceDate"
-                    required
-                >
+        invoiceNumber: generateInvoiceNumber(),
 
+        customerId: selectedCustomer.id,
 
-                <label>Product / Service</label>
+        customer: selectedCustomer.name,
 
-                <input
-                    type="text"
-                    id="invoiceProduct"
-                    placeholder="Enter product or service"
-                    required
-                >
+        date: date,
 
+        product: product,
 
-                <label>Quantity</label>
+        quantity: quantity,
 
-                <input
-                    type="number"
-                    id="invoiceQuantity"
-                    value="1"
-                    min="1"
-                    step="1"
-                    required
-                >
+        rate: rate,
 
+        total: total,
 
-                <label>Rate</label>
+        status: status
 
-                <input
-                    type="number"
-                    id="invoiceRate"
-                    placeholder="Enter rate"
-                    min="0"
-                    step="0.01"
-                    required
-                >
+    };
 
+    invoices.push(invoice);
 
-                <label>Payment Status</label>
+    saveInvoices();
 
-                <select id="invoiceStatus" required>
+    alert(
+        "Invoice " +
+        invoice.invoiceNumber +
+        " created successfully!"
+    );
 
-                    <option value="paid">Paid</option>
-                    <option value="unpaid">Unpaid</option>
-
-                </select>
-
-
-                <div class="form-buttons">
-
-                    <button
-                        type="submit"
-                        class="new-btn"
-                    >
-                        Save Invoice
-                    </button>
-
-                    <button
-                        type="button"
-                        class="cancel-btn"
-                        onclick="showPage('sales')"
-                    >
-                        Cancel
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-    `;
-
-    document.getElementById("invoiceDate").value =
-        new Date().toISOString().split("T")[0];
+    showPage("sales");
 }
-
 /* =========================
    PURCHASES
 ========================= */
