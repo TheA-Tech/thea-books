@@ -114,7 +114,6 @@ function addCustomer(event) {
 
     showPage("customers");
 }
-    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
 
 
 /* =========================
