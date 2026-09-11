@@ -941,12 +941,21 @@ function showCustomers() {
         invoice.customer === customer.name
     );
 
-                            const totalSales =
-                                customerInvoices.reduce(
-                                    (sum, invoice) =>
-                                        sum + Number(invoice.total),
-                                    0
-                                );
+                            const customerInvoices =
+    invoices.filter(invoice => {
+
+        const invoiceCustomerName =
+            String(invoice.customer || "").trim().toLowerCase();
+
+        const currentCustomerName =
+            String(customer.name || "").trim().toLowerCase();
+
+        return (
+            String(invoice.customerId) === String(customer.id) ||
+            invoiceCustomerName === currentCustomerName
+        );
+
+    });
 
                             const paidAmount =
                                 customerInvoices
