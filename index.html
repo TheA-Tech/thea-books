@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>THEA Books</title>
+
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
+    <!-- Sidebar -->
     <aside class="sidebar">
+
         <h2>THEA <span>Books</span></h2>
 
         <nav>
@@ -23,54 +27,39 @@
             <button onclick="showPage('accounting')">Accounting</button>
             <button onclick="showPage('reports')">Reports</button>
         </nav>
+
     </aside>
 
+
+    <!-- Main Content -->
     <main class="main">
 
+        <!-- Header -->
         <header>
+
             <div>
                 <h1 id="pageTitle">Dashboard</h1>
                 <p>Business Accounting System</p>
             </div>
 
-            <button class="new-btn">+ New Transaction</button>
+            <button class="new-btn" onclick="openTransactionForm()">
+                + New Transaction
+            </button>
+
         </header>
 
+
+        <!-- Dynamic Content -->
         <section id="content">
 
-            <div class="cards">
-
-                <div class="card">
-                    <p>Total Sales</p>
-                    <h2>Rs. 0</h2>
-                </div>
-
-                <div class="card">
-                    <p>Total Expenses</p>
-                    <h2>Rs. 0</h2>
-                </div>
-
-                <div class="card">
-                    <p>Receivables</p>
-                    <h2>Rs. 0</h2>
-                </div>
-
-                <div class="card">
-                    <p>Payables</p>
-                    <h2>Rs. 0</h2>
-                </div>
-
-            </div>
-
-            <div class="panel">
-                <h2>Recent Transactions</h2>
-                <p>No transactions yet.</p>
-            </div>
+            <!-- Dashboard will be loaded by app.js -->
 
         </section>
 
     </main>
 
+
+    <!-- JavaScript -->
     <script src="app.js"></script>
 
 </body>
