@@ -1,6 +1,15 @@
 const pageTitle = document.getElementById("pageTitle");
 const content = document.getElementById("content");
 
+let products =
+    JSON.parse(localStorage.getItem("theaBooksProducts")) || [];
+
+function saveProducts() {
+    localStorage.setItem(
+        "theaBooksProducts",
+        JSON.stringify(products)
+    );
+}
 let transactions =
     JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
 
@@ -1237,69 +1246,235 @@ function showInventory() {
 
     pageTitle.innerText = "Inventory";
 
+    const totalProducts = products.length;
+
+    const stockValue = products.reduce(
+        (sum, product) =>
+            sum + (Number(product.stock) * Number(product.cost)),
+        0
+    );
+
     content.innerHTML = `
 
         <div class="cards">
 
             <div class="card">
                 <p>Total Products</p>
-                <h2>0</h2>
+                <h2>${totalProducts}</h2>
             </div>
 
             <div class="card">
                 <p>Stock Value</p>
-                <h2>Rs. 0</h2>
+                <h2>${formatMoney(stockValue)}</h2>
             </div>
 
         </div>
+
 
         <div class="panel">
 
             <h2>Inventory</h2>
 
-            <button class="new-btn">
+            <button
+                class="new-btn"
+                onclick="openProductForm()"
+            >
                 + Add Product
             </button>
 
-            <p>No products added yet.</p>
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Product List</h2>
+
+            ${
+                products.length === 0
+                    ? `<p>No products added yet.</p>`
+
+                    : products
+                        .slice()
+                        .reverse()
+                        .map(product => `
+
+                            <div class="transaction-row">
+
+                                <div>
+
+                                    <strong>
+                                        ${product.name}
+                                    </strong>
+
+                                    <small>
+                                        SKU: ${product.sku || "N/A"}
+                                        • Stock: ${product.stock}
+                                        • Cost: ${formatMoney(product.cost)}
+                                    </small>
+
+                                </div>
+
+                                <strong>
+                                    ${formatMoney(
+                                        Number(product.stock) *
+                                        Number(product.cost)
+                                    )}
+                                </strong>
+
+                            </div>
+
+                        `)
+                        .join("")
+            }
 
         </div>
     `;
 }
 
+function openProductForm() {
 
-/* =========================
-   ACCOUNTING
-========================= */
-
-function showAccounting() {
-
-    pageTitle.innerText = "Accounting";
+    pageTitle.innerText = "Add Product";
 
     content.innerHTML = `
 
         <div class="panel">
 
-            <h2>Accounting</h2>
+            <h2>New Product</h2>
 
-            <button class="new-btn">
-                + Journal Entry
-            </button>
+            <form onsubmit="addProduct(event)">
 
-        </div>
+                <label>Product Name</label>
 
-        <div class="panel">
+                <input
+                    type="text"
+                    id="productName"
+                    placeholder="Enter product name"
+                    required
+                >
 
-            <h2>Accounting Tools</h2>
 
-            <p>Chart of Accounts</p>
-            <p>General Ledger</p>
-            <p>Trial Balance</p>
+                <label>SKU / Product Code</label>
+
+                <input
+                    type="text"
+                    id="productSKU"
+                    placeholder="e.g. PROD-001"
+                >
+
+
+                <label>Opening Stock</label>
+
+                <input
+                    type="number"
+                    id="productStock"
+                    value="0"
+                    min="0"
+                    step="1"
+                    required
+                >
+
+
+                <label>Cost Price</label>
+
+                <input
+                    type="number"
+                    id="productCost"
+                    placeholder="Enter cost price"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+
+                <label>Sale Price</label>
+
+                <input
+                    type="number"
+                    id="productPrice"
+                    placeholder="Enter sale price"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Product
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('inventory')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
     `;
 }
 
+function addProduct(event) {
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("productName").value.trim();
+
+    const sku =
+        document.getElementById("productSKU").value.trim();
+
+    const stock =
+        Number(document.getElementById("productStock").value);
+
+    const cost =
+        Number(document.getElementById("productCost").value);
+
+    const price =
+        Number(document.getElementById("productPrice").value);
+
+    if (
+        !name ||
+        stock < 0 ||
+        cost < 0 ||
+        price <= 0
+    ) {
+
+        alert("Please enter valid product details.");
+
+        return;
+    }
+
+    products.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        sku: sku,
+
+        stock: stock,
+
+        cost: cost,
+
+        price: price
+    });
+
+    saveProducts();
+
+    alert("Product saved successfully!");
+
+    showPage("inventory");
+}
 
 /* =========================
    REPORTS
