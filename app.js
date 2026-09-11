@@ -512,7 +512,7 @@ function openInvoiceForm() {
                     ${
                         customers.length === 0
                             ? `<option value="" disabled>
-                                No customers added yet
+                                No customers added yet.
                                </option>`
                             : customers.map(customer => `
                                 <option value="${customer.id}">
@@ -567,6 +567,30 @@ function openInvoiceForm() {
                 >
 
 
+                <label>Discount</label>
+
+                <input
+                    type="number"
+                    id="invoiceDiscount"
+                    value="0"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter discount"
+                >
+
+
+                <label>Tax (%)</label>
+
+                <input
+                    type="number"
+                    id="invoiceTax"
+                    value="0"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter tax percentage"
+                >
+
+
                 <label>Payment Status</label>
 
                 <select id="invoiceStatus" required>
@@ -575,6 +599,33 @@ function openInvoiceForm() {
                     <option value="unpaid">Unpaid</option>
 
                 </select>
+
+
+                <div class="panel invoice-summary">
+
+                    <h2>Invoice Summary</h2>
+
+                    <p>
+                        Subtotal:
+                        <strong id="invoiceSubtotal">Rs. 0</strong>
+                    </p>
+
+                    <p>
+                        Discount:
+                        <strong id="invoiceDiscountDisplay">Rs. 0</strong>
+                    </p>
+
+                    <p>
+                        Tax:
+                        <strong id="invoiceTaxDisplay">Rs. 0</strong>
+                    </p>
+
+                    <p>
+                        Total:
+                        <strong id="invoiceTotalDisplay">Rs. 0</strong>
+                    </p>
+
+                </div>
 
 
                 <div class="form-buttons">
@@ -603,7 +654,62 @@ function openInvoiceForm() {
 
     document.getElementById("invoiceDate").value =
         new Date().toISOString().split("T")[0];
+
+
+    function updateInvoiceTotal() {
+
+        const quantity =
+            Number(document.getElementById("invoiceQuantity").value) || 0;
+
+        const rate =
+            Number(document.getElementById("invoiceRate").value) || 0;
+
+        const discount =
+            Number(document.getElementById("invoiceDiscount").value) || 0;
+
+        const taxPercent =
+            Number(document.getElementById("invoiceTax").value) || 0;
+
+        const subtotal = quantity * rate;
+
+        const afterDiscount =
+            Math.max(0, subtotal - discount);
+
+        const tax =
+            afterDiscount * (taxPercent / 100);
+
+        const total =
+            afterDiscount + tax;
+
+        document.getElementById("invoiceSubtotal").innerText =
+            formatMoney(subtotal);
+
+        document.getElementById("invoiceDiscountDisplay").innerText =
+            formatMoney(discount);
+
+        document.getElementById("invoiceTaxDisplay").innerText =
+            formatMoney(tax);
+
+        document.getElementById("invoiceTotalDisplay").innerText =
+            formatMoney(total);
+    }
+
+
+    document.getElementById("invoiceQuantity")
+        .addEventListener("input", updateInvoiceTotal);
+
+    document.getElementById("invoiceRate")
+        .addEventListener("input", updateInvoiceTotal);
+
+    document.getElementById("invoiceDiscount")
+        .addEventListener("input", updateInvoiceTotal);
+
+    document.getElementById("invoiceTax")
+        .addEventListener("input", updateInvoiceTotal);
+
+    updateInvoiceTotal();
 }
+
 
 /* =========================
    SAVE INVOICE
@@ -628,48 +734,114 @@ function createInvoice(event) {
     const rate =
         Number(document.getElementById("invoiceRate").value);
 
+    const discount =
+        Number(document.getElementById("invoiceDiscount").value) || 0;
+
+    const taxPercent =
+        Number(document.getElementById("invoiceTax").value) || 0;
+
     const status =
         document.getElementById("invoiceStatus").value;
 
+
     const selectedCustomer = customers.find(
-        customer => String(customer.id) === String(customerId)
+        customer =>
+            String(customer.id) === String(customerId)
     );
+
 
     if (
         !selectedCustomer ||
         !date ||
         !product ||
         quantity <= 0 ||
-        rate <= 0
+        rate <= 0 ||
+        discount < 0 ||
+        taxPercent < 0
     ) {
+
         alert("Please enter valid invoice details.");
+
         return;
     }
 
-    const total = quantity * rate;
+
+    const subtotal =
+        quantity * rate;
+
+
+    const validDiscount =
+        Math.min(discount, subtotal);
+
+
+    const afterDiscount =
+        subtotal - validDiscount;
+
+
+    const taxAmount =
+        afterDiscount * (taxPercent / 100);
+
+
+    const total =
+        afterDiscount + taxAmount;
+
 
     const invoice = {
+
         id: Date.now(),
-        invoiceNumber: generateInvoiceNumber(),
-        customerId: selectedCustomer.id,
-        customer: selectedCustomer.name,
-        date: date,
-        product: product,
-        quantity: quantity,
-        rate: rate,
-        total: total,
-        status: status
+
+        invoiceNumber:
+            generateInvoiceNumber(),
+
+        customerId:
+            selectedCustomer.id,
+
+        customer:
+            selectedCustomer.name,
+
+        date:
+            date,
+
+        product:
+            product,
+
+        quantity:
+            quantity,
+
+        rate:
+            rate,
+
+        subtotal:
+            subtotal,
+
+        discount:
+            validDiscount,
+
+        taxPercent:
+            taxPercent,
+
+        taxAmount:
+            taxAmount,
+
+        total:
+            total,
+
+        status:
+            status
     };
+
 
     invoices.push(invoice);
 
     saveInvoices();
+
 
     alert(
         "Invoice " +
         invoice.invoiceNumber +
         " created successfully!"
     );
+
 
     showPage("sales");
 }
