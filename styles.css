@@ -1717,3 +1717,146 @@ table tbody tr:hover {
     }
 
 }
+/* =========================================
+   THEA BOOKS BRAND + NAVIGATION
+========================================= */
+
+.brand-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.brand-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.app-navigation {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.app-navigation .nav-arrow {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #cbd8e2;
+    border-radius: 9px;
+
+    background: linear-gradient(
+        145deg,
+        #ffffff,
+        #e7eef4
+    );
+
+    color: #174f78;
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 9px rgba(15,76,129,.12),
+        inset 0 1px 0 #ffffff;
+
+    transition: .2s ease;
+}
+
+.app-navigation .nav-arrow:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 14px rgba(15,76,129,.18);
+}
+
+
+/* =========================================
+   DASHBOARD ALIGNMENT
+========================================= */
+
+.dashboard-section,
+.dashboard-grid,
+.cards,
+.quick-actions {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dashboard-grid {
+    align-items: stretch;
+}
+
+.dashboard-grid > *,
+.cards > *,
+.quick-actions > * {
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   TAX / SUMMARY BOX ALIGNMENT
+========================================= */
+
+.chart-container {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.chart-container > div {
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   KPI CARD ALIGNMENT
+========================================= */
+
+.cards {
+    align-items: stretch;
+}
+
+.cards .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+
+.cards .card h3 {
+    margin-top: 0;
+    min-height: 20px;
+}
+
+.cards .card p {
+    margin-top: 12px;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .brand-left {
+        gap: 8px;
+    }
+
+    .app-navigation .nav-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 17px;
+    }
+
+}
