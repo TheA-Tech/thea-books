@@ -495,7 +495,7 @@ function showSales() {
 
 
 /* =========================
-   CREATE INVOICE
+   CREATE PROFESSIONAL INVOICE
 ========================= */
 
 function openInvoiceForm() {
@@ -542,58 +542,138 @@ function openInvoiceForm() {
                 >
 
 
-                <label>Product / Service</label>
+                <label>Invoice Items</label>
 
-                <input
-                    type="text"
-                    id="invoiceProduct"
-                    placeholder="Enter product or service"
-                    required
+                <div id="invoiceItems">
+
+                    <div class="invoice-item"
+                         style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:10px;">
+
+                        <input
+                            type="text"
+                            class="item-product"
+                            placeholder="Product / Service"
+                            required
+                        >
+
+                        <input
+                            type="number"
+                            class="item-quantity"
+                            value="1"
+                            min="1"
+                            step="1"
+                            oninput="calculateInvoiceTotals()"
+                            required
+                        >
+
+                        <input
+                            type="number"
+                            class="item-rate"
+                            placeholder="Rate"
+                            min="0"
+                            step="0.01"
+                            oninput="calculateInvoiceTotals()"
+                            required
+                        >
+
+                        <input
+                            type="text"
+                            class="item-amount"
+                            value="Rs. 0"
+                            readonly
+                        >
+
+                        <button
+                            type="button"
+                            class="cancel-btn"
+                            onclick="removeInvoiceItem(this)"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="addInvoiceItem()"
                 >
+                    + Add Item
+                </button>
 
 
-                <label>Quantity</label>
+                <label>Discount</label>
 
                 <input
                     type="number"
-                    id="invoiceQuantity"
-                    value="1"
-                    min="1"
-                    step="1"
-                    required
-                    oninput="calculateInvoiceTotal()"
-                >
-
-
-                <label>Rate</label>
-
-                <input
-                    type="number"
-                    id="invoiceRate"
-                    placeholder="Enter rate"
+                    id="invoiceDiscount"
+                    value="0"
                     min="0"
                     step="0.01"
-                    required
-                    oninput="calculateInvoiceTotal()"
+                    oninput="calculateInvoiceTotals()"
                 >
 
 
-                <label>Total</label>
+                <label>Tax (%)</label>
 
                 <input
-                    type="text"
-                    id="invoiceTotal"
-                    value="Rs. 0"
-                    readonly
+                    type="number"
+                    id="invoiceTax"
+                    value="0"
+                    min="0"
+                    step="0.01"
+                    oninput="calculateInvoiceTotals()"
                 >
+
+
+                <div class="panel"
+                     style="margin-top:15px;padding:15px;">
+
+                    <p>
+                        <strong>Subtotal:</strong>
+                        <span id="invoiceSubtotal">
+                            Rs. 0
+                        </span>
+                    </p>
+
+                    <p>
+                        <strong>Discount:</strong>
+                        <span id="invoiceDiscountDisplay">
+                            Rs. 0
+                        </span>
+                    </p>
+
+                    <p>
+                        <strong>Tax:</strong>
+                        <span id="invoiceTaxDisplay">
+                            Rs. 0
+                        </span>
+                    </p>
+
+                    <h2>
+                        Grand Total:
+                        <span id="invoiceGrandTotal">
+                            Rs. 0
+                        </span>
+                    </h2>
+
+                </div>
 
 
                 <label>Payment Status</label>
 
                 <select id="invoiceStatus" required>
 
-                    <option value="paid">Paid</option>
-                    <option value="unpaid">Unpaid</option>
+                    <option value="paid">
+                        Paid
+                    </option>
+
+                    <option value="unpaid">
+                        Unpaid
+                    </option>
 
                 </select>
 
@@ -624,6 +704,182 @@ function openInvoiceForm() {
 
     document.getElementById("invoiceDate").value =
         new Date().toISOString().split("T")[0];
+
+    calculateInvoiceTotals();
+}
+
+
+/* =========================
+   ADD INVOICE ITEM
+========================= */
+
+function addInvoiceItem() {
+
+    const itemsContainer =
+        document.getElementById("invoiceItems");
+
+    const item = document.createElement("div");
+
+    item.className = "invoice-item";
+
+    item.style.display = "grid";
+    item.style.gridTemplateColumns =
+        "2fr 1fr 1fr 1fr auto";
+    item.style.gap = "8px";
+    item.style.marginBottom = "10px";
+
+    item.innerHTML = `
+
+        <input
+            type="text"
+            class="item-product"
+            placeholder="Product / Service"
+            required
+        >
+
+        <input
+            type="number"
+            class="item-quantity"
+            value="1"
+            min="1"
+            step="1"
+            oninput="calculateInvoiceTotals()"
+            required
+        >
+
+        <input
+            type="number"
+            class="item-rate"
+            placeholder="Rate"
+            min="0"
+            step="0.01"
+            oninput="calculateInvoiceTotals()"
+            required
+        >
+
+        <input
+            type="text"
+            class="item-amount"
+            value="Rs. 0"
+            readonly
+        >
+
+        <button
+            type="button"
+            class="cancel-btn"
+            onclick="removeInvoiceItem(this)"
+        >
+            ×
+        </button>
+    `;
+
+    itemsContainer.appendChild(item);
+
+    calculateInvoiceTotals();
+}
+
+
+/* =========================
+   REMOVE INVOICE ITEM
+========================= */
+
+function removeInvoiceItem(button) {
+
+    const items =
+        document.querySelectorAll(".invoice-item");
+
+    if (items.length <= 1) {
+
+        alert("Invoice must contain at least one item.");
+
+        return;
+    }
+
+    button.parentElement.remove();
+
+    calculateInvoiceTotals();
+}
+
+
+/* =========================
+   CALCULATE INVOICE TOTALS
+========================= */
+
+function calculateInvoiceTotals() {
+
+    const items =
+        document.querySelectorAll(".invoice-item");
+
+    let subtotal = 0;
+
+    items.forEach(item => {
+
+        const quantity =
+            Number(
+                item.querySelector(".item-quantity").value
+            ) || 0;
+
+        const rate =
+            Number(
+                item.querySelector(".item-rate").value
+            ) || 0;
+
+        const amount = quantity * rate;
+
+        subtotal += amount;
+
+        item.querySelector(".item-amount").value =
+            formatMoney(amount);
+    });
+
+
+    const discount =
+        Number(
+            document.getElementById("invoiceDiscount")?.value
+        ) || 0;
+
+
+    const taxPercent =
+        Number(
+            document.getElementById("invoiceTax")?.value
+        ) || 0;
+
+
+    const afterDiscount =
+        Math.max(0, subtotal - discount);
+
+
+    const taxAmount =
+        afterDiscount * (taxPercent / 100);
+
+
+    const grandTotal =
+        afterDiscount + taxAmount;
+
+
+    document.getElementById("invoiceSubtotal").innerText =
+        formatMoney(subtotal);
+
+
+    document.getElementById("invoiceDiscountDisplay").innerText =
+        formatMoney(discount);
+
+
+    document.getElementById("invoiceTaxDisplay").innerText =
+        formatMoney(taxAmount);
+
+
+    document.getElementById("invoiceGrandTotal").innerText =
+        formatMoney(grandTotal);
+
+
+    return {
+        subtotal: subtotal,
+        discount: discount,
+        taxPercent: taxPercent,
+        taxAmount: taxAmount,
+        grandTotal: grandTotal
+    };
 }
 
 
@@ -646,7 +902,7 @@ function calculateInvoiceTotal() {
 }
 
 /* =========================
-   SAVE INVOICE
+   SAVE PROFESSIONAL INVOICE
 ========================= */
 
 function createInvoice(event) {
@@ -657,40 +913,152 @@ function createInvoice(event) {
     const customerId =
         document.getElementById("invoiceCustomer").value;
 
+
     const date =
         document.getElementById("invoiceDate").value;
 
-    const productId =
-        document.getElementById("invoiceProduct").value;
-
-    const quantity =
-        Number(document.getElementById("invoiceQuantity").value);
-
-    const rate =
-        Number(document.getElementById("invoiceRate").value);
-
-    const discount =
-        Number(document.getElementById("invoiceDiscount").value) || 0;
-
-    const taxPercent =
-        Number(document.getElementById("invoiceTax").value) || 0;
 
     const status =
         document.getElementById("invoiceStatus").value;
 
 
-    const selectedCustomer = customers.find(
-        customer =>
-            String(customer.id) ===
-            String(customerId)
+    const selectedCustomer =
+        customers.find(
+            customer =>
+                String(customer.id) ===
+                String(customerId)
+        );
+
+
+    if (!selectedCustomer || !date) {
+
+        alert("Please select customer and invoice date.");
+
+        return;
+    }
+
+
+    const itemElements =
+        document.querySelectorAll(".invoice-item");
+
+
+    const items = [];
+
+
+    itemElements.forEach(item => {
+
+        const product =
+            item.querySelector(".item-product")
+                .value
+                .trim();
+
+
+        const quantity =
+            Number(
+                item.querySelector(".item-quantity").value
+            );
+
+
+        const rate =
+            Number(
+                item.querySelector(".item-rate").value
+            );
+
+
+        if (product && quantity > 0 && rate > 0) {
+
+            items.push({
+
+                product: product,
+
+                quantity: quantity,
+
+                rate: rate,
+
+                amount: quantity * rate
+
+            });
+
+        }
+
+    });
+
+
+    if (items.length === 0) {
+
+        alert("Please add at least one valid invoice item.");
+
+        return;
+    }
+
+
+    const totals =
+        calculateInvoiceTotals();
+
+
+    if (totals.grandTotal <= 0) {
+
+        alert("Invoice total must be greater than zero.");
+
+        return;
+    }
+
+
+    const invoice = {
+
+        id: Date.now(),
+
+        invoiceNumber:
+            generateInvoiceNumber(),
+
+        customerId:
+            selectedCustomer.id,
+
+        customer:
+            selectedCustomer.name,
+
+        date:
+            date,
+
+        items:
+            items,
+
+        subtotal:
+            totals.subtotal,
+
+        discount:
+            totals.discount,
+
+        taxPercent:
+            totals.taxPercent,
+
+        taxAmount:
+            totals.taxAmount,
+
+        total:
+            totals.grandTotal,
+
+        status:
+            status
+
+    };
+
+
+    invoices.push(invoice);
+
+
+    saveInvoices();
+
+
+    alert(
+        "Invoice " +
+        invoice.invoiceNumber +
+        " created successfully!"
     );
 
 
-    const selectedProduct = products.find(
-        product =>
-            String(product.id) ===
-            String(productId)
-    );
+    showPage("sales");
+}
 
 
     /* =========================
