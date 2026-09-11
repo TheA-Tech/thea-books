@@ -163,137 +163,897 @@ function generateInvoiceNumber() {
 
 
 /* =========================
-   DASHBOARD
+   MODERN ERP DASHBOARD
 ========================= */
 
 function showDashboard() {
 
     pageTitle.innerText = "Dashboard";
 
+
+    /* =========================
+       BASIC CALCULATIONS
+    ========================= */
+
     const invoiceSales = invoices.reduce(
-        (sum, invoice) => sum + Number(invoice.total),
+        (sum, invoice) =>
+            sum + Number(invoice.total || 0),
         0
     );
 
+
     const transactionSales = transactions
         .filter(t => t.type === "sale")
-        .reduce((sum, t) => sum + Number(t.amount), 0);
+        .reduce(
+            (sum, t) =>
+                sum + Number(t.amount || 0),
+            0
+        );
 
-    const totalSales = invoiceSales + transactionSales;
+
+    const totalSales =
+        invoiceSales + transactionSales;
+
 
     const totalExpenses = transactions
         .filter(t => t.type === "expense")
-        .reduce((sum, t) => sum + Number(t.amount), 0);
+        .reduce(
+            (sum, t) =>
+                sum + Number(t.amount || 0),
+            0
+        );
+
 
     const receivables = invoices
         .filter(invoice => invoice.status === "unpaid")
-        .reduce((sum, invoice) => sum + Number(invoice.total), 0);
+        .reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
 
-    const netProfit = totalSales - totalExpenses;
+
+    const paidSales = invoices
+        .filter(invoice => invoice.status === "paid")
+        .reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+
+    const netProfit =
+        totalSales - totalExpenses;
+
+
+    const totalProducts =
+        products.length;
+
+
+    const stockValue = products.reduce(
+        (sum, product) =>
+            sum +
+            (
+                Number(product.stock || 0) *
+                Number(product.cost || 0)
+            ),
+        0
+    );
+
+
+    /* =========================
+       RECENT INVOICES
+    ========================= */
 
     const recentInvoices = invoices
         .slice()
         .reverse()
         .slice(0, 5);
 
+
+    /* =========================
+       RECENT TRANSACTIONS
+    ========================= */
+
+    const recentTransactions = transactions
+        .slice()
+        .reverse()
+        .slice(0, 5);
+
+
+    /* =========================
+       DASHBOARD
+    ========================= */
+
     content.innerHTML = `
+
+        <!-- =========================
+             WELCOME
+        ========================== -->
+
+        <div class="dashboard-section">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:15px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+
+                    <h2 style="margin-bottom:5px;">
+                        Welcome to THEA Books 👋
+                    </h2>
+
+                    <p style="color:#718096;font-size:13px;">
+                        Your business financial overview
+                    </p>
+
+                </div>
+
+                <div style="
+                    padding:10px 15px;
+                    background:#edf5fa;
+                    border-radius:10px;
+                    color:#175b87;
+                    font-size:12px;
+                    font-weight:700;
+                ">
+
+                    ${new Date().toLocaleDateString("en-PK")}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             KPI CARDS
+        ========================== -->
 
         <div class="cards">
 
             <div class="card">
-                <p>Total Sales</p>
-                <h2>${formatMoney(totalSales)}</h2>
+
+                <h3>💰 Total Sales</h3>
+
+                <p>
+                    ${formatMoney(totalSales)}
+                </p>
+
+                <small style="
+                    color:#059669;
+                    font-weight:600;
+                ">
+                    ↑ Business Revenue
+                </small>
+
             </div>
 
-            <div class="card">
-                <p>Total Expenses</p>
-                <h2>${formatMoney(totalExpenses)}</h2>
-            </div>
 
             <div class="card">
-                <p>Net Profit</p>
-                <h2>${formatMoney(netProfit)}</h2>
+
+                <h3>💸 Total Expenses</h3>
+
+                <p>
+                    ${formatMoney(totalExpenses)}
+                </p>
+
+                <small style="
+                    color:#dc2626;
+                    font-weight:600;
+                ">
+                    Business Expenses
+                </small>
+
             </div>
 
+
             <div class="card">
-                <p>Receivables</p>
-                <h2>${formatMoney(receivables)}</h2>
+
+                <h3>📈 Net Profit</h3>
+
+                <p>
+                    ${formatMoney(netProfit)}
+                </p>
+
+                <small style="
+                    color:#059669;
+                    font-weight:600;
+                ">
+                    Sales − Expenses
+                </small>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🧾 Receivables</h3>
+
+                <p>
+                    ${formatMoney(receivables)}
+                </p>
+
+                <small style="
+                    color:#7c3aed;
+                    font-weight:600;
+                ">
+                    Unpaid Invoices
+                </small>
+
             </div>
 
         </div>
 
 
-        <div class="panel">
+        <!-- =========================
+             QUICK ACTIONS
+        ========================== -->
 
-            <h2>Recent Invoices</h2>
+        <div class="quick-actions">
+
+            <div
+                class="quick-action"
+                onclick="openInvoiceForm()"
+            >
+
+                <div class="quick-action-icon">
+                    🧾
+                </div>
+
+                <strong>
+                    Create Invoice
+                </strong>
+
+                <span>
+                    Create a new sales invoice
+                </span>
+
+            </div>
+
+
+            <div
+                class="quick-action"
+                onclick="openCustomerForm()"
+            >
+
+                <div class="quick-action-icon">
+                    👥
+                </div>
+
+                <strong>
+                    Add Customer
+                </strong>
+
+                <span>
+                    Create customer account
+                </span>
+
+            </div>
+
+
+            <div
+                class="quick-action"
+                onclick="openExpenseForm()"
+            >
+
+                <div class="quick-action-icon">
+                    💸
+                </div>
+
+                <strong>
+                    Record Expense
+                </strong>
+
+                <span>
+                    Add business expense
+                </span>
+
+            </div>
+
+
+            <div
+                class="quick-action"
+                onclick="openProductForm()"
+            >
+
+                <div class="quick-action-icon">
+                    📦
+                </div>
+
+                <strong>
+                    Add Product
+                </strong>
+
+                <span>
+                    Add inventory item
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             FINANCIAL OVERVIEW
+        ========================== -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- SALES / EXPENSES -->
+
+            <div class="chart-container">
+
+                <h3>
+                    📊 Financial Overview
+                </h3>
+
+                <p style="
+                    color:#718096;
+                    font-size:12px;
+                    margin-bottom:20px;
+                ">
+                    Sales vs Expenses
+                </p>
+
+
+                <div style="
+                    display:flex;
+                    align-items:flex-end;
+                    justify-content:center;
+                    gap:35px;
+                    height:190px;
+                    border-bottom:1px solid #dbe4ec;
+                    padding:0 20px;
+                ">
+
+                    <div style="
+                        display:flex;
+                        flex-direction:column;
+                        align-items:center;
+                        justify-content:flex-end;
+                        height:100%;
+                    ">
+
+                        <strong style="
+                            font-size:12px;
+                            color:#175b87;
+                            margin-bottom:6px;
+                        ">
+                            ${formatMoney(totalSales)}
+                        </strong>
+
+                        <div style="
+                            width:55px;
+                            height:${Math.max(
+                                25,
+                                totalSales > 0
+                                    ? Math.min(
+                                        130,
+                                        (totalSales /
+                                        Math.max(
+                                            totalSales,
+                                            totalExpenses,
+                                            1
+                                        )) * 130
+                                    )
+                                    : 25
+                            )}px;
+
+                            background:linear-gradient(
+                                180deg,
+                                #2587c7,
+                                #0f4c81
+                            );
+
+                            border-radius:10px 10px 0 0;
+                            box-shadow:0 5px 12px
+                            rgba(15,76,129,.18);
+                        "></div>
+
+                        <small style="
+                            margin-top:8px;
+                            color:#64748b;
+                        ">
+                            Sales
+                        </small>
+
+                    </div>
+
+
+                    <div style="
+                        display:flex;
+                        flex-direction:column;
+                        align-items:center;
+                        justify-content:flex-end;
+                        height:100%;
+                    ">
+
+                        <strong style="
+                            font-size:12px;
+                            color:#d97706;
+                            margin-bottom:6px;
+                        ">
+                            ${formatMoney(totalExpenses)}
+                        </strong>
+
+                        <div style="
+                            width:55px;
+                            height:${Math.max(
+                                25,
+                                totalExpenses > 0
+                                    ? Math.min(
+                                        130,
+                                        (totalExpenses /
+                                        Math.max(
+                                            totalSales,
+                                            totalExpenses,
+                                            1
+                                        )) * 130
+                                    )
+                                    : 25
+                            )}px;
+
+                            background:linear-gradient(
+                                180deg,
+                                #f59e0b,
+                                #c2410c
+                            );
+
+                            border-radius:10px 10px 0 0;
+
+                            box-shadow:0 5px 12px
+                            rgba(217,119,6,.18);
+                        "></div>
+
+                        <small style="
+                            margin-top:8px;
+                            color:#64748b;
+                        ">
+                            Expenses
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CASH / PROFIT -->
+
+            <div class="chart-container">
+
+                <h3>
+                    💳 Business Summary
+                </h3>
+
+                <p style="
+                    color:#718096;
+                    font-size:12px;
+                    margin-bottom:18px;
+                ">
+                    Current financial position
+                </p>
+
+
+                <div style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:13px;
+                ">
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        padding:13px;
+                        background:#f1f8f5;
+                        border-radius:10px;
+                    ">
+
+                        <span>
+                            Paid Sales
+                        </span>
+
+                        <strong style="color:#059669;">
+                            ${formatMoney(paidSales)}
+                        </strong>
+
+                    </div>
+
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        padding:13px;
+                        background:#f5f1fb;
+                        border-radius:10px;
+                    ">
+
+                        <span>
+                            Receivables
+                        </span>
+
+                        <strong style="color:#7c3aed;">
+                            ${formatMoney(receivables)}
+                        </strong>
+
+                    </div>
+
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        padding:13px;
+                        background:#eef5fa;
+                        border-radius:10px;
+                    ">
+
+                        <span>
+                            Net Profit
+                        </span>
+
+                        <strong style="color:#175b87;">
+                            ${formatMoney(netProfit)}
+                        </strong>
+
+                    </div>
+
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        padding:13px;
+                        background:#f8f4ed;
+                        border-radius:10px;
+                    ">
+
+                        <span>
+                            Inventory Value
+                        </span>
+
+                        <strong style="color:#b45309;">
+                            ${formatMoney(stockValue)}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             BUSINESS SUMMARY
+        ========================== -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>📦 Products</h3>
+
+                <p>
+                    ${totalProducts}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🧾 Invoices</h3>
+
+                <p>
+                    ${invoices.length}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>👥 Customers</h3>
+
+                <p>
+                    ${customers.length}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>💳 Transactions</h3>
+
+                <p>
+                    ${transactions.length}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             RECENT INVOICES
+        ========================== -->
+
+        <div class="dashboard-section">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-bottom:15px;
+            ">
+
+                <h3 style="margin:0;">
+                    🧾 Recent Invoices
+                </h3>
+
+                <button
+                    class="action-btn"
+                    onclick="showPage('sales')"
+                >
+                    View All
+                </button>
+
+            </div>
+
 
             ${
                 recentInvoices.length === 0
-                    ? `<p>No invoices yet.</p>`
-                    : recentInvoices.map(invoice => `
 
-                        <div class="transaction-row">
+                    ? `
+                        <div class="empty-state">
 
-                            <div>
-                                <strong>
-                                    ${invoice.invoiceNumber}
-                                </strong>
+                            <h3>
+                                No invoices yet
+                            </h3>
 
-                                <small>
-                                    ${invoice.customer} • ${invoice.date}
-                                </small>
-                            </div>
+                            <p>
+                                Create your first invoice to see it here.
+                            </p>
 
-                            <strong>
-                                ${formatMoney(invoice.total)}
-                            </strong>
+                        </div>
+                    `
+
+                    : `
+
+                        <div class="table-container">
+
+                            <table>
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Invoice
+                                        </th>
+
+                                        <th>
+                                            Customer
+                                        </th>
+
+                                        <th>
+                                            Date
+                                        </th>
+
+                                        <th>
+                                            Status
+                                        </th>
+
+                                        <th>
+                                            Amount
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    ${recentInvoices.map(invoice => `
+
+                                        <tr>
+
+                                            <td>
+                                                <strong>
+                                                    ${invoice.invoiceNumber}
+                                                </strong>
+                                            </td>
+
+                                            <td>
+                                                ${invoice.customer}
+                                            </td>
+
+                                            <td>
+                                                ${invoice.date}
+                                            </td>
+
+                                            <td>
+
+                                                <span class="badge ${
+                                                    invoice.status === "paid"
+                                                        ? "badge-paid"
+                                                        : "badge-unpaid"
+                                                }">
+
+                                                    ${
+                                                        invoice.status === "paid"
+                                                            ? "Paid"
+                                                            : "Unpaid"
+                                                    }
+
+                                                </span>
+
+                                            </td>
+
+                                            <td>
+                                                <strong>
+                                                    ${formatMoney(invoice.total)}
+                                                </strong>
+                                            </td>
+
+                                        </tr>
+
+                                    `).join("")}
+
+                                </tbody>
+
+                            </table>
 
                         </div>
 
-                    `).join("")
+                    `
             }
 
         </div>
 
 
-        <div class="panel">
+        <!-- =========================
+             RECENT TRANSACTIONS
+        ========================== -->
 
-            <h2>Recent Transactions</h2>
+        <div class="dashboard-section">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-bottom:15px;
+            ">
+
+                <h3 style="margin:0;">
+                    💳 Recent Transactions
+                </h3>
+
+                <button
+                    class="action-btn"
+                    onclick="openTransactionForm()"
+                >
+                    + Transaction
+                </button>
+
+            </div>
+
 
             ${
-                transactions.length === 0
-                    ? `<p>No transactions yet.</p>`
-                    : transactions
-                        .slice()
-                        .reverse()
-                        .slice(0, 5)
-                        .map(t => `
+                recentTransactions.length === 0
 
-                            <div class="transaction-row">
+                    ? `
+                        <div class="empty-state">
 
-                                <div>
-                                    <strong>
-                                        ${t.description}
-                                    </strong>
+                            <h3>
+                                No transactions yet
+                            </h3>
 
-                                    <small>
-                                        ${t.date} • ${t.type}
-                                    </small>
-                                </div>
+                            <p>
+                                Your recent business transactions will appear here.
+                            </p>
 
-                                <strong>
-                                    ${formatMoney(t.amount)}
-                                </strong>
+                        </div>
+                    `
 
-                            </div>
+                    : `
 
-                        `).join("")
+                        <div class="table-container">
+
+                            <table>
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Description
+                                        </th>
+
+                                        <th>
+                                            Date
+                                        </th>
+
+                                        <th>
+                                            Type
+                                        </th>
+
+                                        <th>
+                                            Amount
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    ${recentTransactions.map(t => `
+
+                                        <tr>
+
+                                            <td>
+                                                <strong>
+                                                    ${t.description}
+                                                </strong>
+                                            </td>
+
+                                            <td>
+                                                ${t.date}
+                                            </td>
+
+                                            <td>
+
+                                                <span class="badge ${
+                                                    t.type === "sale"
+                                                        ? "badge-paid"
+                                                        : "badge-unpaid"
+                                                }">
+
+                                                    ${
+                                                        t.type === "sale"
+                                                            ? "Income"
+                                                            : "Expense"
+                                                    }
+
+                                                </span>
+
+                                            </td>
+
+                                            <td>
+                                                <strong>
+                                                    ${formatMoney(t.amount)}
+                                                </strong>
+                                            </td>
+
+                                        </tr>
+
+                                    `).join("")}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    `
             }
 
         </div>
+
     `;
 }
-
 
 /* =========================
    NEW TRANSACTION
