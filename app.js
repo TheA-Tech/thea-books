@@ -2530,3 +2530,61 @@ function toggleMobileMenu() {
 
     navigation.classList.toggle("mobile-open");
 }
+/* =========================================
+   THEA BOOKS PAGE NAVIGATION
+========================================= */
+
+let pageHistory = [];
+let historyPosition = -1;
+let navigatingHistory = false;
+
+function navigateToPage(page) {
+
+    if (!navigatingHistory) {
+
+        pageHistory =
+            pageHistory.slice(0, historyPosition + 1);
+
+        pageHistory.push(page);
+
+        historyPosition =
+            pageHistory.length - 1;
+    }
+
+    showPage(page);
+}
+
+function goBack() {
+
+    if (historyPosition > 0) {
+
+        historyPosition--;
+
+        navigatingHistory = true;
+
+        showPage(
+            pageHistory[historyPosition]
+        );
+
+        navigatingHistory = false;
+    }
+}
+
+function goForward() {
+
+    if (
+        historyPosition <
+        pageHistory.length - 1
+    ) {
+
+        historyPosition++;
+
+        navigatingHistory = true;
+
+        showPage(
+            pageHistory[historyPosition]
+        );
+
+        navigatingHistory = false;
+    }
+}
