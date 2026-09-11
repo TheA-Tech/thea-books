@@ -2013,3 +2013,192 @@ table tbody tr:hover {
 #content > .dashboard-section {
     margin-bottom: 0;
 }
+/* =========================================
+   FINAL ERP ALIGNMENT + PREMIUM POLISH
+========================================= */
+
+#content {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   ALL DASHBOARD SECTIONS
+========================================= */
+
+#content > .dashboard-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 22px;
+    border-radius: 18px;
+}
+
+
+/* =========================================
+   WELCOME SECTION
+========================================= */
+
+#content > .dashboard-section:first-child h2 {
+    margin: 0 0 6px 0 !important;
+    line-height: 1.3;
+    text-align: left;
+}
+
+#content > .dashboard-section:first-child p {
+    margin: 0 !important;
+    line-height: 1.5;
+    text-align: left;
+}
+
+
+/* =========================================
+   KPI CARDS
+========================================= */
+
+#content > .cards {
+    width: 100%;
+    align-items: stretch;
+}
+
+#content > .cards .card {
+    min-width: 0;
+    height: 100%;
+    min-height: 145px;
+    box-sizing: border-box;
+    padding: 21px;
+    text-align: left;
+}
+
+#content > .cards .card h3 {
+    width: 100%;
+    margin: 0 !important;
+    line-height: 1.4;
+    text-align: left;
+}
+
+#content > .cards .card p {
+    width: 100%;
+    margin: 13px 0 7px !important;
+    line-height: 1.2;
+    text-align: left;
+}
+
+#content > .cards .card small {
+    width: 100%;
+    line-height: 1.4;
+    text-align: left;
+}
+
+
+/* =========================================
+   QUICK ACTIONS
+========================================= */
+
+#content > .quick-actions {
+    width: 100%;
+    align-items: stretch;
+}
+
+.quick-action {
+    min-height: 135px;
+    box-sizing: border-box;
+    padding: 20px !important;
+}
+
+.quick-action-icon {
+    margin-bottom: 13px;
+}
+
+.quick-action strong {
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.quick-action span {
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   CHART HEADINGS
+========================================= */
+
+.chart-container h3 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    line-height: 1.35;
+}
+
+.chart-container > p {
+    margin-top: 0 !important;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   BUSINESS SUMMARY ITEMS
+========================================= */
+
+.chart-container span {
+    line-height: 1.4;
+}
+
+.chart-container strong {
+    line-height: 1.4;
+}
+
+
+/* =========================================
+   RECENT TABLE SECTIONS
+========================================= */
+
+#content > .dashboard-section h3 {
+    line-height: 1.35;
+}
+
+#content > .dashboard-section .action-btn {
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   PREMIUM 3D EFFECT
+========================================= */
+
+#content > .cards .card {
+    transform: translateZ(0);
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+#content > .cards .card:hover {
+    transform:
+        translateY(-7px)
+        perspective(700px)
+        rotateX(1deg);
+}
+
+
+/* =========================================
+   MOBILE ALIGNMENT
+========================================= */
+
+@media (max-width: 700px) {
+
+    #content > .dashboard-section {
+        padding: 16px;
+    }
+
+    #content > .cards .card {
+        min-height: 125px;
+        padding: 17px;
+    }
+
+    .quick-action {
+        min-height: 115px;
+        padding: 17px !important;
+    }
+
+}
