@@ -908,6 +908,31 @@ function showCustomers() {
 
     pageTitle.innerText = "Customers";
 
+    // Link old invoices to existing customers using name
+    // This is only for old invoices that do not have customerId.
+    let dataChanged = false;
+
+    invoices.forEach(invoice => {
+
+        if (!invoice.customerId && invoice.customer) {
+
+            const matchingCustomer = customers.find(
+                customer =>
+                    String(customer.name).trim().toLowerCase() ===
+                    String(invoice.customer).trim().toLowerCase()
+            );
+
+            if (matchingCustomer) {
+                invoice.customerId = matchingCustomer.id;
+                dataChanged = true;
+            }
+        }
+    });
+
+    if (dataChanged) {
+        saveInvoices();
+    }
+
     content.innerHTML = `
 
         <div class="panel">
@@ -936,26 +961,18 @@ function showCustomers() {
                         .map(customer => {
 
                             const customerInvoices =
-    invoices.filter(invoice =>
-        String(invoice.customerId) === String(customer.id) ||
-        invoice.customer === customer.name
-    );
+                                invoices.filter(
+                                    invoice =>
+                                        String(invoice.customerId) ===
+                                        String(customer.id)
+                                );
 
-                            const customerInvoices =
-    invoices.filter(invoice => {
-
-        const invoiceCustomerName =
-            String(invoice.customer || "").trim().toLowerCase();
-
-        const currentCustomerName =
-            String(customer.name || "").trim().toLowerCase();
-
-        return (
-            String(invoice.customerId) === String(customer.id) ||
-            invoiceCustomerName === currentCustomerName
-        );
-
-    });
+                            const totalSales =
+                                customerInvoices.reduce(
+                                    (sum, invoice) =>
+                                        sum + Number(invoice.total),
+                                    0
+                                );
 
                             const paidAmount =
                                 customerInvoices
@@ -973,9 +990,11 @@ function showCustomers() {
                                 totalSales - paidAmount;
 
                             return `
+
                                 <div class="transaction-row">
 
                                     <div>
+
                                         <strong>
                                             ${customer.name}
                                         </strong>
@@ -990,6 +1009,7 @@ function showCustomers() {
                                             • Sales: ${formatMoney(totalSales)}
                                             • Receivable: ${formatMoney(receivable)}
                                         </small>
+
                                     </div>
 
                                     <strong>
@@ -997,7 +1017,9 @@ function showCustomers() {
                                     </strong>
 
                                 </div>
+
                             `;
+
                         })
                         .join("")
             }
