@@ -1,7 +1,11 @@
 const pageTitle = document.getElementById("pageTitle");
 const content = document.getElementById("content");
 
-let transactions = JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
+let transactions =
+    JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
+
+let invoices =
+    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
 
 
 /* =========================
@@ -12,6 +16,13 @@ function saveTransactions() {
     localStorage.setItem(
         "theaBooksTransactions",
         JSON.stringify(transactions)
+    );
+}
+
+function saveInvoices() {
+    localStorage.setItem(
+        "theaBooksInvoices",
+        JSON.stringify(invoices)
     );
 }
 
@@ -26,6 +37,15 @@ function formatMoney(amount) {
 
 
 /* =========================
+   INVOICE NUMBER
+========================= */
+
+function generateInvoiceNumber() {
+    return "INV-" + String(invoices.length + 1).padStart(4, "0");
+}
+
+
+/* =========================
    DASHBOARD
 ========================= */
 
@@ -33,15 +53,31 @@ function showDashboard() {
 
     pageTitle.innerText = "Dashboard";
 
-    const totalSales = transactions
+    const invoiceSales = invoices.reduce(
+        (sum, invoice) => sum + Number(invoice.total),
+        0
+    );
+
+    const transactionSales = transactions
         .filter(t => t.type === "sale")
         .reduce((sum, t) => sum + Number(t.amount), 0);
+
+    const totalSales = invoiceSales + transactionSales;
 
     const totalExpenses = transactions
         .filter(t => t.type === "expense")
         .reduce((sum, t) => sum + Number(t.amount), 0);
 
+    const receivables = invoices
+        .filter(invoice => invoice.status === "unpaid")
+        .reduce((sum, invoice) => sum + Number(invoice.total), 0);
+
     const netProfit = totalSales - totalExpenses;
+
+    const recentInvoices = invoices
+        .slice()
+        .reverse()
+        .slice(0, 5);
 
     content.innerHTML = `
 
@@ -63,11 +99,45 @@ function showDashboard() {
             </div>
 
             <div class="card">
-                <p>Total Transactions</p>
-                <h2>${transactions.length}</h2>
+                <p>Receivables</p>
+                <h2>${formatMoney(receivables)}</h2>
             </div>
 
         </div>
+
+
+        <div class="panel">
+
+            <h2>Recent Invoices</h2>
+
+            ${
+                recentInvoices.length === 0
+                    ? `<p>No invoices yet.</p>`
+                    : recentInvoices.map(invoice => `
+
+                        <div class="transaction-row">
+
+                            <div>
+                                <strong>
+                                    ${invoice.invoiceNumber}
+                                </strong>
+
+                                <small>
+                                    ${invoice.customer} • ${invoice.date}
+                                </small>
+                            </div>
+
+                            <strong>
+                                ${formatMoney(invoice.total)}
+                            </strong>
+
+                        </div>
+
+                    `).join("")
+            }
+
+        </div>
+
 
         <div class="panel">
 
@@ -75,32 +145,32 @@ function showDashboard() {
 
             ${
                 transactions.length === 0
-                ? `<p>No transactions yet.</p>`
-                : `
-                    <div class="transaction-list">
+                    ? `<p>No transactions yet.</p>`
+                    : transactions
+                        .slice()
+                        .reverse()
+                        .slice(0, 5)
+                        .map(t => `
 
-                        ${transactions
-                            .slice()
-                            .reverse()
-                            .slice(0, 10)
-                            .map(t => `
-                                <div class="transaction-row">
+                            <div class="transaction-row">
 
-                                    <div>
-                                        <strong>${t.description}</strong>
-                                        <small>${t.date} • ${t.type}</small>
-                                    </div>
-
+                                <div>
                                     <strong>
-                                        ${formatMoney(t.amount)}
+                                        ${t.description}
                                     </strong>
 
+                                    <small>
+                                        ${t.date} • ${t.type}
+                                    </small>
                                 </div>
-                            `)
-                            .join("")}
 
-                    </div>
-                `
+                                <strong>
+                                    ${formatMoney(t.amount)}
+                                </strong>
+
+                            </div>
+
+                        `).join("")
             }
 
         </div>
@@ -109,7 +179,7 @@ function showDashboard() {
 
 
 /* =========================
-   NEW TRANSACTION FORM
+   NEW TRANSACTION
 ========================= */
 
 function openTransactionForm() {
@@ -147,7 +217,7 @@ function openTransactionForm() {
                 <input
                     type="text"
                     id="transactionDescription"
-                    placeholder="e.g. Product sale, electricity bill"
+                    placeholder="Enter description"
                     required
                 >
 
@@ -210,16 +280,12 @@ function addTransaction(event) {
     const amount =
         Number(document.getElementById("transactionAmount").value);
 
-
     if (!type || !date || !description || amount <= 0) {
-
         alert("Please enter valid transaction details.");
-
         return;
     }
 
-
-    const transaction = {
+    transactions.push({
 
         id: Date.now(),
 
@@ -230,10 +296,8 @@ function addTransaction(event) {
         description: description,
 
         amount: amount
-    };
 
-
-    transactions.push(transaction);
+    });
 
     saveTransactions();
 
@@ -244,14 +308,12 @@ function addTransaction(event) {
 
 
 /* =========================
-   SALES
+   SALES PAGE
 ========================= */
 
 function showSales() {
 
     pageTitle.innerText = "Sales";
-
-    const sales = transactions.filter(t => t.type === "sale");
 
     content.innerHTML = `
 
@@ -260,39 +322,54 @@ function showSales() {
             <h2>Sales</h2>
 
             <p>
-                Record and manage your sales transactions.
+                Create and manage customer invoices.
             </p>
 
             <button
                 class="new-btn"
-                onclick="openTransactionForm()"
+                onclick="openInvoiceForm()"
             >
-                + Create Sale
+                + Create Invoice
             </button>
 
         </div>
 
+
         <div class="panel">
 
-            <h2>Sales Records</h2>
+            <h2>Invoices</h2>
 
             ${
-                sales.length === 0
-                ? `<p>No sales recorded yet.</p>`
-                : sales.map(t => `
-                    <div class="transaction-row">
+                invoices.length === 0
+                    ? `<p>No invoices yet.</p>`
+                    : invoices
+                        .slice()
+                        .reverse()
+                        .map(invoice => `
 
-                        <div>
-                            <strong>${t.description}</strong>
-                            <small>${t.date}</small>
-                        </div>
+                            <div class="transaction-row">
 
-                        <strong>
-                            ${formatMoney(t.amount)}
-                        </strong>
+                                <div>
 
-                    </div>
-                `).join("")
+                                    <strong>
+                                        ${invoice.invoiceNumber}
+                                    </strong>
+
+                                    <small>
+                                        Customer: ${invoice.customer}
+                                        • ${invoice.date}
+                                        • ${invoice.status}
+                                    </small>
+
+                                </div>
+
+                                <strong>
+                                    ${formatMoney(invoice.total)}
+                                </strong>
+
+                            </div>
+
+                        `).join("")
             }
 
         </div>
@@ -301,65 +378,195 @@ function showSales() {
 
 
 /* =========================
-   EXPENSES
+   CREATE INVOICE
 ========================= */
 
-function showExpenses() {
+function openInvoiceForm() {
 
-    pageTitle.innerText = "Expenses";
-
-    const expenses =
-        transactions.filter(t => t.type === "expense");
+    pageTitle.innerText = "Create Invoice";
 
     content.innerHTML = `
 
         <div class="panel">
 
-            <h2>Expenses</h2>
+            <h2>New Sales Invoice</h2>
 
-            <p>
-                Record and manage business expenses.
-            </p>
+            <form onsubmit="createInvoice(event)">
 
-            <button
-                class="new-btn"
-                onclick="openTransactionForm()"
-            >
-                + Record Expense
-            </button>
+                <label>Customer Name</label>
 
-        </div>
+                <input
+                    type="text"
+                    id="invoiceCustomer"
+                    placeholder="Enter customer name"
+                    required
+                >
 
-        <div class="panel">
 
-            <h2>Expense Records</h2>
+                <label>Invoice Date</label>
 
-            ${
-                expenses.length === 0
-                ? `<p>No expenses recorded yet.</p>`
-                : expenses.map(t => `
-                    <div class="transaction-row">
+                <input
+                    type="date"
+                    id="invoiceDate"
+                    required
+                >
 
-                        <div>
-                            <strong>${t.description}</strong>
-                            <small>${t.date}</small>
-                        </div>
 
-                        <strong>
-                            ${formatMoney(t.amount)}
-                        </strong>
+                <label>Product / Service</label>
 
-                    </div>
-                `).join("")
-            }
+                <input
+                    type="text"
+                    id="invoiceProduct"
+                    placeholder="Enter product or service"
+                    required
+                >
+
+
+                <label>Quantity</label>
+
+                <input
+                    type="number"
+                    id="invoiceQuantity"
+                    value="1"
+                    min="1"
+                    step="1"
+                    required
+                >
+
+
+                <label>Rate</label>
+
+                <input
+                    type="number"
+                    id="invoiceRate"
+                    placeholder="Enter rate"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+
+                <label>Payment Status</label>
+
+                <select id="invoiceStatus" required>
+
+                    <option value="paid">
+                        Paid
+                    </option>
+
+                    <option value="unpaid">
+                        Unpaid
+                    </option>
+
+                </select>
+
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Invoice
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('sales')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
     `;
+
+    document.getElementById("invoiceDate").value =
+        new Date().toISOString().split("T")[0];
 }
 
 
 /* =========================
-   OTHER PAGES
+   SAVE INVOICE
+========================= */
+
+function createInvoice(event) {
+
+    event.preventDefault();
+
+    const customer =
+        document.getElementById("invoiceCustomer").value.trim();
+
+    const date =
+        document.getElementById("invoiceDate").value;
+
+    const product =
+        document.getElementById("invoiceProduct").value.trim();
+
+    const quantity =
+        Number(document.getElementById("invoiceQuantity").value);
+
+    const rate =
+        Number(document.getElementById("invoiceRate").value);
+
+    const status =
+        document.getElementById("invoiceStatus").value;
+
+    const total = quantity * rate;
+
+    if (
+        !customer ||
+        !date ||
+        !product ||
+        quantity <= 0 ||
+        rate <= 0
+    ) {
+        alert("Please enter valid invoice details.");
+        return;
+    }
+
+    const invoice = {
+
+        id: Date.now(),
+
+        invoiceNumber: generateInvoiceNumber(),
+
+        customer: customer,
+
+        date: date,
+
+        product: product,
+
+        quantity: quantity,
+
+        rate: rate,
+
+        total: total,
+
+        status: status
+
+    };
+
+    invoices.push(invoice);
+
+    saveInvoices();
+
+    alert(
+        "Invoice " +
+        invoice.invoiceNumber +
+        " created successfully!"
+    );
+
+    showPage("sales");
+}
+
+
+/* =========================
+   PURCHASES
 ========================= */
 
 function showPurchases() {
@@ -393,6 +600,201 @@ function showPurchases() {
 }
 
 
+/* =========================
+   EXPENSES
+========================= */
+
+function showExpenses() {
+
+    pageTitle.innerText = "Expenses";
+
+    const expenses =
+        transactions.filter(t => t.type === "expense");
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>Expenses</h2>
+
+            <p>
+                Record and manage business expenses.
+            </p>
+
+            <button
+                class="new-btn"
+                onclick="openExpenseForm()"
+            >
+                + Record Expense
+            </button>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Expense Records</h2>
+
+            ${
+                expenses.length === 0
+                    ? `<p>No expenses recorded yet.</p>`
+                    : expenses
+                        .slice()
+                        .reverse()
+                        .map(t => `
+
+                            <div class="transaction-row">
+
+                                <div>
+                                    <strong>
+                                        ${t.description}
+                                    </strong>
+
+                                    <small>
+                                        ${t.date}
+                                    </small>
+                                </div>
+
+                                <strong>
+                                    ${formatMoney(t.amount)}
+                                </strong>
+
+                            </div>
+
+                        `).join("")
+            }
+
+        </div>
+    `;
+}
+
+
+/* =========================
+   EXPENSE FORM
+========================= */
+
+function openExpenseForm() {
+
+    pageTitle.innerText = "Record Expense";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>New Expense</h2>
+
+            <form onsubmit="saveExpense(event)">
+
+                <label>Date</label>
+
+                <input
+                    type="date"
+                    id="expenseDate"
+                    required
+                >
+
+
+                <label>Expense Description</label>
+
+                <input
+                    type="text"
+                    id="expenseDescription"
+                    placeholder="e.g. Electricity bill"
+                    required
+                >
+
+
+                <label>Amount</label>
+
+                <input
+                    type="number"
+                    id="expenseAmount"
+                    placeholder="Enter amount"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Expense
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('expenses')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+
+    document.getElementById("expenseDate").value =
+        new Date().toISOString().split("T")[0];
+}
+
+
+/* =========================
+   SAVE EXPENSE
+========================= */
+
+function saveExpense(event) {
+
+    event.preventDefault();
+
+    const date =
+        document.getElementById("expenseDate").value;
+
+    const description =
+        document.getElementById("expenseDescription").value.trim();
+
+    const amount =
+        Number(document.getElementById("expenseAmount").value);
+
+    if (!date || !description || amount <= 0) {
+
+        alert("Please enter valid expense details.");
+
+        return;
+    }
+
+    transactions.push({
+
+        id: Date.now(),
+
+        type: "expense",
+
+        date: date,
+
+        description: description,
+
+        amount: amount
+
+    });
+
+    saveTransactions();
+
+    alert("Expense saved successfully!");
+
+    showPage("expenses");
+}
+
+
+/* =========================
+   CUSTOMERS
+========================= */
+
 function showCustomers() {
 
     pageTitle.innerText = "Customers";
@@ -420,6 +822,10 @@ function showCustomers() {
 }
 
 
+/* =========================
+   VENDORS
+========================= */
+
 function showVendors() {
 
     pageTitle.innerText = "Vendors";
@@ -446,6 +852,10 @@ function showVendors() {
     `;
 }
 
+
+/* =========================
+   INVENTORY
+========================= */
 
 function showInventory() {
 
@@ -482,6 +892,10 @@ function showInventory() {
 }
 
 
+/* =========================
+   ACCOUNTING
+========================= */
+
 function showAccounting() {
 
     pageTitle.innerText = "Accounting";
@@ -510,6 +924,10 @@ function showAccounting() {
     `;
 }
 
+
+/* =========================
+   REPORTS
+========================= */
 
 function showReports() {
 
