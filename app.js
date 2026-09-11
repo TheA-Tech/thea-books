@@ -1208,3 +1208,13 @@ const savedPage =
     localStorage.getItem("theaBooksCurrentPage") || "dashboard";
 
 showPage(savedPage);
+/* =========================
+   MOBILE MENU
+========================= */
+
+function toggleMobileMenu() {
+
+    const navigation = document.getElementById("mainNavigation");
+
+    navigation.classList.toggle("mobile-open");
+}
