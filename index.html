@@ -1,39 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>THEA Books</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THEA Books</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <aside class="sidebar">
-    <div class="brand">THEA <span>Books</span></div>
-    <nav>
-      <button class="nav active" data-page="dashboard">Dashboard</button>
-      <button class="nav" data-page="sales">Sales</button>
-      <button class="nav" data-page="purchases">Purchases</button>
-      <button class="nav" data-page="expenses">Expenses</button>
-      <button class="nav" data-page="customers">Customers</button>
-      <button class="nav" data-page="vendors">Vendors</button>
-      <button class="nav" data-page="inventory">Inventory</button>
-      <button class="nav" data-page="accounting">Accounting</button>
-      <button class="nav" data-page="reports">Reports</button>
-    </nav>
-  </aside>
 
-  <main class="main">
-    <header class="topbar">
-      <div>
-        <h1 id="pageTitle">Dashboard</h1>
-        <p>Simple business accounting, built step by step.</p>
-      </div>
-      <button class="primary" id="newTransaction">+ New Transaction</button>
-    </header>
+    <aside class="sidebar">
+        <h2>THEA <span>Books</span></h2>
 
-    <section id="app"></section>
-  </main>
+        <nav>
+            <button onclick="showPage('dashboard')">Dashboard</button>
+            <button onclick="showPage('sales')">Sales</button>
+            <button onclick="showPage('purchases')">Purchases</button>
+            <button onclick="showPage('expenses')">Expenses</button>
+            <button onclick="showPage('customers')">Customers</button>
+            <button onclick="showPage('vendors')">Vendors</button>
+            <button onclick="showPage('inventory')">Inventory</button>
+            <button onclick="showPage('accounting')">Accounting</button>
+            <button onclick="showPage('reports')">Reports</button>
+        </nav>
+    </aside>
 
-  <script src="app.js"></script>
+    <main class="main">
+
+        <header>
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p>Business Accounting System</p>
+            </div>
+
+            <button class="new-btn">+ New Transaction</button>
+        </header>
+
+        <section id="content">
+
+            <div class="cards">
+
+                <div class="card">
+                    <p>Total Sales</p>
+                    <h2>Rs. 0</h2>
+                </div>
+
+                <div class="card">
+                    <p>Total Expenses</p>
+                    <h2>Rs. 0</h2>
+                </div>
+
+                <div class="card">
+                    <p>Receivables</p>
+                    <h2>Rs. 0</h2>
+                </div>
+
+                <div class="card">
+                    <p>Payables</p>
+                    <h2>Rs. 0</h2>
+                </div>
+
+            </div>
+
+            <div class="panel">
+                <h2>Recent Transactions</h2>
+                <p>No transactions yet.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+
 </body>
 </html>
