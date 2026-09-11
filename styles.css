@@ -1650,3 +1650,70 @@ table tbody tr:hover {
     }
 
 }
+/* =========================================
+   BROWSER STYLE NAVIGATION
+========================================= */
+
+.navigation-buttons {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.nav-arrow {
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid #d6e0e8;
+    border-radius: 11px;
+
+    background: linear-gradient(
+        145deg,
+        #ffffff,
+        #e8eef3
+    );
+
+    color: #174f78;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 12px rgba(15,76,129,0.10),
+        inset 0 1px 0 white;
+
+    transition: all 0.2s ease;
+}
+
+.nav-arrow:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(
+        145deg,
+        #f8fbfd,
+        #dce7ef
+    );
+
+    box-shadow:
+        0 9px 17px rgba(15,76,129,0.16);
+}
+
+.nav-arrow:active {
+    transform: translateY(1px);
+}
+
+@media (max-width: 700px) {
+
+    .navigation-buttons {
+        order: 2;
+    }
+
+    .nav-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 19px;
+    }
+
+}
