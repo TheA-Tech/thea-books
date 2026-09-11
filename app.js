@@ -1819,6 +1819,822 @@ function createInvoice(event) {
 
     showPage("sales");
 }  
+/* =========================================
+   THEA BOOKS ERP MODULES
+========================================= */
+
+let vendors =
+    JSON.parse(localStorage.getItem("theaBooksVendors")) || [];
+
+let purchases =
+    JSON.parse(localStorage.getItem("theaBooksPurchases")) || [];
+
+let companyAccount =
+    JSON.parse(localStorage.getItem("theaBooksCompany")) || {
+        name: "",
+        owner: "",
+        phone: "",
+        email: "",
+        address: "",
+        currency: "PKR"
+    };
+
+
+function saveVendors() {
+    localStorage.setItem(
+        "theaBooksVendors",
+        JSON.stringify(vendors)
+    );
+}
+
+
+function savePurchases() {
+    localStorage.setItem(
+        "theaBooksPurchases",
+        JSON.stringify(purchases)
+    );
+}
+
+
+function saveCompanyAccount() {
+    localStorage.setItem(
+        "theaBooksCompany",
+        JSON.stringify(companyAccount)
+    );
+}
+
+
+/* =========================
+   COMPANY ACCOUNT
+========================= */
+
+function showCompanyAccount() {
+
+    pageTitle.innerText = "Company Account";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>🏢 Company Account</h2>
+
+            <p>
+                Manage your company information.
+            </p>
+
+            <form onsubmit="saveCompany(event)">
+
+                <label>Company Name</label>
+
+                <input
+                    type="text"
+                    id="companyName"
+                    value="${companyAccount.name || ""}"
+                    placeholder="Company Name"
+                    required
+                >
+
+                <label>Owner / Manager</label>
+
+                <input
+                    type="text"
+                    id="companyOwner"
+                    value="${companyAccount.owner || ""}"
+                    placeholder="Owner Name"
+                >
+
+                <label>Phone</label>
+
+                <input
+                    type="text"
+                    id="companyPhone"
+                    value="${companyAccount.phone || ""}"
+                    placeholder="03XXXXXXXXX"
+                >
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="companyEmail"
+                    value="${companyAccount.email || ""}"
+                    placeholder="company@email.com"
+                >
+
+                <label>Address</label>
+
+                <input
+                    type="text"
+                    id="companyAddress"
+                    value="${companyAccount.address || ""}"
+                    placeholder="Business Address"
+                >
+
+                <label>Currency</label>
+
+                <select id="companyCurrency">
+
+                    <option value="PKR"
+                        ${companyAccount.currency === "PKR" ? "selected" : ""}>
+                        PKR - Pakistani Rupee
+                    </option>
+
+                    <option value="USD"
+                        ${companyAccount.currency === "USD" ? "selected" : ""}>
+                        USD - US Dollar
+                    </option>
+
+                    <option value="AED"
+                        ${companyAccount.currency === "AED" ? "selected" : ""}>
+                        AED - UAE Dirham
+                    </option>
+
+                </select>
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn">
+                        Save Company
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('dashboard')">
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+}
+
+
+function saveCompany(event) {
+
+    event.preventDefault();
+
+    companyAccount = {
+
+        name:
+            document.getElementById("companyName").value.trim(),
+
+        owner:
+            document.getElementById("companyOwner").value.trim(),
+
+        phone:
+            document.getElementById("companyPhone").value.trim(),
+
+        email:
+            document.getElementById("companyEmail").value.trim(),
+
+        address:
+            document.getElementById("companyAddress").value.trim(),
+
+        currency:
+            document.getElementById("companyCurrency").value
+    };
+
+    saveCompanyAccount();
+
+    alert("Company account saved successfully!");
+
+    showPage("dashboard");
+}
+
+
+/* =========================
+   VENDORS
+========================= */
+
+function openVendorForm() {
+
+    pageTitle.innerText = "Add Vendor";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>🏢 New Vendor</h2>
+
+            <form onsubmit="addVendor(event)">
+
+                <label>Vendor Name</label>
+
+                <input
+                    type="text"
+                    id="vendorName"
+                    placeholder="Vendor Name"
+                    required
+                >
+
+                <label>Phone</label>
+
+                <input
+                    type="text"
+                    id="vendorPhone"
+                    placeholder="03XXXXXXXXX"
+                >
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="vendorEmail"
+                    placeholder="vendor@email.com"
+                >
+
+                <label>Address</label>
+
+                <input
+                    type="text"
+                    id="vendorAddress"
+                    placeholder="Vendor Address"
+                >
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn">
+                        Save Vendor
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('vendors')">
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+}
+
+
+function addVendor(event) {
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("vendorName").value.trim();
+
+    const phone =
+        document.getElementById("vendorPhone").value.trim();
+
+    const email =
+        document.getElementById("vendorEmail").value.trim();
+
+    const address =
+        document.getElementById("vendorAddress").value.trim();
+
+    if (!name) {
+
+        alert("Vendor name is required.");
+
+        return;
+    }
+
+    vendors.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        phone: phone,
+
+        email: email,
+
+        address: address
+
+    });
+
+    saveVendors();
+
+    alert("Vendor saved successfully!");
+
+    showPage("vendors");
+}
+
+
+/* =========================
+   PURCHASE BILL
+========================= */
+
+function openPurchaseForm() {
+
+    pageTitle.innerText = "New Purchase";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>🛒 New Purchase Bill</h2>
+
+            <form onsubmit="savePurchase(event)">
+
+                <label>Vendor</label>
+
+                <select id="purchaseVendor" required>
+
+                    <option value="">
+                        Select Vendor
+                    </option>
+
+                    ${
+                        vendors.map(vendor => `
+                            <option value="${vendor.id}">
+                                ${vendor.name}
+                            </option>
+                        `).join("")
+                    }
+
+                </select>
+
+                <label>Date</label>
+
+                <input
+                    type="date"
+                    id="purchaseDate"
+                    required
+                >
+
+                <label>Description</label>
+
+                <input
+                    type="text"
+                    id="purchaseDescription"
+                    placeholder="Purchase Description"
+                    required
+                >
+
+                <label>Amount</label>
+
+                <input
+                    type="number"
+                    id="purchaseAmount"
+                    placeholder="Amount"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+                <label>Payment Status</label>
+
+                <select id="purchaseStatus">
+
+                    <option value="paid">
+                        Paid
+                    </option>
+
+                    <option value="unpaid">
+                        Unpaid
+                    </option>
+
+                </select>
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn">
+                        Save Purchase
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('purchases')">
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+
+    document.getElementById("purchaseDate").value =
+        new Date().toISOString().split("T")[0];
+}
+
+
+function savePurchase(event) {
+
+    event.preventDefault();
+
+    const vendorId =
+        document.getElementById("purchaseVendor").value;
+
+    const date =
+        document.getElementById("purchaseDate").value;
+
+    const description =
+        document
+            .getElementById("purchaseDescription")
+            .value.trim();
+
+    const amount =
+        Number(
+            document.getElementById("purchaseAmount").value
+        );
+
+    const status =
+        document.getElementById("purchaseStatus").value;
+
+    const vendor =
+        vendors.find(
+            v => String(v.id) === String(vendorId)
+        );
+
+    if (!vendor || !date || !description || amount <= 0) {
+
+        alert("Please enter valid purchase details.");
+
+        return;
+    }
+
+    purchases.push({
+
+        id: Date.now(),
+
+        vendorId: vendor.id,
+
+        vendor: vendor.name,
+
+        date: date,
+
+        description: description,
+
+        amount: amount,
+
+        status: status
+
+    });
+
+    savePurchases();
+
+    alert("Purchase saved successfully!");
+
+    showPage("purchases");
+}
+
+
+/* =========================
+   ACCOUNTING
+========================= */
+
+function showAccounting() {
+
+    pageTitle.innerText = "Accounting";
+
+    const sales =
+        invoices.reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const expenses =
+        transactions
+            .filter(t => t.type === "expense")
+            .reduce(
+                (sum, t) =>
+                    sum + Number(t.amount || 0),
+                0
+            );
+
+    const purchaseTotal =
+        purchases.reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+    const netPosition =
+        sales - expenses - purchaseTotal;
+
+    content.innerHTML = `
+
+        <div class="dashboard-section">
+
+            <h2>📚 Accounting Overview</h2>
+
+            <p>
+                Business financial position
+            </p>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>💰 Sales</h3>
+                <p>${formatMoney(sales)}</p>
+            </div>
+
+            <div class="card">
+                <h3>💸 Expenses</h3>
+                <p>${formatMoney(expenses)}</p>
+            </div>
+
+            <div class="card">
+                <h3>🛒 Purchases</h3>
+                <p>${formatMoney(purchaseTotal)}</p>
+            </div>
+
+            <div class="card">
+                <h3>📈 Net Position</h3>
+                <p>${formatMoney(netPosition)}</p>
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Accounting Tools</h2>
+
+            <div class="quick-actions">
+
+                <div
+                    class="quick-action"
+                    onclick="showReports()">
+
+                    <div class="quick-action-icon">
+                        📊
+                    </div>
+
+                    <strong>
+                        Financial Reports
+                    </strong>
+
+                    <span>
+                        View financial reports
+                    </span>
+
+                </div>
+
+                <div
+                    class="quick-action"
+                    onclick="showPage('sales')">
+
+                    <div class="quick-action-icon">
+                        🧾
+                    </div>
+
+                    <strong>
+                        Sales
+                    </strong>
+
+                    <span>
+                        Manage invoices
+                    </span>
+
+                </div>
+
+                <div
+                    class="quick-action"
+                    onclick="showPage('purchases')">
+
+                    <div class="quick-action-icon">
+                        🛒
+                    </div>
+
+                    <strong>
+                        Purchases
+                    </strong>
+
+                    <span>
+                        Manage bills
+                    </span>
+
+                </div>
+
+                <div
+                    class="quick-action"
+                    onclick="showPage('expenses')">
+
+                    <div class="quick-action-icon">
+                        💸
+                    </div>
+
+                    <strong>
+                        Expenses
+                    </strong>
+
+                    <span>
+                        Manage expenses
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* =========================
+   RECEIVABLES
+========================= */
+
+function showReceivables() {
+
+    pageTitle.innerText = "Accounts Receivable";
+
+    const unpaid =
+        invoices.filter(
+            invoice =>
+                invoice.status === "unpaid"
+        );
+
+    const total =
+        unpaid.reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    content.innerHTML = `
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>🧾 Unpaid Invoices</h3>
+
+                <p>
+                    ${unpaid.length}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>💰 Total Receivable</h3>
+
+                <p>
+                    ${formatMoney(total)}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Accounts Receivable</h2>
+
+            ${
+                unpaid.length === 0
+
+                    ? `
+                        <div class="empty-state">
+                            <h3>No outstanding invoices</h3>
+                            <p>
+                                All customer invoices are paid.
+                            </p>
+                        </div>
+                    `
+
+                    :
+
+                    unpaid.map(invoice => `
+
+                        <div class="transaction-row">
+
+                            <div>
+
+                                <strong>
+                                    ${invoice.invoiceNumber}
+                                </strong>
+
+                                <small>
+                                    ${invoice.customer}
+                                    • ${invoice.date}
+                                </small>
+
+                            </div>
+
+                            <strong>
+                                ${formatMoney(invoice.total)}
+                            </strong>
+
+                        </div>
+
+                    `).join("")
+            }
+
+        </div>
+    `;
+}
+
+
+/* =========================
+   PAYABLES
+========================= */
+
+function showPayables() {
+
+    pageTitle.innerText = "Accounts Payable";
+
+    const unpaid =
+        purchases.filter(
+            purchase =>
+                purchase.status === "unpaid"
+        );
+
+    const total =
+        unpaid.reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+    content.innerHTML = `
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>🛒 Unpaid Bills</h3>
+
+                <p>
+                    ${unpaid.length}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>💰 Total Payable</h3>
+
+                <p>
+                    ${formatMoney(total)}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Accounts Payable</h2>
+
+            ${
+                unpaid.length === 0
+
+                    ? `
+                        <div class="empty-state">
+                            <h3>No outstanding bills</h3>
+                            <p>
+                                All vendor bills are paid.
+                            </p>
+                        </div>
+                    `
+
+                    :
+
+                    unpaid.map(purchase => `
+
+                        <div class="transaction-row">
+
+                            <div>
+
+                                <strong>
+                                    ${purchase.vendor}
+                                </strong>
+
+                                <small>
+                                    ${purchase.description}
+                                    • ${purchase.date}
+                                </small>
+
+                            </div>
+
+                            <strong>
+                                ${formatMoney(purchase.amount)}
+                            </strong>
+
+                        </div>
+
+                    `).join("")
+            }
+
+        </div>
+    `;
+}
 /* =========================
    PURCHASES
 ========================= */
@@ -1827,7 +2643,28 @@ function showPurchases() {
 
     pageTitle.innerText = "Purchases";
 
+    const totalPurchases =
+        purchases.reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
     content.innerHTML = `
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>🛒 Total Purchases</h3>
+                <p>${formatMoney(totalPurchases)}</p>
+            </div>
+
+            <div class="card">
+                <h3>📄 Purchase Bills</h3>
+                <p>${purchases.length}</p>
+            </div>
+
+        </div>
 
         <div class="panel">
 
@@ -1837,7 +2674,9 @@ function showPurchases() {
                 Manage vendors, bills and purchase payments.
             </p>
 
-            <button class="new-btn">
+            <button
+                class="new-btn"
+                onclick="openPurchaseForm()">
                 + New Bill
             </button>
 
@@ -1847,12 +2686,49 @@ function showPurchases() {
 
             <h2>Purchase Records</h2>
 
-            <p>No purchase records yet.</p>
+            ${
+                purchases.length === 0
+
+                    ? `<p>No purchase records yet.</p>`
+
+                    :
+
+                    purchases
+                        .slice()
+                        .reverse()
+                        .map(purchase => `
+
+                            <div class="transaction-row">
+
+                                <div>
+
+                                    <strong>
+                                        ${purchase.vendor}
+                                    </strong>
+
+                                    <small>
+                                        ${purchase.description}
+                                        • ${purchase.date}
+                                        • ${purchase.status}
+                                    </small>
+
+                                </div>
+
+                                <strong>
+                                    ${formatMoney(
+                                        purchase.amount
+                                    )}
+                                </strong>
+
+                            </div>
+
+                        `)
+                        .join("")
+            }
 
         </div>
     `;
 }
-
 
 /* =========================
    EXPENSES
@@ -2184,9 +3060,15 @@ function showVendors() {
 
         <div class="panel">
 
-            <h2>Vendors</h2>
+            <h2>🏢 Vendors</h2>
 
-            <button class="new-btn">
+            <p>
+                Manage suppliers and vendor accounts.
+            </p>
+
+            <button
+                class="new-btn"
+                onclick="openVendorForm()">
                 + Add Vendor
             </button>
 
@@ -2196,7 +3078,95 @@ function showVendors() {
 
             <h2>Vendor List</h2>
 
-            <p>No vendors added yet.</p>
+            ${
+                vendors.length === 0
+
+                    ? `<p>No vendors added yet.</p>`
+
+                    :
+
+                    vendors
+                        .slice()
+                        .reverse()
+                        .map(vendor => {
+
+                            const vendorPurchases =
+                                purchases.filter(
+                                    purchase =>
+                                        String(
+                                            purchase.vendorId
+                                        ) ===
+                                        String(vendor.id)
+                                );
+
+                            const total =
+                                vendorPurchases.reduce(
+                                    (sum, purchase) =>
+                                        sum +
+                                        Number(
+                                            purchase.amount || 0
+                                        ),
+                                    0
+                                );
+
+                            const payable =
+                                vendorPurchases
+                                    .filter(
+                                        purchase =>
+                                            purchase.status ===
+                                            "unpaid"
+                                    )
+                                    .reduce(
+                                        (sum, purchase) =>
+                                            sum +
+                                            Number(
+                                                purchase.amount || 0
+                                            ),
+                                        0
+                                    );
+
+                            return `
+
+                                <div class="transaction-row">
+
+                                    <div>
+
+                                        <strong>
+                                            ${vendor.name}
+                                        </strong>
+
+                                        <small>
+                                            ${vendor.phone || "No phone"}
+                                            ${
+                                                vendor.email
+                                                    ? " • " +
+                                                      vendor.email
+                                                    : ""
+                                            }
+                                        </small>
+
+                                        <small>
+                                            Purchases:
+                                            ${vendorPurchases.length}
+                                            • Total:
+                                            ${formatMoney(total)}
+                                            • Payable:
+                                            ${formatMoney(payable)}
+                                        </small>
+
+                                    </div>
+
+                                    <strong>
+                                        ${formatMoney(payable)}
+                                    </strong>
+
+                                </div>
+
+                            `;
+
+                        })
+                        .join("")
+            }
 
         </div>
     `;
@@ -2653,9 +3623,30 @@ const savedPage =
     localStorage.getItem("theaBooksCurrentPage") || "dashboard";
 
 pageHistory = [savedPage];
+
 historyPosition = 0;
 
 showPage(savedPage);
+
+if (companyAccount.name) {
+
+    const companyName =
+        document.getElementById("currentCompanyName");
+
+    const companyStatus =
+        document.getElementById("currentCompanyStatus");
+
+    if (companyName) {
+        companyName.innerText =
+            companyAccount.name;
+    }
+
+    if (companyStatus) {
+        companyStatus.innerText =
+            companyAccount.phone ||
+            "Company configured";
+    }
+}
 /* =========================
    MOBILE MENU
 ========================= */
