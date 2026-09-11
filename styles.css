@@ -1860,3 +1860,156 @@ table tbody tr:hover {
     }
 
 }
+/* =========================================
+   PREMIUM ERP TEXT ALIGNMENT
+========================================= */
+
+.dashboard-section {
+    text-align: left;
+}
+
+.dashboard-section h2,
+.dashboard-section h3,
+.dashboard-section p {
+    text-align: left;
+}
+
+.chart-container {
+    text-align: left;
+}
+
+.chart-container h3,
+.chart-container p {
+    text-align: left;
+}
+
+
+/* =========================================
+   KPI CARDS
+========================================= */
+
+.cards .card {
+    text-align: left;
+    align-items: flex-start;
+}
+
+.cards .card h3 {
+    width: 100%;
+    margin: 0;
+    text-align: left;
+}
+
+.cards .card p {
+    width: 100%;
+    margin: 12px 0 5px;
+    text-align: left;
+}
+
+.cards .card small {
+    width: 100%;
+    text-align: left;
+}
+
+
+/* =========================================
+   QUICK ACTION TEXT
+========================================= */
+
+.quick-action {
+    text-align: left;
+}
+
+.quick-action strong,
+.quick-action span {
+    display: block;
+    text-align: left;
+}
+
+.quick-action-icon {
+    margin-bottom: 10px;
+}
+
+
+/* =========================================
+   PREMIUM HEADINGS
+========================================= */
+
+#content > .dashboard-section:first-child h2 {
+    color: #123f63;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+#content > .dashboard-section:first-child p {
+    margin-top: 4px;
+}
+
+
+/* =========================================
+   SUMMARY ITEMS
+========================================= */
+
+.chart-container > div > div {
+    box-sizing: border-box;
+}
+
+.chart-container span,
+.chart-container strong {
+    line-height: 1.4;
+}
+
+
+/* =========================================
+   BUTTON ALIGNMENT
+========================================= */
+
+.dashboard-section > div:first-child {
+    align-items: center;
+}
+
+.action-btn {
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   PREMIUM CARD DEPTH
+========================================= */
+
+.cards .card {
+    transform-style: preserve-3d;
+    perspective: 800px;
+}
+
+.cards .card h3,
+.cards .card p,
+.cards .card small {
+    position: relative;
+    z-index: 3;
+}
+
+.cards .card:hover h3 {
+    transform: translateZ(5px);
+}
+
+.cards .card:hover p {
+    transform: translateZ(8px);
+}
+
+
+/* =========================================
+   CONSISTENT SPACING
+========================================= */
+
+#content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#content > .cards,
+#content > .quick-actions,
+#content > .dashboard-grid,
+#content > .dashboard-section {
+    margin-bottom: 0;
+}
