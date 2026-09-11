@@ -936,11 +936,10 @@ function showCustomers() {
                         .map(customer => {
 
                             const customerInvoices =
-                                invoices.filter(
-                                    invoice =>
-                                        String(invoice.customerId) ===
-                                        String(customer.id)
-                                );
+    invoices.filter(invoice =>
+        String(invoice.customerId) === String(customer.id) ||
+        invoice.customer === customer.name
+    );
 
                             const totalSales =
                                 customerInvoices.reduce(
