@@ -1161,6 +1161,8 @@ function showReports() {
 
 function showPage(page) {
 
+    localStorage.setItem("theaBooksCurrentPage", page);
+
     if (page === "dashboard") {
         showDashboard();
     }
@@ -1198,9 +1200,11 @@ function showPage(page) {
     }
 }
 
-
 /* =========================
    LOAD DASHBOARD
 ========================= */
 
-showPage("dashboard");
+const savedPage =
+    localStorage.getItem("theaBooksCurrentPage") || "dashboard";
+
+showPage(savedPage);
