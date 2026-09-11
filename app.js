@@ -912,7 +912,10 @@ function showCustomers() {
 
             <h2>Customers</h2>
 
-            <button class="new-btn">
+            <button
+                class="new-btn"
+                onclick="openCustomerForm()"
+            >
                 + Add Customer
             </button>
 
@@ -922,12 +925,39 @@ function showCustomers() {
 
             <h2>Customer List</h2>
 
-            <p>No customers added yet.</p>
+            ${
+                customers.length === 0
+                    ? `<p>No customers added yet.</p>`
+                    : customers
+                        .slice()
+                        .reverse()
+                        .map(customer => `
+                            <div class="transaction-row">
+
+                                <div>
+                                    <strong>
+                                        ${customer.name}
+                                    </strong>
+
+                                    <small>
+                                        ${customer.phone || "No phone"}
+                                        ${customer.email ? " • " + customer.email : ""}
+                                    </small>
+
+                                </div>
+
+                                <span>
+                                    ${customer.address || "No address"}
+                                </span>
+
+                            </div>
+                        `)
+                        .join("")
+            }
 
         </div>
     `;
 }
-
 
 /* =========================
    VENDORS
