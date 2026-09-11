@@ -5,6 +5,113 @@ let transactions =
     JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
 
 let invoices =
+    let customers =
+    JSON.parse(localStorage.getItem("theaBooksCustomers")) || [];
+
+function saveCustomers() {
+    localStorage.setItem(
+        "theaBooksCustomers",
+        JSON.stringify(customers)
+    );
+}
+
+function openCustomerForm() {
+
+    pageTitle.innerText = "Add Customer";
+
+    content.innerHTML = `
+        <div class="panel">
+
+            <h2>New Customer</h2>
+
+            <form onsubmit="addCustomer(event)">
+
+                <label>Customer Name</label>
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter customer name"
+                    required
+                >
+
+                <label>Phone</label>
+                <input
+                    type="text"
+                    id="customerPhone"
+                    placeholder="03XXXXXXXXX"
+                >
+
+                <label>Email</label>
+                <input
+                    type="email"
+                    id="customerEmail"
+                    placeholder="customer@email.com"
+                >
+
+                <label>Address</label>
+                <input
+                    type="text"
+                    id="customerAddress"
+                    placeholder="Enter address"
+                >
+
+                <div class="form-buttons">
+
+                    <button type="submit" class="new-btn">
+                        Save Customer
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('customers')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+}
+
+function addCustomer(event) {
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("customerName").value.trim();
+
+    const phone =
+        document.getElementById("customerPhone").value.trim();
+
+    const email =
+        document.getElementById("customerEmail").value.trim();
+
+    const address =
+        document.getElementById("customerAddress").value.trim();
+
+    if (!name) {
+        alert("Customer name is required.");
+        return;
+    }
+
+    customers.push({
+        id: Date.now(),
+        name: name,
+        phone: phone,
+        email: email,
+        address: address
+    });
+
+    saveCustomers();
+
+    alert("Customer saved successfully!");
+
+    showPage("customers");
+}
     JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
 
 
