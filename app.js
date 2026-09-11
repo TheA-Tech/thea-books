@@ -542,14 +542,27 @@ function openInvoiceForm() {
                 >
 
 
-                <label>Product / Service</label>
+                <label>Product</label>
 
-                <input
-                    type="text"
-                    id="invoiceProduct"
-                    placeholder="Enter product or service"
-                    required
-                >
+                <select id="invoiceProduct" required>
+
+                    <option value="">
+                        Select Product
+                    </option>
+
+                    ${
+                        products.length === 0
+                            ? `<option value="" disabled>
+                                No products added yet.
+                               </option>`
+                            : products.map(product => `
+                                <option value="${product.id}">
+                                    ${product.name} — Stock: ${product.stock}
+                                </option>
+                            `).join("")
+                    }
+
+                </select>
 
 
                 <label>Quantity</label>
@@ -661,8 +674,32 @@ function openInvoiceForm() {
         </div>
     `;
 
+
     document.getElementById("invoiceDate").value =
         new Date().toISOString().split("T")[0];
+
+
+    const productSelect =
+        document.getElementById("invoiceProduct");
+
+    const rateInput =
+        document.getElementById("invoiceRate");
+
+
+    productSelect.addEventListener("change", function () {
+
+        const selectedProduct = products.find(
+            product =>
+                String(product.id) ===
+                String(productSelect.value)
+        );
+
+        if (selectedProduct) {
+            rateInput.value = selectedProduct.price;
+        }
+
+        updateInvoiceTotal();
+    });
 
 
     function updateInvoiceTotal() {
@@ -679,7 +716,8 @@ function openInvoiceForm() {
         const taxPercent =
             Number(document.getElementById("invoiceTax").value) || 0;
 
-        const subtotal = quantity * rate;
+        const subtotal =
+            quantity * rate;
 
         const afterDiscount =
             Math.max(0, subtotal - discount);
@@ -689,6 +727,7 @@ function openInvoiceForm() {
 
         const total =
             afterDiscount + tax;
+
 
         document.getElementById("invoiceSubtotal").innerText =
             formatMoney(subtotal);
@@ -719,7 +758,6 @@ function openInvoiceForm() {
     updateInvoiceTotal();
 }
 
-
 /* =========================
    SAVE INVOICE
 ========================= */
@@ -728,14 +766,15 @@ function createInvoice(event) {
 
     event.preventDefault();
 
+
     const customerId =
         document.getElementById("invoiceCustomer").value;
 
     const date =
         document.getElementById("invoiceDate").value;
 
-    const product =
-        document.getElementById("invoiceProduct").value.trim();
+    const productId =
+        document.getElementById("invoiceProduct").value;
 
     const quantity =
         Number(document.getElementById("invoiceQuantity").value);
@@ -755,25 +794,65 @@ function createInvoice(event) {
 
     const selectedCustomer = customers.find(
         customer =>
-            String(customer.id) === String(customerId)
+            String(customer.id) ===
+            String(customerId)
     );
 
 
-    if (
-        !selectedCustomer ||
-        !date ||
-        !product ||
-        quantity <= 0 ||
-        rate <= 0 ||
-        discount < 0 ||
-        taxPercent < 0
-    ) {
+    const selectedProduct = products.find(
+        product =>
+            String(product.id) ===
+            String(productId)
+    );
+
+
+    /* =========================
+       VALIDATION
+    ========================= */
+
+    if (!selectedCustomer) {
+
+        alert("Please select a customer.");
+
+        return;
+    }
+
+
+    if (!selectedProduct) {
+
+        alert("Please select a product.");
+
+        return;
+    }
+
+
+    if (!date || quantity <= 0 || rate <= 0) {
 
         alert("Please enter valid invoice details.");
 
         return;
     }
 
+
+    /* =========================
+       STOCK CHECK
+    ========================= */
+
+    if (quantity > Number(selectedProduct.stock)) {
+
+        alert(
+            "Insufficient stock!\n\n" +
+            "Available stock: " +
+            selectedProduct.stock
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       CALCULATE TOTAL
+    ========================= */
 
     const subtotal =
         quantity * rate;
@@ -795,6 +874,10 @@ function createInvoice(event) {
         afterDiscount + taxAmount;
 
 
+    /* =========================
+       CREATE INVOICE
+    ========================= */
+
     const invoice = {
 
         id: Date.now(),
@@ -808,11 +891,11 @@ function createInvoice(event) {
         customer:
             selectedCustomer.name,
 
-        date:
-            date,
+        productId:
+            selectedProduct.id,
 
         product:
-            product,
+            selectedProduct.name,
 
         quantity:
             quantity,
@@ -836,19 +919,38 @@ function createInvoice(event) {
             total,
 
         status:
-            status
+            status,
+
+        date:
+            date
     };
 
+
+    /* =========================
+       SAVE INVOICE
+    ========================= */
 
     invoices.push(invoice);
 
     saveInvoices();
 
 
+    /* =========================
+       REDUCE INVENTORY STOCK
+    ========================= */
+
+    selectedProduct.stock =
+        Number(selectedProduct.stock) - quantity;
+
+    saveProducts();
+
+
     alert(
         "Invoice " +
         invoice.invoiceNumber +
-        " created successfully!"
+        " created successfully!\n\n" +
+        "Stock remaining: " +
+        selectedProduct.stock
     );
 
 
