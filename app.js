@@ -933,34 +933,70 @@ function showCustomers() {
                     : customers
                         .slice()
                         .reverse()
-                        .map(customer => `
-                            <div class="transaction-row">
+                        .map(customer => {
 
-                                <div>
+                            const customerInvoices =
+                                invoices.filter(
+                                    invoice =>
+                                        String(invoice.customerId) ===
+                                        String(customer.id)
+                                );
+
+                            const totalSales =
+                                customerInvoices.reduce(
+                                    (sum, invoice) =>
+                                        sum + Number(invoice.total),
+                                    0
+                                );
+
+                            const paidAmount =
+                                customerInvoices
+                                    .filter(
+                                        invoice =>
+                                            invoice.status === "paid"
+                                    )
+                                    .reduce(
+                                        (sum, invoice) =>
+                                            sum + Number(invoice.total),
+                                        0
+                                    );
+
+                            const receivable =
+                                totalSales - paidAmount;
+
+                            return `
+                                <div class="transaction-row">
+
+                                    <div>
+                                        <strong>
+                                            ${customer.name}
+                                        </strong>
+
+                                        <small>
+                                            ${customer.phone || "No phone"}
+                                            ${customer.email ? " • " + customer.email : ""}
+                                        </small>
+
+                                        <small>
+                                            Invoices: ${customerInvoices.length}
+                                            • Sales: ${formatMoney(totalSales)}
+                                            • Receivable: ${formatMoney(receivable)}
+                                        </small>
+                                    </div>
+
                                     <strong>
-                                        ${customer.name}
+                                        ${formatMoney(receivable)}
                                     </strong>
 
-                                    <small>
-                                        ${customer.phone || "No phone"}
-                                        ${customer.email ? " • " + customer.email : ""}
-                                    </small>
-
                                 </div>
-
-                                <span>
-                                    ${customer.address || "No address"}
-                                </span>
-
-                            </div>
-                        `)
+                            `;
+                        })
                         .join("")
             }
 
         </div>
     `;
 }
-
 /* =========================
    VENDORS
 ========================= */
