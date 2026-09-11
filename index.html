@@ -12,11 +12,17 @@
 <body>
 
     <!-- Sidebar -->
-    <aside class="sidebar">
+   <aside class="sidebar">
 
+    <div class="brand-row">
         <h2>THEA <span>Books</span></h2>
 
-        <nav>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </div>
+
+    <nav id="mainNavigation">
             <button onclick="showPage('dashboard')">Dashboard</button>
             <button onclick="showPage('sales')">Sales</button>
             <button onclick="showPage('purchases')">Purchases</button>
