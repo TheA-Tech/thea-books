@@ -5,7 +5,9 @@ let transactions =
     JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
 
 let invoices =
-    let customers =
+    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
+
+let customers =
     JSON.parse(localStorage.getItem("theaBooksCustomers")) || [];
 
 function saveCustomers() {
