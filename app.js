@@ -632,10 +632,9 @@ function createInvoice(event) {
     const status =
         document.getElementById("invoiceStatus").value;
 
-    const selectedCustomer =
-        customers.find(
-            customer => String(customer.id) === String(customerId)
-        );
+    const selectedCustomer = customers.find(
+        customer => String(customer.id) === String(customerId)
+    );
 
     if (
         !selectedCustomer ||
@@ -651,27 +650,16 @@ function createInvoice(event) {
     const total = quantity * rate;
 
     const invoice = {
-
         id: Date.now(),
-
         invoiceNumber: generateInvoiceNumber(),
-
         customerId: selectedCustomer.id,
-
         customer: selectedCustomer.name,
-
         date: date,
-
         product: product,
-
         quantity: quantity,
-
         rate: rate,
-
         total: total,
-
         status: status
-
     };
 
     invoices.push(invoice);
