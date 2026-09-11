@@ -483,3 +483,74 @@ header p {
     }
 }
 ```
+/* =========================================================
+   MOBILE MENU BUTTON
+========================================================= */
+
+.brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-menu-btn {
+    display: none;
+    border: none;
+    background: #1e293b;
+    color: white;
+    width: 42px;
+    height: 38px;
+    border-radius: 7px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MOBILE NAVIGATION
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .brand-row {
+        margin-bottom: 0;
+    }
+
+    .sidebar h2 {
+        margin: 3px 0;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .sidebar nav {
+        display: none;
+        grid-template-columns: 1fr;
+        gap: 5px;
+        margin-top: 15px;
+        padding-top: 12px;
+        border-top: 1px solid #334155;
+    }
+
+    .sidebar nav.mobile-open {
+        display: grid;
+    }
+
+    .sidebar nav button {
+        text-align: left;
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+}
+
+
+/* Very small screens */
+
+@media (max-width: 420px) {
+
+    .sidebar nav {
+        grid-template-columns: 1fr;
+    }
+
+}
