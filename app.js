@@ -521,7 +521,7 @@ function openInvoiceForm() {
                     ${
                         customers.length === 0
                             ? `<option value="" disabled>
-                                No customers added yet.
+                                No customers added yet
                                </option>`
                             : customers.map(customer => `
                                 <option value="${customer.id}">
@@ -542,27 +542,14 @@ function openInvoiceForm() {
                 >
 
 
-                <label>Product</label>
+                <label>Product / Service</label>
 
-                <select id="invoiceProduct" required>
-
-                    <option value="">
-                        Select Product
-                    </option>
-
-                    ${
-                        products.length === 0
-                            ? `<option value="" disabled>
-                                No products added yet.
-                               </option>`
-                            : products.map(product => `
-                                <option value="${product.id}">
-                                    ${product.name} — Stock: ${product.stock}
-                                </option>
-                            `).join("")
-                    }
-
-                </select>
+                <input
+                    type="text"
+                    id="invoiceProduct"
+                    placeholder="Enter product or service"
+                    required
+                >
 
 
                 <label>Quantity</label>
@@ -574,6 +561,7 @@ function openInvoiceForm() {
                     min="1"
                     step="1"
                     required
+                    oninput="calculateInvoiceTotal()"
                 >
 
 
@@ -586,30 +574,17 @@ function openInvoiceForm() {
                     min="0"
                     step="0.01"
                     required
+                    oninput="calculateInvoiceTotal()"
                 >
 
 
-                <label>Discount</label>
+                <label>Total</label>
 
                 <input
-                    type="number"
-                    id="invoiceDiscount"
-                    value="0"
-                    min="0"
-                    step="0.01"
-                    placeholder="Enter discount"
-                >
-
-
-                <label>Tax (%)</label>
-
-                <input
-                    type="number"
-                    id="invoiceTax"
-                    value="0"
-                    min="0"
-                    step="0.01"
-                    placeholder="Enter tax percentage"
+                    type="text"
+                    id="invoiceTotal"
+                    value="Rs. 0"
+                    readonly
                 >
 
 
@@ -621,33 +596,6 @@ function openInvoiceForm() {
                     <option value="unpaid">Unpaid</option>
 
                 </select>
-
-
-                <div class="panel invoice-summary">
-
-                    <h2>Invoice Summary</h2>
-
-                    <p>
-                        Subtotal:
-                        <strong id="invoiceSubtotal">Rs. 0</strong>
-                    </p>
-
-                    <p>
-                        Discount:
-                        <strong id="invoiceDiscountDisplay">Rs. 0</strong>
-                    </p>
-
-                    <p>
-                        Tax:
-                        <strong id="invoiceTaxDisplay">Rs. 0</strong>
-                    </p>
-
-                    <p>
-                        Total:
-                        <strong id="invoiceTotalDisplay">Rs. 0</strong>
-                    </p>
-
-                </div>
 
 
                 <div class="form-buttons">
@@ -674,88 +622,27 @@ function openInvoiceForm() {
         </div>
     `;
 
-
     document.getElementById("invoiceDate").value =
         new Date().toISOString().split("T")[0];
+}
 
 
-    const productSelect =
-        document.getElementById("invoiceProduct");
+/* =========================
+   CALCULATE INVOICE TOTAL
+========================= */
 
-    const rateInput =
-        document.getElementById("invoiceRate");
+function calculateInvoiceTotal() {
 
+    const quantity =
+        Number(document.getElementById("invoiceQuantity").value) || 0;
 
-    productSelect.addEventListener("change", function () {
+    const rate =
+        Number(document.getElementById("invoiceRate").value) || 0;
 
-        const selectedProduct = products.find(
-            product =>
-                String(product.id) ===
-                String(productSelect.value)
-        );
+    const total = quantity * rate;
 
-        if (selectedProduct) {
-            rateInput.value = selectedProduct.price;
-        }
-
-        updateInvoiceTotal();
-    });
-
-
-    function updateInvoiceTotal() {
-
-        const quantity =
-            Number(document.getElementById("invoiceQuantity").value) || 0;
-
-        const rate =
-            Number(document.getElementById("invoiceRate").value) || 0;
-
-        const discount =
-            Number(document.getElementById("invoiceDiscount").value) || 0;
-
-        const taxPercent =
-            Number(document.getElementById("invoiceTax").value) || 0;
-
-        const subtotal =
-            quantity * rate;
-
-        const afterDiscount =
-            Math.max(0, subtotal - discount);
-
-        const tax =
-            afterDiscount * (taxPercent / 100);
-
-        const total =
-            afterDiscount + tax;
-
-
-        document.getElementById("invoiceSubtotal").innerText =
-            formatMoney(subtotal);
-
-        document.getElementById("invoiceDiscountDisplay").innerText =
-            formatMoney(discount);
-
-        document.getElementById("invoiceTaxDisplay").innerText =
-            formatMoney(tax);
-
-        document.getElementById("invoiceTotalDisplay").innerText =
-            formatMoney(total);
-    }
-
-
-    document.getElementById("invoiceQuantity")
-        .addEventListener("input", updateInvoiceTotal);
-
-    document.getElementById("invoiceRate")
-        .addEventListener("input", updateInvoiceTotal);
-
-    document.getElementById("invoiceDiscount")
-        .addEventListener("input", updateInvoiceTotal);
-
-    document.getElementById("invoiceTax")
-        .addEventListener("input", updateInvoiceTotal);
-
-    updateInvoiceTotal();
+    document.getElementById("invoiceTotal").value =
+        formatMoney(total);
 }
 
 /* =========================
