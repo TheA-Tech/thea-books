@@ -2467,57 +2467,202 @@ function showReports() {
 }
 
 
+/* =========================================
+   THEA BOOKS PAGE NAVIGATION
+========================================= */
+
+let pageHistory = [];
+let historyPosition = -1;
+let navigatingHistory = false;
+
+
 /* =========================
-   PAGE NAVIGATION
+   SHOW PAGE
 ========================= */
 
 function showPage(page) {
 
-    localStorage.setItem("theaBooksCurrentPage", page);
+    /* Save page in browser storage */
+    localStorage.setItem(
+        "theaBooksCurrentPage",
+        page
+    );
+
+
+    /* Add page to THEA Books history */
+
+    if (!navigatingHistory) {
+
+        /* Remove forward history */
+        pageHistory =
+            pageHistory.slice(
+                0,
+                historyPosition + 1
+            );
+
+
+        /* Don't add same page twice */
+        if (
+            pageHistory.length === 0 ||
+            pageHistory[pageHistory.length - 1] !== page
+        ) {
+
+            pageHistory.push(page);
+
+            historyPosition =
+                pageHistory.length - 1;
+        }
+    }
+
+
+    /* =========================
+       OPEN SELECTED PAGE
+    ========================= */
 
     if (page === "dashboard") {
+
         showDashboard();
+
     }
 
     else if (page === "sales") {
+
         showSales();
+
     }
 
     else if (page === "purchases") {
+
         showPurchases();
+
     }
 
     else if (page === "expenses") {
+
         showExpenses();
+
     }
 
     else if (page === "customers") {
+
         showCustomers();
+
     }
 
     else if (page === "vendors") {
+
         showVendors();
+
     }
 
     else if (page === "inventory") {
+
         showInventory();
+
     }
 
     else if (page === "accounting") {
+
         showAccounting();
+
     }
 
     else if (page === "reports") {
+
         showReports();
+
+    }
+
+
+    /* Close mobile menu after navigation */
+
+    const navigation =
+        document.getElementById("mainNavigation");
+
+    if (navigation) {
+
+        navigation.classList.remove(
+            "mobile-open"
+        );
     }
 }
 
+
 /* =========================
-   LOAD DASHBOARD
+   BACK
+========================= */
+
+function goBack() {
+
+    if (historyPosition <= 0) {
+
+        return;
+    }
+
+
+    historyPosition--;
+
+
+    navigatingHistory = true;
+
+
+    showPage(
+        pageHistory[historyPosition]
+    );
+
+
+    navigatingHistory = false;
+}
+
+
+/* =========================
+   FORWARD
+========================= */
+
+function goForward() {
+
+    if (
+        historyPosition >=
+        pageHistory.length - 1
+    ) {
+
+        return;
+    }
+
+
+    historyPosition++;
+
+
+    navigatingHistory = true;
+
+
+    showPage(
+        pageHistory[historyPosition]
+    );
+
+
+    navigatingHistory = false;
+}
+
+
+/* =========================
+   LOAD LAST PAGE
 ========================= */
 
 const savedPage =
-    localStorage.getItem("theaBooksCurrentPage") || "dashboard";
+    localStorage.getItem(
+        "theaBooksCurrentPage"
+    ) || "dashboard";
+
+
+/* Put saved page into history first */
+
+pageHistory = [savedPage];
+
+historyPosition = 0;
+
+
+/* Open saved page */
 
 showPage(savedPage);
 /* =========================
