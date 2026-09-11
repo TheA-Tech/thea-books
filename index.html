@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,38 +15,54 @@
     <!-- Sidebar -->
     <aside class="sidebar">
 
-       <div class="brand-row">
+        <!-- Brand / Navigation -->
+        <div class="brand-row">
 
-    <div class="brand-left">
+            <div class="brand-left">
 
-        <div class="app-navigation">
+                <div class="app-navigation">
 
-            <button class="nav-arrow" onclick="goBack()" title="Back">
-                ←
-            </button>
+                    <button
+                        class="nav-arrow"
+                        onclick="goBack()"
+                        title="Back"
+                    >
+                        ←
+                    </button>
 
-            <button class="nav-arrow" onclick="goForward()" title="Forward">
-                →
-            </button>
+                    <button
+                        class="nav-arrow"
+                        onclick="goForward()"
+                        title="Forward"
+                    >
+                        →
+                    </button>
 
-            <button class="nav-arrow" onclick="location.reload()" title="Refresh">
-                ↻
+                    <button
+                        class="nav-arrow"
+                        onclick="location.reload()"
+                        title="Refresh"
+                    >
+                        ↻
+                    </button>
+
+                </div>
+
+                <h2>
+                    THEA <span>Books</span>
+                </h2>
+
+            </div>
+
+            <!-- Mobile Menu -->
+            <button
+                class="mobile-menu-btn"
+                onclick="toggleMobileMenu()"
+            >
+                ☰
             </button>
 
         </div>
-
-        <h2>THEA <span>Books</span></h2>
-
-    </div>
-
-    <button
-        class="mobile-menu-btn"
-        onclick="toggleMobileMenu()"
-    >
-        ☰
-    </button>
-
-</div>
 
 
         <!-- Company Account -->
@@ -55,9 +72,13 @@
                 class="company-account-btn"
                 onclick="showCompanyAccount()"
             >
-                <span class="company-icon">🏢</span>
+
+                <span class="company-icon">
+                    🏢
+                </span>
 
                 <span>
+
                     <strong id="currentCompanyName">
                         Company Account
                     </strong>
@@ -65,66 +86,178 @@
                     <small id="currentCompanyStatus">
                         Set up company
                     </small>
+
                 </span>
+
             </button>
 
         </div>
 
 
-        <!-- Navigation -->
-       <nav id="mainNavigation">
+        <!-- Main Navigation -->
+        <nav id="mainNavigation">
 
-    <button onclick="showPage('dashboard')">
-        <span class="menu-icon">📊</span>
-        <span>Dashboard</span>
-    </button>
+            <!-- Dashboard -->
+            <button onclick="showPage('dashboard')">
 
-    <button onclick="showPage('sales')">
-        <span class="menu-icon">🧾</span>
-        <span>Sales</span>
-    </button>
+                <span class="menu-icon">
+                    📊
+                </span>
 
-    <button onclick="showPage('purchases')">
-        <span class="menu-icon">🛒</span>
-        <span>Purchases</span>
-    </button>
+                <span>
+                    Dashboard
+                </span>
 
-    <button onclick="showPage('expenses')">
-        <span class="menu-icon">💰</span>
-        <span>Expenses</span>
-    </button>
+            </button>
 
-    <button onclick="showPage('customers')">
-        <span class="menu-icon">👥</span>
-        <span>Customers</span>
-    </button>
 
-    <button onclick="showPage('vendors')">
-        <span class="menu-icon">🏢</span>
-        <span>Vendors</span>
-    </button>
+            <!-- Sales -->
+            <button onclick="showPage('sales')">
 
-    <button onclick="showPage('inventory')">
-        <span class="menu-icon">📦</span>
-        <span>Inventory</span>
-    </button>
+                <span class="menu-icon">
+                    🧾
+                </span>
 
-    <button onclick="showPage('accounting')">
-        <span class="menu-icon">📚</span>
-        <span>Accounting</span>
-    </button>
+                <span>
+                    Sales
+                </span>
 
-    <button onclick="showPage('reports')">
-        <span class="menu-icon">📈</span>
-        <span>Reports</span>
-    </button>
+            </button>
 
-</nav>
+
+            <!-- Purchases -->
+            <button onclick="showPage('purchases')">
+
+                <span class="menu-icon">
+                    🛒
+                </span>
+
+                <span>
+                    Purchases
+                </span>
+
+            </button>
+
+
+            <!-- Expenses -->
+            <button onclick="showPage('expenses')">
+
+                <span class="menu-icon">
+                    💰
+                </span>
+
+                <span>
+                    Expenses
+                </span>
+
+            </button>
+
+
+            <!-- Customers -->
+            <button onclick="showPage('customers')">
+
+                <span class="menu-icon">
+                    👥
+                </span>
+
+                <span>
+                    Customers
+                </span>
+
+            </button>
+
+
+            <!-- Vendors -->
+            <button onclick="showPage('vendors')">
+
+                <span class="menu-icon">
+                    🏢
+                </span>
+
+                <span>
+                    Vendors
+                </span>
+
+            </button>
+
+
+            <!-- Inventory -->
+            <button onclick="showPage('inventory')">
+
+                <span class="menu-icon">
+                    📦
+                </span>
+
+                <span>
+                    Inventory
+                </span>
+
+            </button>
+
+
+            <!-- Accounting -->
+            <button onclick="showPage('accounting')">
+
+                <span class="menu-icon">
+                    📚
+                </span>
+
+                <span>
+                    Accounting
+                </span>
+
+            </button>
+
+
+            <!-- Receivables -->
+            <button onclick="showPage('receivables')">
+
+                <span class="menu-icon">
+                    💵
+                </span>
+
+                <span>
+                    Receivables
+                </span>
+
+            </button>
+
+
+            <!-- Payables -->
+            <button onclick="showPage('payables')">
+
+                <span class="menu-icon">
+                    📋
+                </span>
+
+                <span>
+                    Payables
+                </span>
+
+            </button>
+
+
+            <!-- Reports -->
+            <button onclick="showPage('reports')">
+
+                <span class="menu-icon">
+                    📈
+                </span>
+
+                <span>
+                    Reports
+                </span>
+
+            </button>
+
+        </nav>
+
     </aside>
 
 
     <!-- Main Content -->
     <main class="main">
+
 
         <!-- Header -->
         <header>
@@ -141,6 +274,8 @@
 
             </div>
 
+
+            <!-- New Transaction -->
             <button
                 class="new-btn"
                 onclick="openTransactionForm()"
@@ -165,4 +300,5 @@
     <script src="app.js?v=5"></script>
 
 </body>
+
 </html>
