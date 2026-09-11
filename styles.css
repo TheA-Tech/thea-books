@@ -1116,3 +1116,75 @@ header {
     }
 }
 ```
+/* =========================================================
+   PROFESSIONAL ERP MENU
+========================================================= */
+
+#mainNavigation button {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 45px;
+
+    padding: 10px 12px;
+
+    white-space: nowrap;
+}
+
+.menu-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    border-radius: 8px;
+
+    font-size: 16px;
+
+    line-height: 1;
+}
+
+#mainNavigation button:hover .menu-icon {
+    background: rgba(255, 255, 255, 0.18);
+
+    transform: scale(1.05);
+}
+
+#mainNavigation button span:last-child {
+    line-height: 1;
+
+    font-weight: 500;
+}
+
+
+/* Mobile menu */
+
+@media (max-width: 700px) {
+
+    #mainNavigation button {
+        min-height: 43px;
+
+        gap: 10px;
+
+        padding: 8px 10px;
+    }
+
+    .menu-icon {
+        width: 28px;
+        height: 28px;
+
+        font-size: 15px;
+    }
+}
