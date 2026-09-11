@@ -2649,16 +2649,13 @@ function goForward() {
    LOAD DASHBOARD ON START
 ========================= */
 
-pageHistory = ["dashboard"];
+const savedPage =
+    localStorage.getItem("theaBooksCurrentPage") || "dashboard";
 
+pageHistory = [savedPage];
 historyPosition = 0;
 
-localStorage.setItem(
-    "theaBooksCurrentPage",
-    "dashboard"
-);
-
-showPage("dashboard");
+showPage(savedPage);
 /* =========================
    MOBILE MENU
 ========================= */
