@@ -2646,25 +2646,19 @@ function goForward() {
 
 
 /* =========================
-   LOAD LAST PAGE
+   LOAD DASHBOARD ON START
 ========================= */
 
-const savedPage =
-    localStorage.getItem(
-        "theaBooksCurrentPage"
-    ) || "dashboard";
-
-
-/* Put saved page into history first */
-
-pageHistory = [savedPage];
+pageHistory = ["dashboard"];
 
 historyPosition = 0;
 
+localStorage.setItem(
+    "theaBooksCurrentPage",
+    "dashboard"
+);
 
-/* Open saved page */
-
-showPage(savedPage);
+showPage("dashboard");
 /* =========================
    MOBILE MENU
 ========================= */
