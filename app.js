@@ -4400,7 +4400,7 @@ function showSoftwareSettings() {
 
                 <button type="button"
                     class="settings-card"
-                    onclick="showCompanyAccount()">
+                    onclick="showInvoiceSettings()"
 
                     <span class="settings-icon">🧾</span>
 
