@@ -2024,6 +2024,53 @@ function openInvoiceEditForm(invoiceId) {
 
     pageTitle.innerText = "Edit Invoice";
 
+    /*
+       Old invoices may not have an items array.
+       Create a fallback item from the saved subtotal/total.
+    */
+    let editItems = Array.isArray(invoice.items)
+        ? invoice.items
+        : [];
+
+    if (editItems.length === 0) {
+
+        const savedSubtotal =
+            Number(invoice.subtotal);
+
+        const savedDiscount =
+            Number(invoice.discount || 0);
+
+        const savedTax =
+            Number(invoice.taxAmount || 0);
+
+        const savedTotal =
+            Number(invoice.total || 0);
+
+        let fallbackAmount = savedSubtotal;
+
+        if (!fallbackAmount || fallbackAmount <= 0) {
+
+            fallbackAmount =
+                savedTotal -
+                savedTax +
+                savedDiscount;
+
+        }
+
+        if (!fallbackAmount || fallbackAmount < 0) {
+            fallbackAmount = savedTotal;
+        }
+
+        editItems = [
+            {
+                product: "Invoice Amount",
+                quantity: 1,
+                rate: fallbackAmount,
+                amount: fallbackAmount
+            }
+        ];
+    }
+
     content.innerHTML = `
 
         <div class="panel">
@@ -2044,7 +2091,12 @@ function openInvoiceEditForm(invoiceId) {
                         customers.map(customer => `
                             <option
                                 value="${customer.id}"
-                                ${String(customer.id) === String(invoice.customerId) ? "selected" : ""}
+                                ${
+                                    String(customer.id) ===
+                                    String(invoice.customerId)
+                                        ? "selected"
+                                        : ""
+                                }
                             >
                                 ${customer.name}
                             </option>
@@ -2059,7 +2111,7 @@ function openInvoiceEditForm(invoiceId) {
                 <input
                     type="date"
                     id="editInvoiceDate"
-                    value="${invoice.date}"
+                    value="${invoice.date || ""}"
                     required
                 >
 
@@ -2068,8 +2120,8 @@ function openInvoiceEditForm(invoiceId) {
 
                 <div id="editInvoiceItems">
 
-                   ${
-    (invoice.items || []).map((item, index) => `
+                    ${
+                        editItems.map(item => `
 
                             <div
                                 class="invoice-item"
@@ -2084,14 +2136,14 @@ function openInvoiceEditForm(invoiceId) {
                                 <input
                                     type="text"
                                     class="edit-item-product"
-                                    value="${item.product}"
+                                    value="${item.product || ""}"
                                     required
                                 >
 
                                 <input
                                     type="number"
                                     class="edit-item-quantity"
-                                    value="${item.quantity}"
+                                    value="${Number(item.quantity) || 1}"
                                     min="1"
                                     step="1"
                                     oninput="calculateEditInvoiceTotals()"
@@ -2101,7 +2153,7 @@ function openInvoiceEditForm(invoiceId) {
                                 <input
                                     type="number"
                                     class="edit-item-rate"
-                                    value="${item.rate}"
+                                    value="${Number(item.rate) || 0}"
                                     min="0"
                                     step="0.01"
                                     oninput="calculateEditInvoiceTotals()"
@@ -2111,7 +2163,9 @@ function openInvoiceEditForm(invoiceId) {
                                 <input
                                     type="text"
                                     class="edit-item-amount"
-                                    value="${formatMoney(item.amount)}"
+                                    value="${formatMoney(
+                                        Number(item.amount) || 0
+                                    )}"
                                     readonly
                                 >
 
@@ -2145,7 +2199,7 @@ function openInvoiceEditForm(invoiceId) {
                 <input
                     type="number"
                     id="editInvoiceDiscount"
-                    value="${invoice.discount || 0}"
+                    value="${Number(invoice.discount) || 0}"
                     min="0"
                     step="0.01"
                     oninput="calculateEditInvoiceTotals()"
@@ -2157,7 +2211,7 @@ function openInvoiceEditForm(invoiceId) {
                 <input
                     type="number"
                     id="editInvoiceTax"
-                    value="${invoice.taxPercent || 0}"
+                    value="${Number(invoice.taxPercent) || 0}"
                     min="0"
                     step="0.01"
                     oninput="calculateEditInvoiceTotals()"
@@ -2166,7 +2220,11 @@ function openInvoiceEditForm(invoiceId) {
 
                 <div
                     class="panel"
-                    style="margin-top:15px;padding:15px;"
+                    style="
+                        margin-top:15px;
+                        padding:15px;
+                        background:#f8fafc;
+                    "
                 >
 
                     <p>
@@ -2206,14 +2264,22 @@ function openInvoiceEditForm(invoiceId) {
 
                     <option
                         value="paid"
-                        ${invoice.status === "paid" ? "selected" : ""}
+                        ${
+                            invoice.status === "paid"
+                                ? "selected"
+                                : ""
+                        }
                     >
                         Paid
                     </option>
 
                     <option
                         value="unpaid"
-                        ${invoice.status === "unpaid" ? "selected" : ""}
+                        ${
+                            invoice.status === "unpaid"
+                                ? "selected"
+                                : ""
+                        }
                     >
                         Unpaid
                     </option>
@@ -2227,7 +2293,7 @@ function openInvoiceEditForm(invoiceId) {
                         type="submit"
                         class="new-btn"
                     >
-                        Save Changes
+                        💾 Save Changes
                     </button>
 
                     <button
@@ -2247,6 +2313,7 @@ function openInvoiceEditForm(invoiceId) {
 
     calculateEditInvoiceTotals();
 }
+
 function openInvoiceForm(customerId = "") {
 
     pageTitle.innerText = "Create Invoice";
@@ -3076,149 +3143,6 @@ function removeEditInvoiceItem(button) {
 }
 
 
-function updateInvoice(event, invoiceId) {
-
-    event.preventDefault();
-
-    const invoice =
-        invoices.find(
-            invoice =>
-                String(invoice.id) ===
-                String(invoiceId)
-        );
-
-    if (!invoice) {
-        alert("Invoice not found.");
-        return;
-    }
-
-    const customerId =
-        document.getElementById(
-            "editInvoiceCustomer"
-        ).value;
-
-    const date =
-        document.getElementById(
-            "editInvoiceDate"
-        ).value;
-
-    const status =
-        document.getElementById(
-            "editInvoiceStatus"
-        ).value;
-
-    const customer =
-        customers.find(
-            customer =>
-                String(customer.id) ===
-                String(customerId)
-        );
-
-    if (!customer || !date) {
-        alert(
-            "Please select customer and invoice date."
-        );
-        return;
-    }
-
-    const itemElements =
-        document.querySelectorAll(
-            "#editInvoiceItems .invoice-item"
-        );
-
-    const items = [];
-
-    itemElements.forEach(item => {
-
-        const product =
-            item.querySelector(
-                ".edit-item-product"
-            ).value.trim();
-
-        const quantity =
-            Number(
-                item.querySelector(
-                    ".edit-item-quantity"
-                ).value
-            );
-
-        const rate =
-            Number(
-                item.querySelector(
-                    ".edit-item-rate"
-                ).value
-            );
-
-        if (
-            product &&
-            quantity > 0 &&
-            rate > 0
-        ) {
-            items.push({
-                product: product,
-                quantity: quantity,
-                rate: rate,
-                amount: quantity * rate
-            });
-        }
-    });
-
-    if (items.length === 0) {
-        alert(
-            "Please add at least one valid invoice item."
-        );
-        return;
-    }
-
-    const totals =
-        calculateEditInvoiceTotals();
-
-    if (totals.grandTotal <= 0) {
-        alert(
-            "Invoice total must be greater than zero."
-        );
-        return;
-    }
-
-    invoice.customerId =
-        customer.id;
-
-    invoice.customer =
-        customer.name;
-
-    invoice.date =
-        date;
-
-    invoice.items =
-        items;
-
-    invoice.subtotal =
-        totals.subtotal;
-
-    invoice.discount =
-        totals.discount;
-
-    invoice.taxPercent =
-        totals.taxPercent;
-
-    invoice.taxAmount =
-        totals.taxAmount;
-
-    invoice.total =
-        totals.grandTotal;
-
-    invoice.status =
-        status;
-
-    saveInvoices();
-
-    alert(
-        invoice.invoiceNumber +
-        " updated successfully!"
-    );
-
-    showPage("sales");
-}
 function calculateInvoiceTotals() {
 
     const items =
