@@ -5054,21 +5054,25 @@ function showReports() {
 </div>
 
 
-                <div class="quick-action">
+               <div
+    class="quick-action"
+    onclick="showPage('trial-balance')"
+    style="cursor:pointer;"
+>
 
-                    <div class="quick-action-icon">
-                        ⚖️
-                    </div>
+    <div class="quick-action-icon">
+        📊
+    </div>
 
-                    <strong>
-                        Trial Balance
-                    </strong>
+    <strong>
+        Trial Balance
+    </strong>
 
-                    <span>
-                        Coming next
-                    </span>
+    <span>
+        View Report
+    </span>
 
-                </div>
+</div>
 
 
                 <div class="quick-action">
@@ -5208,6 +5212,11 @@ else if (page === "payables") {
 else if (page === "reports") {
 
     showReports();
+
+}
+    else if (page === "trial-balance") {
+
+    showTrialBalance();
 
 }
 else if (page === "balance-sheet") {
