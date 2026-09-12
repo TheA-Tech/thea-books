@@ -4271,7 +4271,9 @@ function showSoftwareSettings() {
 
             <h3>General Settings</h3>
 
-            <p>Software configuration and preferences.</p>
+            <p>
+                Software configuration and preferences.
+            </p>
 
             <button
                 type="button"
@@ -4286,13 +4288,6 @@ function showSoftwareSettings() {
 }
 
 
-function showCompanyAccount() {
-
-    pageTitle.innerText = "Company Account";
-
-    content.innerHTML = `
-
-        <div class="panel">
 function showCompanyAccount() {
 
     pageTitle.innerText = "Company Account";
