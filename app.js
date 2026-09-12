@@ -4358,6 +4358,187 @@ function showInvoiceSettings() {
         </div>
     `;
 }
+
+function showCurrencySettings() {
+
+    pageTitle.textContent = "Currency Settings";
+
+    content.innerHTML = `
+        <div class="panel">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:16px;
+                margin-bottom:20px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+                    <h2>💱 Currency Settings</h2>
+
+                    <p style="color:#6b7280;">
+                        Configure currency, decimal and tax preferences
+                        for your business.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    ← Back to Settings
+                </button>
+
+            </div>
+
+            <hr>
+
+            <h3>💰 Currency</h3>
+
+            <label>Default Currency</label>
+
+            <select id="settingsCurrency">
+
+                <option value="PKR"
+                    ${companyAccount.currency === "PKR" ? "selected" : ""}>
+                    PKR - Pakistani Rupee
+                </option>
+
+                <option value="USD"
+                    ${companyAccount.currency === "USD" ? "selected" : ""}>
+                    USD - US Dollar
+                </option>
+
+                <option value="AED"
+                    ${companyAccount.currency === "AED" ? "selected" : ""}>
+                    AED - UAE Dirham
+                </option>
+
+            </select>
+
+
+            <label>Currency Symbol</label>
+
+            <input
+                type="text"
+                id="currencySymbol"
+                value="${
+                    companyAccount.currency === "USD"
+                        ? "$"
+                        : companyAccount.currency === "AED"
+                        ? "د.إ"
+                        : "₨"
+                }"
+                placeholder="₨"
+            >
+
+
+            <h3 style="margin-top:25px;">
+                🔢 Number Format
+            </h3>
+
+            <label>Decimal Places</label>
+
+            <select id="decimalPlaces">
+
+                <option value="0">0 - 1000</option>
+                <option value="2" selected>2 - 1000.00</option>
+                <option value="3">3 - 1000.000</option>
+
+            </select>
+
+
+            <h3 style="margin-top:25px;">
+                🧾 Tax Settings
+            </h3>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="enableTax"
+                    style="width:auto;margin-right:8px;"
+                >
+                Enable Tax / VAT
+            </label>
+
+            <label>Default Tax Rate (%)</label>
+
+            <input
+                type="number"
+                id="taxRate"
+                value="0"
+                min="0"
+                max="100"
+                step="0.01"
+                placeholder="0"
+            >
+
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="saveCurrencySettings()">
+                    Save Currency Settings
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+function saveCurrencySettings() {
+
+    const currency =
+        document.getElementById("settingsCurrency").value;
+
+    const symbol =
+        document.getElementById("currencySymbol").value.trim();
+
+    const decimalPlaces =
+        document.getElementById("decimalPlaces").value;
+
+    const enableTax =
+        document.getElementById("enableTax").checked;
+
+    const taxRate =
+        Number(document.getElementById("taxRate").value || 0);
+
+
+    companyAccount.currency = currency;
+
+    companyAccount.currencySymbol = symbol;
+
+    companyAccount.decimalPlaces =
+        Number(decimalPlaces);
+
+    companyAccount.enableTax =
+        enableTax;
+
+    companyAccount.taxRate =
+        taxRate;
+
+
+    saveCompanyAccount();
+
+
+    alert("Currency settings saved successfully!");
+
+
+    showSoftwareSettings();
+}
 function showSoftwareSettings() {
 
     pageTitle.textContent = "Software Settings";
