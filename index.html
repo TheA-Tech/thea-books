@@ -463,22 +463,26 @@
            MAIN AREA
         ===================================================== */
 
-        .main {
+       .main {
 
-            flex: 1;
+    flex: 1 1 auto;
 
-            min-width: 0;
+    min-width: 0;
 
-            width: calc(100% - 82px);
+    width: auto;
 
-            min-height: 100vh;
+    max-width: none;
 
-            background: #f4f7fb;
+    min-height: 100vh;
 
-            transition:
-                width 0.25s ease;
-        }
+    background: #f4f7fb;
 
+    overflow-x: hidden;
+
+    transition:
+        margin-left 0.25s ease,
+        width 0.25s ease;
+}
 
         /* =====================================================
            TOP HEADER
