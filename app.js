@@ -4897,13 +4897,20 @@ function deleteVendor(vendorId) {
 function showInventory() {
 
     pageTitle.innerText = "Inventory";
-    const totalProducts = products.length;
 
-    const stockValue = products.reduce(
-        (sum, product) =>
-            sum + (Number(product.stock) * Number(product.cost)),
-        0
-    );
+    const totalProducts =
+        products.length;
+
+    const stockValue =
+        products.reduce(
+            (sum, product) =>
+                sum +
+                (
+                    Number(product.stock) *
+                    Number(product.cost)
+                ),
+            0
+        );
 
     content.innerHTML = `
 
@@ -4942,14 +4949,20 @@ function showInventory() {
 
             ${
                 products.length === 0
+
                     ? `<p>No products added yet.</p>`
 
-                    : products
+                    :
+
+                    products
                         .slice()
                         .reverse()
                         .map(product => `
 
-                            <div class="transaction-row">
+                            <div
+                                class="transaction-row"
+                                style="position:relative;"
+                            >
 
                                 <div>
 
@@ -4963,14 +4976,136 @@ function showInventory() {
                                         • Cost: ${formatMoney(product.cost)}
                                     </small>
 
+                                    <small>
+                                        Sale Price:
+                                        ${formatMoney(product.price)}
+                                    </small>
+
                                 </div>
 
-                                <strong>
-                                    ${formatMoney(
-                                        Number(product.stock) *
-                                        Number(product.cost)
-                                    )}
-                                </strong>
+
+                                <div style="
+                                    position:relative;
+                                    display:flex;
+                                    align-items:center;
+                                    gap:14px;
+                                ">
+
+                                    <strong>
+                                        ${formatMoney(
+                                            Number(product.stock) *
+                                            Number(product.cost)
+                                        )}
+                                    </strong>
+
+
+                                    <button
+                                        type="button"
+                                        onclick="toggleProductMenu(${product.id})"
+                                        style="
+                                            border:none;
+                                            background:#f3f4f6;
+                                            width:36px;
+                                            height:36px;
+                                            border-radius:8px;
+                                            cursor:pointer;
+                                            font-size:20px;
+                                            color:#374151;
+                                        "
+                                        title="Actions"
+                                    >
+                                        ⋮
+                                    </button>
+
+
+                                    <div
+                                        id="product-menu-${product.id}"
+                                        style="
+                                            display:none;
+                                            position:absolute;
+                                            right:0;
+                                            top:42px;
+                                            background:#fff;
+                                            border:1px solid #e5e7eb;
+                                            border-radius:10px;
+                                            box-shadow:0 8px 25px rgba(0,0,0,.12);
+                                            min-width:190px;
+                                            z-index:100;
+                                            overflow:hidden;
+                                        "
+                                    >
+
+                                        <button
+                                            type="button"
+                                            onclick="viewProduct(${product.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            👁️ View Product
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="openProductEditForm(${product.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            ✏️ Edit Product
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="openStockAdjustment(${product.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            📦 Adjust Stock
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="deleteProduct(${product.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                color:#dc2626;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            🗑️ Delete Product
+                                        </button>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
@@ -4979,9 +5114,145 @@ function showInventory() {
             }
 
         </div>
+
     `;
 }
 
+function toggleProductMenu(productId) {
+
+    const menu = document.getElementById(
+        "product-menu-" + productId
+    );
+
+    if (!menu) return;
+
+    document.querySelectorAll(
+        '[id^="product-menu-"]'
+    ).forEach(item => {
+        if (item !== menu) {
+            item.style.display = "none";
+        }
+    });
+
+    menu.style.display =
+        menu.style.display === "none"
+            ? "block"
+            : "none";
+}
+
+
+function viewProduct(productId) {
+
+    const product = products.find(
+        product =>
+            String(product.id) === String(productId)
+    );
+
+    if (!product) {
+        alert("Product not found.");
+        return;
+    }
+
+    const stockValue =
+        Number(product.stock) *
+        Number(product.cost);
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>📦 Product Details</h2>
+
+            <p>
+                <strong>Product Name:</strong>
+                ${product.name}
+            </p>
+
+            <p>
+                <strong>SKU:</strong>
+                ${product.sku || "N/A"}
+            </p>
+
+            <p>
+                <strong>Current Stock:</strong>
+                ${product.stock}
+            </p>
+
+            <p>
+                <strong>Cost Price:</strong>
+                ${formatMoney(product.cost)}
+            </p>
+
+            <p>
+                <strong>Sale Price:</strong>
+                ${formatMoney(product.price)}
+            </p>
+
+            <p>
+                <strong>Stock Value:</strong>
+                ${formatMoney(stockValue)}
+            </p>
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="openProductEditForm(${product.id})"
+                >
+                    ✏️ Edit Product
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showPage('inventory')"
+                >
+                    Back to Inventory
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    pageTitle.innerText = "Product Details";
+}
+
+function deleteProduct(productId) {
+
+    const product = products.find(
+        product =>
+            String(product.id) === String(productId)
+    );
+
+    if (!product) {
+        alert("Product not found.");
+        return;
+    }
+
+    const confirmed = confirm(
+        `Delete "${product.name}"?\n\n` +
+        `Current Stock: ${product.stock}\n` +
+        `This action cannot be undone.\n\n` +
+        `Are you sure?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    products = products.filter(
+        product =>
+            String(product.id) !== String(productId)
+    );
+
+    saveProducts();
+
+    alert("Product deleted successfully!");
+
+    showPage("inventory");
+}
 function openProductForm() {
 
     pageTitle.innerText = "Add Product";
@@ -5072,6 +5343,324 @@ function openProductForm() {
 
         </div>
     `;
+}
+
+function openStockAdjustment(productId) {
+
+    const product = products.find(
+        product =>
+            String(product.id) === String(productId)
+    );
+
+    if (!product) {
+        alert("Product not found.");
+        return;
+    }
+
+    pageTitle.innerText = "Adjust Stock";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>📦 Adjust Stock</h2>
+
+            <p>
+                <strong>Product:</strong>
+                ${product.name}
+            </p>
+
+            <p>
+                <strong>Current Stock:</strong>
+                ${product.stock}
+            </p>
+
+            <form onsubmit="saveStockAdjustment(event, ${product.id})">
+
+                <label>Adjustment Type</label>
+
+                <select id="stockAdjustmentType" required>
+
+                    <option value="add">
+                        Add Stock (+)
+                    </option>
+
+                    <option value="remove">
+                        Remove Stock (-)
+                    </option>
+
+                </select>
+
+                <label>Quantity</label>
+
+                <input
+                    type="number"
+                    id="stockAdjustmentQuantity"
+                    min="1"
+                    step="1"
+                    placeholder="Enter quantity"
+                    required
+                >
+
+                <label>Reason</label>
+
+                <input
+                    type="text"
+                    id="stockAdjustmentReason"
+                    placeholder="e.g. Purchase, damaged, correction"
+                >
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Adjustment
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('inventory')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+}
+
+
+function saveStockAdjustment(event, productId) {
+
+    event.preventDefault();
+
+    const product = products.find(
+        product =>
+            String(product.id) === String(productId)
+    );
+
+    if (!product) {
+        alert("Product not found.");
+        return;
+    }
+
+    const type =
+        document.getElementById(
+            "stockAdjustmentType"
+        ).value;
+
+    const quantity =
+        Number(
+            document.getElementById(
+                "stockAdjustmentQuantity"
+            ).value
+        );
+
+    const reason =
+        document.getElementById(
+            "stockAdjustmentReason"
+        ).value.trim();
+
+    if (!quantity || quantity <= 0) {
+        alert("Please enter a valid quantity.");
+        return;
+    }
+
+    if (
+        type === "remove" &&
+        quantity > Number(product.stock)
+    ) {
+        alert("Stock cannot become negative.");
+        return;
+    }
+
+    if (type === "add") {
+        product.stock =
+            Number(product.stock) + quantity;
+    } else {
+        product.stock =
+            Number(product.stock) - quantity;
+    }
+
+    saveProducts();
+
+    alert(
+        "Stock adjusted successfully!\n\n" +
+        "Product: " + product.name +
+        "\nNew Stock: " + product.stock +
+        (reason ? "\nReason: " + reason : "")
+    );
+
+    showPage("inventory");
+}
+
+function openProductEditForm(productId) {
+
+    const product = products.find(
+        product =>
+            String(product.id) === String(productId)
+    );
+
+    if (!product) {
+        alert("Product not found.");
+        return;
+    }
+
+    pageTitle.innerText = "Edit Product";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>✏️ Edit Product</h2>
+
+            <form onsubmit="updateProduct(event, ${product.id})">
+
+                <label>Product Name</label>
+
+                <input
+                    type="text"
+                    id="editProductName"
+                    value="${product.name}"
+                    required
+                >
+
+                <label>SKU / Product Code</label>
+
+                <input
+                    type="text"
+                    id="editProductSKU"
+                    value="${product.sku || ""}"
+                >
+
+                <label>Current Stock</label>
+
+                <input
+                    type="number"
+                    id="editProductStock"
+                    value="${product.stock}"
+                    min="0"
+                    step="1"
+                    required
+                >
+
+                <label>Cost Price</label>
+
+                <input
+                    type="number"
+                    id="editProductCost"
+                    value="${product.cost}"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+                <label>Sale Price</label>
+
+                <input
+                    type="number"
+                    id="editProductPrice"
+                    value="${product.price}"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Changes
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('inventory')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+}
+
+
+function updateProduct(event, productId) {
+
+    event.preventDefault();
+
+    const product =
+        products.find(
+            product =>
+                String(product.id) === String(productId)
+        );
+
+    if (!product) {
+        alert("Product not found.");
+        return;
+    }
+
+    const name =
+        document
+            .getElementById("editProductName")
+            .value
+            .trim();
+
+    const sku =
+        document
+            .getElementById("editProductSKU")
+            .value
+            .trim();
+
+    const stock =
+        Number(
+            document.getElementById("editProductStock").value
+        );
+
+    const cost =
+        Number(
+            document.getElementById("editProductCost").value
+        );
+
+    const price =
+        Number(
+            document.getElementById("editProductPrice").value
+        );
+
+    if (
+        !name ||
+        stock < 0 ||
+        cost < 0 ||
+        price <= 0
+    ) {
+        alert("Please enter valid product details.");
+        return;
+    }
+
+    product.name = name;
+    product.sku = sku;
+    product.stock = stock;
+    product.cost = cost;
+    product.price = price;
+
+    saveProducts();
+
+    alert("Product updated successfully!");
+
+    showPage("inventory");
 }
 
 function addProduct(event) {
