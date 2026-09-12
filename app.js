@@ -14,6 +14,37 @@ if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
     );
 }
 
+/* =========================
+   THEA BOOKS DATA
+========================= */
+
+let customers =
+    JSON.parse(localStorage.getItem("theaBooksCustomers")) || [];
+
+let vendors =
+    JSON.parse(localStorage.getItem("theaBooksVendors")) || [];
+
+let products =
+    JSON.parse(localStorage.getItem("theaBooksProducts")) || [];
+
+let purchases =
+    JSON.parse(localStorage.getItem("theaBooksPurchases")) || [];
+
+let invoices =
+    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
+
+let transactions =
+    JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
+
+let companyAccount =
+    JSON.parse(localStorage.getItem("theaBooksCompany")) || {
+        name: "",
+        owner: "",
+        phone: "",
+        email: "",
+        address: "",
+        currency: "PKR"
+    };
 async function loginUser() {
 
     const email =
