@@ -10151,18 +10151,17 @@ async function checkLogin() {
     const loginScreen =
         document.getElementById("loginScreen");
 
-    if (session) {
+   if (session) {
 
     loginScreen.style.display = "none";
 
+    await loadCompanyProfile();
 
 } else {
 
     loginScreen.style.display = "flex";
 }
-
-checkLogin();
-
+    }
 function showCloudSync() {
 
     pageTitle.textContent = "Cloud & Sync";
