@@ -10689,3 +10689,42 @@ function togglePassword() {
 document.addEventListener("DOMContentLoaded", function () {
     checkLogin();
 });
+
+/* =====================================================
+   AUTH SCREEN SWITCHING
+===================================================== */
+
+function showSignupForm() {
+
+    const loginForm =
+        document.getElementById("loginFormContainer");
+
+    const signupForm =
+        document.getElementById("signupFormContainer");
+
+    if (!loginForm || !signupForm) {
+        return;
+    }
+
+    loginForm.style.display = "none";
+    signupForm.style.display = "block";
+
+}
+
+
+function showLoginForm() {
+
+    const loginForm =
+        document.getElementById("loginFormContainer");
+
+    const signupForm =
+        document.getElementById("signupFormContainer");
+
+    if (!loginForm || !signupForm) {
+        return;
+    }
+
+    signupForm.style.display = "none";
+    loginForm.style.display = "block";
+
+}
