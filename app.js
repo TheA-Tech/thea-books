@@ -4256,6 +4256,36 @@ function saveCompanyAccount() {
 
 function showCompanyAccount() {
 
+    function showSoftwareSettings() {
+
+    pageTitle.textContent = "Software Settings";
+
+    content.innerHTML = `
+        <div class="panel">
+
+            <h2>⚙️ Software Settings</h2>
+
+            <p>
+                Manage your THEA Books software preferences.
+            </p>
+
+            <hr>
+
+            <h3>General Settings</h3>
+
+            <p>Software configuration and preferences.</p>
+
+            <button
+                type="button"
+                class="new-btn"
+                onclick="alert('More software settings will be added here.')"
+            >
+                Manage Settings
+            </button>
+
+        </div>
+    `;
+}
     pageTitle.innerText = "Company Account";
 
     content.innerHTML = `
