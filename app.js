@@ -14,6 +14,33 @@ if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
     );
 }
 
+async function loginUser() {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const message = document.getElementById("loginMessage");
+
+    if (!email || !password) {
+        message.textContent = "Please enter email and password.";
+        return;
+    }
+
+    message.textContent = "Signing in...";
+
+    const { data, error } = await theaSupabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        console.error(error);
+        message.textContent = error.message;
+        return;
+    }
+
+    console.log("Login successful:", data.user.id);
+
+    document.getElementById("loginScreen").style.display = "none";
+}
 let products =
     JSON.parse(localStorage.getItem("theaBooksProducts")) || [];
 
@@ -9272,3 +9299,19 @@ function toggleMobileMenu() {
         "mobile-open"
     );
 }
+
+async function checkLogin() {
+    const { data: { session } } =
+        await theaSupabase.auth.getSession();
+
+    const loginScreen =
+        document.getElementById("loginScreen");
+
+    if (session) {
+        loginScreen.style.display = "none";
+    } else {
+        loginScreen.style.display = "flex";
+    }
+}
+
+checkLogin();
