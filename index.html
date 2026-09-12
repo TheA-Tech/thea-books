@@ -1717,7 +1717,132 @@
     text-align: center;
 }
 
+/* =====================================================
+   SIGN UP SCREEN
+===================================================== */
 
+.signup-screen {
+    display: none;
+}
+
+.signup-screen.active {
+    display: block;
+}
+
+.auth-switch {
+    margin-top: 22px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.auth-switch button {
+    border: none;
+    background: transparent;
+    color: #2563eb;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    font-size: 12px;
+}
+
+.auth-switch button:hover {
+    text-decoration: underline;
+}
+
+.signup-heading {
+    margin-bottom: 25px;
+}
+
+.signup-heading .login-welcome {
+    margin-bottom: 7px;
+}
+
+.signup-heading h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 30px;
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+}
+
+.signup-heading p {
+    margin: 9px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.signup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 14px;
+}
+
+.signup-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.signup-submit {
+    width: 100%;
+    height: 49px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 17px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 18px rgba(37, 99, 235, 0.18);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.signup-submit:hover {
+    background: #1d4ed8;
+
+    box-shadow:
+        0 9px 22px rgba(37, 99, 235, 0.25);
+}
+
+.signup-submit:active {
+    transform: translateY(1px);
+}
+
+.signup-message {
+    min-height: 20px;
+    margin-top: 12px;
+    text-align: center;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+@media (max-width: 600px) {
+
+    .signup-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .signup-grid .full-width {
+        grid-column: auto;
+    }
+
+}
+        
 /* =====================================================
    MOBILE
 ===================================================== */
@@ -1875,14 +2000,16 @@
 <body>
 
 <!-- =====================================================
-     THEA BOOKS - PROFESSIONAL LOGIN
+     THEA BOOKS - AUTHENTICATION
 ===================================================== -->
 
 <div id="loginScreen">
 
     <div class="login-container">
 
-        <!-- LEFT BRAND PANEL -->
+        <!-- =================================================
+             LEFT BRAND PANEL
+        ================================================= -->
 
         <div class="login-brand-panel">
 
@@ -1893,6 +2020,7 @@
                 </div>
 
                 <div>
+
                     <div class="login-brand-name">
                         THEA Books
                     </div>
@@ -1900,6 +2028,7 @@
                     <div class="login-brand-subtitle">
                         Business & Accounting
                     </div>
+
                 </div>
 
             </div>
@@ -1926,33 +2055,59 @@
                 <div class="login-features">
 
                     <div class="login-feature">
+
                         <span>✓</span>
+
                         <div>
-                            <strong>Complete Accounting</strong>
+
+                            <strong>
+                                Complete Accounting
+                            </strong>
+
                             <small>
                                 Keep your business finances organized.
                             </small>
+
                         </div>
+
                     </div>
 
+
                     <div class="login-feature">
+
                         <span>✓</span>
+
                         <div>
-                            <strong>Business Management</strong>
+
+                            <strong>
+                                Business Management
+                            </strong>
+
                             <small>
                                 Manage your daily operations in one place.
                             </small>
+
                         </div>
+
                     </div>
 
+
                     <div class="login-feature">
+
                         <span>✓</span>
+
                         <div>
-                            <strong>Professional Reports</strong>
+
+                            <strong>
+                                Professional Reports
+                            </strong>
+
                             <small>
                                 Get clear insights into your business.
                             </small>
+
                         </div>
+
                     </div>
 
                 </div>
@@ -1967,72 +2122,440 @@
         </div>
 
 
-        <!-- RIGHT LOGIN PANEL -->
+        <!-- =================================================
+             RIGHT AUTH PANEL
+        ================================================= -->
 
         <div class="login-form-panel">
 
             <div class="login-form-wrapper">
 
+
+                <!-- MOBILE LOGO -->
+
                 <div class="login-mobile-logo">
+
                     <div class="login-logo">
                         TB
                     </div>
 
                     <div>
-                        <strong>THEA Books</strong>
-                        <small>Business & Accounting</small>
+
+                        <strong>
+                            THEA Books
+                        </strong>
+
+                        <small>
+                            Business & Accounting
+                        </small>
+
                     </div>
-                </div>
-
-
-                <div class="login-heading">
-
-                    <div class="login-welcome">
-                        Welcome back
-                    </div>
-
-                    <h2>
-                        Sign in to your account
-                    </h2>
-
-                    <p>
-                        Enter your account details to continue.
-                    </p>
 
                 </div>
 
 
-                <form
-                    onsubmit="event.preventDefault(); loginUser();"
+                <!-- =================================================
+                     LOGIN FORM
+                ================================================= -->
+
+                <div
+                    id="loginFormContainer"
                 >
 
-                    <div class="login-field">
+                    <div class="login-heading">
 
-    <label for="loginPassword">
-        Password
-    </label>
+                        <div class="login-welcome">
+                            Welcome back
+                        </div>
 
-    <div class="login-input-wrapper">
+                        <h2>
+                            Sign in to your account
+                        </h2>
 
-        <span class="login-input-icon">
-            🔒
-        </span>
+                        <p>
+                            Enter your account details to continue.
+                        </p>
 
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-        >
+                    </div>
 
-        <button
-            type="button"
-            class="password-toggle"
-            onclick="togglePassword()"
-            title="Show password"
-        >
-            👁
-        </button>
+
+                    <form
+                        onsubmit="event.preventDefault(); loginUser();"
+                    >
+
+
+                        <!-- EMAIL -->
+
+                        <div class="login-field">
+
+                            <label for="loginEmail">
+                                Email Address
+                            </label>
+
+                            <div class="login-input-wrapper">
+
+                                <span class="login-input-icon">
+                                    ✉
+                                </span>
+
+                                <input
+                                    type="email"
+                                    id="loginEmail"
+                                    placeholder="Enter your email"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PASSWORD -->
+
+                        <div class="login-field">
+
+                            <label for="loginPassword">
+                                Password
+                            </label>
+
+                            <div class="login-input-wrapper">
+
+                                <span class="login-input-icon">
+                                    🔒
+                                </span>
+
+                                <input
+                                    type="password"
+                                    id="loginPassword"
+                                    placeholder="Enter your password"
+                                    autocomplete="current-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    onclick="togglePassword()"
+                                    title="Show password"
+                                >
+                                    👁
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LOGIN OPTIONS -->
+
+                        <div class="login-options">
+
+                            <label class="remember-option">
+
+                                <input
+                                    type="checkbox"
+                                    id="rememberMe"
+                                >
+
+                                <span>
+                                    Remember me
+                                </span>
+
+                            </label>
+
+
+                            <button
+                                type="button"
+                                class="forgot-password"
+                                onclick="alert('Password recovery will be available soon.')"
+                            >
+                                Forgot password?
+                            </button>
+
+                        </div>
+
+
+                        <!-- SIGN IN -->
+
+                        <button
+                            type="submit"
+                            class="login-submit"
+                        >
+
+                            <span>
+                                Sign In
+                            </span>
+
+                            <span>
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <div
+                            id="loginMessage"
+                            class="login-message"
+                        ></div>
+
+
+                    </form>
+
+
+                    <!-- SIGN UP LINK -->
+
+                    <div class="auth-switch">
+
+                        Don't have an account?
+
+                        <button
+                            type="button"
+                            onclick="showSignupForm()"
+                        >
+                            Sign Up
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SIGN UP FORM
+                ================================================= -->
+
+                <div
+                    id="signupFormContainer"
+                    class="signup-screen"
+                >
+
+                    <div class="signup-heading">
+
+                        <div class="login-welcome">
+                            Get started
+                        </div>
+
+                        <h2>
+                            Create your account
+                        </h2>
+
+                        <p>
+                            Create your business account to get started.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        onsubmit="event.preventDefault(); signupUser();"
+                    >
+
+                        <div class="signup-grid">
+
+
+                            <!-- BUSINESS NAME -->
+
+                            <div class="login-field full-width">
+
+                                <label for="signupBusinessName">
+                                    Business Name
+                                </label>
+
+                                <div class="login-input-wrapper">
+
+                                    <span class="login-input-icon">
+                                        🏢
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        id="signupBusinessName"
+                                        placeholder="Enter your business name"
+                                        autocomplete="organization"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="login-field full-width">
+
+                                <label for="signupEmail">
+                                    Email Address
+                                </label>
+
+                                <div class="login-input-wrapper">
+
+                                    <span class="login-input-icon">
+                                        ✉
+                                    </span>
+
+                                    <input
+                                        type="email"
+                                        id="signupEmail"
+                                        placeholder="Enter your business email"
+                                        autocomplete="email"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- PHONE -->
+
+                            <div class="login-field full-width">
+
+                                <label for="signupPhone">
+                                    Phone Number
+                                </label>
+
+                                <div class="login-input-wrapper">
+
+                                    <span class="login-input-icon">
+                                        📱
+                                    </span>
+
+                                    <input
+                                        type="tel"
+                                        id="signupPhone"
+                                        placeholder="Enter your phone number"
+                                        autocomplete="tel"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- PASSWORD -->
+
+                            <div class="login-field">
+
+                                <label for="signupPassword">
+                                    Password
+                                </label>
+
+                                <div class="login-input-wrapper">
+
+                                    <span class="login-input-icon">
+                                        🔒
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        id="signupPassword"
+                                        placeholder="Create password"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CONFIRM PASSWORD -->
+
+                            <div class="login-field">
+
+                                <label for="signupConfirmPassword">
+                                    Confirm Password
+                                </label>
+
+                                <div class="login-input-wrapper">
+
+                                    <span class="login-input-icon">
+                                        🔐
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        id="signupConfirmPassword"
+                                        placeholder="Confirm password"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- CREATE ACCOUNT -->
+
+                        <button
+                            type="submit"
+                            class="signup-submit"
+                        >
+
+                            <span>
+                                Continue
+                            </span>
+
+                            <span>
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <div
+                            id="signupMessage"
+                            class="signup-message"
+                        ></div>
+
+
+                    </form>
+
+
+                    <!-- BACK TO LOGIN -->
+
+                    <div class="auth-switch">
+
+                        Already have an account?
+
+                        <button
+                            type="button"
+                            onclick="showLoginForm()"
+                        >
+                            Sign In
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="login-security">
+
+                    <span>
+                        🔒
+                    </span>
+
+                    <span>
+                        Your account is protected with secure authentication.
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
 
     </div>
 
