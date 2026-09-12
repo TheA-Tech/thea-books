@@ -203,7 +203,23 @@ function showDashboard() {
         );
 
 
-    const receivables = invoices
+const totalPurchases = purchases.reduce(
+        (sum, purchase) =>
+            sum + Number(purchase.amount || 0),
+        0
+    );
+
+
+const payables = purchases
+        .filter(purchase => purchase.status === "unpaid")
+        .reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+
+const receivables = invoices
         .filter(invoice => invoice.status === "unpaid")
         .reduce(
             (sum, invoice) =>
