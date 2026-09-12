@@ -9315,3 +9315,34 @@ async function checkLogin() {
 }
 
 checkLogin();
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("loginPassword");
+
+    const button =
+        document.querySelector(".password-toggle");
+
+    if (!password) {
+        return;
+    }
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        if (button) {
+            button.textContent = "🙈";
+        }
+
+    } else {
+
+        password.type = "password";
+
+        if (button) {
+            button.textContent = "👁";
+        }
+
+    }
+}
