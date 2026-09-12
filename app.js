@@ -14,9 +14,9 @@ if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
     );
 }
 
-/* =========================
-   THEA BOOKS DATA
-========================= */
+/* =========================================
+   THEA BOOKS ERP MODULES
+========================================= */
 
 let customers =
     JSON.parse(localStorage.getItem("theaBooksCustomers")) || [];
@@ -30,11 +30,11 @@ let products =
 let purchases =
     JSON.parse(localStorage.getItem("theaBooksPurchases")) || [];
 
-let invoices =
-    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
-
 let transactions =
     JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
+
+let invoices =
+    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
 
 let companyAccount =
     JSON.parse(localStorage.getItem("theaBooksCompany")) || {
@@ -45,6 +45,7 @@ let companyAccount =
         address: "",
         currency: "PKR"
     };
+
 async function loginUser() {
 
     const email =
@@ -4311,37 +4312,6 @@ function createInvoice(event) {
 
     showPage("sales");
 }  
-/* =========================================
-   THEA BOOKS ERP MODULES
-========================================= */
-
-let customers =
-    JSON.parse(localStorage.getItem("theaBooksCustomers")) || [];
-
-let vendors =
-    JSON.parse(localStorage.getItem("theaBooksVendors")) || [];
-
-let products =
-    JSON.parse(localStorage.getItem("theaBooksProducts")) || [];
-
-let purchases =
-    JSON.parse(localStorage.getItem("theaBooksPurchases")) || [];
-
-let transactions =
-    JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
-
-let invoices =
-    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
-
-let companyAccount =
-    JSON.parse(localStorage.getItem("theaBooksCompany")) || {
-        name: "",
-        owner: "",
-        phone: "",
-        email: "",
-        address: "",
-        currency: "PKR"
-    };
 
 function saveVendors() {
     localStorage.setItem(
