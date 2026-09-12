@@ -1107,83 +1107,260 @@
 
 <body>
 
-<div id="loginScreen" style="display:none;">
-    <div class="login-box">
-        <h1>THEA Books</h1>
-        <p>Sign in to your account</p>
+<!-- =====================================================
+     THEA BOOKS - PROFESSIONAL LOGIN
+===================================================== -->
 
-        <input
-            type="email"
-            id="loginEmail"
-            placeholder="Email"
-        >
+<div id="loginScreen">
 
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Password"
-        >
+    <div class="login-container">
 
-        <button onclick="loginUser()">
-            Sign In
-        </button>
+        <!-- LEFT BRAND PANEL -->
 
-        <p id="loginMessage"></p>
-    </div>
-</div>
-    <!-- =====================================================
-         APP SHELL
-    ===================================================== -->
+        <div class="login-brand-panel">
 
-    <div class="app-shell">
+            <div class="login-brand">
 
+                <div class="login-logo">
+                    TB
+                </div>
 
-        <!-- =================================================
-             SIDEBAR
-        ================================================= -->
+                <div>
+                    <div class="login-brand-name">
+                        THEA Books
+                    </div>
 
-        <aside
-            class="sidebar"
-            id="sidebar"
-        >
+                    <div class="login-brand-subtitle">
+                        Business & Accounting
+                    </div>
+                </div>
+
+            </div>
 
 
-            <!-- BRAND -->
+            <div class="login-brand-content">
 
-            <div class="sidebar-brand">
+                <div class="login-badge">
+                    BUSINESS MANAGEMENT PLATFORM
+                </div>
 
-                <div class="brand-left">
+                <h1>
+                    Manage your business
+                    <span>smarter.</span>
+                </h1>
+
+                <p>
+                    Manage sales, purchases, expenses,
+                    customers, inventory and financial
+                    reports from one professional platform.
+                </p>
 
 
-                    <!-- BACK / FORWARD / REFRESH -->
+                <div class="login-features">
 
-                    <div class="app-navigation">
+                    <div class="login-feature">
+                        <span>✓</span>
+                        <div>
+                            <strong>Complete Accounting</strong>
+                            <small>
+                                Keep your business finances organized.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="login-feature">
+                        <span>✓</span>
+                        <div>
+                            <strong>Business Management</strong>
+                            <small>
+                                Manage your daily operations in one place.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="login-feature">
+                        <span>✓</span>
+                        <div>
+                            <strong>Professional Reports</strong>
+                            <small>
+                                Get clear insights into your business.
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="login-brand-footer">
+                © 2026 THEA Books · Business Management System
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT LOGIN PANEL -->
+
+        <div class="login-form-panel">
+
+            <div class="login-form-wrapper">
+
+                <div class="login-mobile-logo">
+                    <div class="login-logo">
+                        TB
+                    </div>
+
+                    <div>
+                        <strong>THEA Books</strong>
+                        <small>Business & Accounting</small>
+                    </div>
+                </div>
+
+
+                <div class="login-heading">
+
+                    <div class="login-welcome">
+                        Welcome back
+                    </div>
+
+                    <h2>
+                        Sign in to your account
+                    </h2>
+
+                    <p>
+                        Enter your account details to continue.
+                    </p>
+
+                </div>
+
+
+                <form
+                    onsubmit="event.preventDefault(); loginUser();"
+                >
+
+                    <div class="login-field">
+
+                        <label for="loginEmail">
+                            Email address
+                        </label>
+
+                        <div class="login-input-wrapper">
+
+                            <span class="login-input-icon">
+                                ✉
+                            </span>
+
+                            <input
+                                type="email"
+                                id="loginEmail"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="login-field">
+
+                        <label for="loginPassword">
+                            Password
+                        </label>
+
+                        <div class="login-input-wrapper">
+
+                            <span class="login-input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword()"
+                                title="Show password"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="login-options">
+
+                        <label class="remember-option">
+
+                            <input
+                                type="checkbox"
+                                id="rememberMe"
+                            >
+
+                            <span>
+                                Remember me
+                            </span>
+
+                        </label>
 
                         <button
                             type="button"
-                            onclick="goBack()"
-                            title="Back"
+                            class="forgot-password"
+                            onclick="alert('Password recovery will be available soon.')"
                         >
-                            ←
-                        </button>
-
-                        <button
-                            type="button"
-                            onclick="goForward()"
-                            title="Forward"
-                        >
-                            →
-                        </button>
-
-                        <button
-                            type="button"
-                            onclick="refreshCurrentPage()"
-                            title="Refresh"
-                        >
-                            ↻
+                            Forgot password?
                         </button>
 
                     </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-submit"
+                    >
+                        <span>
+                            Sign In
+                        </span>
+
+                        <span>
+                            →
+                        </span>
+                    </button>
+
+
+                    <div
+                        id="loginMessage"
+                        class="login-message"
+                    ></div>
+
+                </form>
+
+
+                <div class="login-security">
+
+                    <span>🔒</span>
+
+                    <span>
+                        Your account is protected with secure authentication.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
                     <!-- BRAND -->
