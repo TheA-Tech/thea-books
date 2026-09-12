@@ -10022,7 +10022,7 @@ function showCloudSync() {
                     </span>
 
                     <div>
-                        <strong>Supabase Cloud</strong>
+                        <strong>THEA Books Cloud</strong>
 
                         <div
                             id="cloudConnectionStatus"
