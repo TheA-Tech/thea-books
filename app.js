@@ -10098,6 +10098,87 @@ function showCloudSync() {
 
     checkCloudConnection();
 }
+
+async function checkCloudConnection() {
+
+    const status =
+        document.getElementById("cloudConnectionStatus");
+
+    const userEmail =
+        document.getElementById("cloudUserEmail");
+
+    if (!status || !userEmail) {
+        return;
+    }
+
+    status.textContent = "Checking connection...";
+    status.style.color = "#6b7280";
+
+    userEmail.textContent = "Checking account...";
+
+    try {
+
+        const {
+            data: { session },
+            error: sessionError
+        } = await theaSupabase.auth.getSession();
+
+        if (sessionError) {
+            throw sessionError;
+        }
+
+        if (!session) {
+
+            status.textContent =
+                "Not connected — please sign in.";
+
+            status.style.color = "#dc2626";
+
+            userEmail.textContent =
+                "No active account session.";
+
+            return;
+        }
+
+        userEmail.textContent =
+            session.user.email || "Authenticated user";
+
+        const { error } =
+            await theaSupabase
+                .from("profiles")
+                .select("id")
+                .eq("id", session.user.id)
+                .limit(1);
+
+        if (error) {
+            console.error("Cloud connection error:", error);
+
+            status.textContent =
+                "Connected to Supabase, but database access needs configuration.";
+
+            status.style.color = "#d97706";
+
+            return;
+        }
+
+        status.textContent =
+            "Connected — Cloud database is working.";
+
+        status.style.color = "#16a34a";
+
+    } catch (error) {
+
+        console.error("Cloud sync error:", error);
+
+        status.textContent =
+            "Cloud connection failed.";
+
+        status.style.color = "#dc2626";
+
+        userEmail.textContent =
+            "Unable to verify account.";
+    }
+}
 function showSecuritySettings() {
 
     pageTitle.textContent = "Security Settings";
