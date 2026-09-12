@@ -1899,94 +1899,440 @@ function viewInvoice(invoiceId) {
     pageTitle.innerText =
         "Invoice " + invoice.invoiceNumber;
 
+    const companyName =
+        companyAccount.name || "THEA Books";
+
+    const companyOwner =
+        companyAccount.owner || "";
+
+    const companyPhone =
+        companyAccount.phone || "";
+
+    const companyEmail =
+        companyAccount.email || "";
+
+    const companyAddress =
+        companyAccount.address || "";
+
+    const invoiceItems =
+        Array.isArray(invoice.items)
+            ? invoice.items
+            : [];
+
     content.innerHTML = `
 
-        <div class="panel">
+        <div
+            class="panel"
+            style="
+                max-width:1000px;
+                margin:0 auto;
+            "
+        >
 
-            <h2>🧾 Invoice ${invoice.invoiceNumber}</h2>
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:flex-start;
+                    gap:20px;
+                    padding-bottom:20px;
+                    border-bottom:2px solid #111827;
+                "
+            >
 
-            <p>
-                <strong>Customer:</strong>
-                ${invoice.customer}
-            </p>
+                <div>
 
-            <p>
-                <strong>Date:</strong>
-                ${invoice.date}
-            </p>
+                    <h1
+                        style="
+                            margin:0 0 6px;
+                            font-size:28px;
+                            color:#111827;
+                        "
+                    >
+                        ${companyName}
+                    </h1>
 
-            <p>
-                <strong>Status:</strong>
-                ${invoice.status}
-            </p>
+                    ${
+                        companyOwner
+                            ? `<p style="margin:3px 0;">
+                                ${companyOwner}
+                               </p>`
+                            : ""
+                    }
 
-        </div>
+                    ${
+                        companyPhone
+                            ? `<p style="margin:3px 0;">
+                                ${companyPhone}
+                               </p>`
+                            : ""
+                    }
+
+                    ${
+                        companyEmail
+                            ? `<p style="margin:3px 0;">
+                                ${companyEmail}
+                               </p>`
+                            : ""
+                    }
+
+                    ${
+                        companyAddress
+                            ? `<p style="margin:3px 0;">
+                                ${companyAddress}
+                               </p>`
+                            : ""
+                    }
+
+                </div>
 
 
-        <div class="panel">
+                <div style="text-align:right;">
 
-            <h2>Invoice Items</h2>
+                    <h2
+                        style="
+                            margin:0 0 8px;
+                            font-size:30px;
+                        "
+                    >
+                        INVOICE
+                    </h2>
 
-            ${
-                invoice.items && invoice.items.length > 0
+                    <p style="margin:4px 0;">
+                        <strong>
+                            Invoice #:
+                        </strong>
+                        ${invoice.invoiceNumber}
+                    </p>
 
-                    ? invoice.items.map(item => `
+                    <p style="margin:4px 0;">
+                        <strong>
+                            Date:
+                        </strong>
+                        ${invoice.date}
+                    </p>
 
-                        <div
-                            class="transaction-row"
+                    <p style="margin:4px 0;">
+                        <strong>
+                            Status:
+                        </strong>
+
+                        <span
+                            style="
+                                display:inline-block;
+                                padding:4px 10px;
+                                border-radius:20px;
+                                background:${
+                                    invoice.status === "paid"
+                                        ? "#dcfce7"
+                                        : "#fee2e2"
+                                };
+                                color:${
+                                    invoice.status === "paid"
+                                        ? "#166534"
+                                        : "#991b1b"
+                                };
+                                font-weight:600;
+                                text-transform:uppercase;
+                                font-size:12px;
+                            "
+                        >
+                            ${invoice.status}
+                        </span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:25px;
+                    padding:18px;
+                    background:#f8fafc;
+                    border:1px solid #e5e7eb;
+                    border-radius:10px;
+                "
+            >
+
+                <h3 style="margin:0 0 8px;">
+                    Bill To
+                </h3>
+
+                <strong>
+                    ${invoice.customer || "Customer"}
+                </strong>
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:25px;
+                    overflow-x:auto;
+                "
+            >
+
+                <table
+                    style="
+                        width:100%;
+                        border-collapse:collapse;
+                    "
+                >
+
+                    <thead>
+
+                        <tr
+                            style="
+                                background:#111827;
+                                color:white;
+                            "
                         >
 
-                            <div>
+                            <th
+                                style="
+                                    padding:12px;
+                                    text-align:left;
+                                "
+                            >
+                                #
+                            </th>
 
-                                <strong>
-                                    ${item.product}
-                                </strong>
+                            <th
+                                style="
+                                    padding:12px;
+                                    text-align:left;
+                                "
+                            >
+                                Description
+                            </th>
 
-                                <small>
-                                    Qty: ${item.quantity}
-                                    • Rate:
-                                    ${formatMoney(item.rate)}
-                                </small>
+                            <th
+                                style="
+                                    padding:12px;
+                                    text-align:right;
+                                "
+                            >
+                                Qty
+                            </th>
 
-                            </div>
+                            <th
+                                style="
+                                    padding:12px;
+                                    text-align:right;
+                                "
+                            >
+                                Rate
+                            </th>
 
-                            <strong>
-                                ${formatMoney(item.amount)}
-                            </strong>
+                            <th
+                                style="
+                                    padding:12px;
+                                    text-align:right;
+                                "
+                            >
+                                Amount
+                            </th>
 
-                        </div>
+                        </tr>
 
-                    `).join("")
+                    </thead>
 
-                    : `<p>No invoice items found.</p>`
-            }
+                    <tbody>
 
-        </div>
+                        ${
+                            invoiceItems.length > 0
+                                ? invoiceItems.map(
+                                    (item, index) => `
+                                        <tr>
+
+                                            <td
+                                                style="
+                                                    padding:12px;
+                                                    border-bottom:1px solid #e5e7eb;
+                                                "
+                                            >
+                                                ${index + 1}
+                                            </td>
+
+                                            <td
+                                                style="
+                                                    padding:12px;
+                                                    border-bottom:1px solid #e5e7eb;
+                                                "
+                                            >
+                                                ${item.product || ""}
+                                            </td>
+
+                                            <td
+                                                style="
+                                                    padding:12px;
+                                                    text-align:right;
+                                                    border-bottom:1px solid #e5e7eb;
+                                                "
+                                            >
+                                                ${item.quantity || 0}
+                                            </td>
+
+                                            <td
+                                                style="
+                                                    padding:12px;
+                                                    text-align:right;
+                                                    border-bottom:1px solid #e5e7eb;
+                                                "
+                                            >
+                                                ${formatMoney(item.rate || 0)}
+                                            </td>
+
+                                            <td
+                                                style="
+                                                    padding:12px;
+                                                    text-align:right;
+                                                    border-bottom:1px solid #e5e7eb;
+                                                    font-weight:600;
+                                                "
+                                            >
+                                                ${formatMoney(item.amount || 0)}
+                                            </td>
+
+                                        </tr>
+                                    `
+                                ).join("")
+                                : `
+                                    <tr>
+                                        <td
+                                            colspan="5"
+                                            style="
+                                                padding:20px;
+                                                text-align:center;
+                                            "
+                                        >
+                                            No item details available.
+                                        </td>
+                                    </tr>
+                                `
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
 
-        <div class="panel">
+            <div
+                style="
+                    display:flex;
+                    justify-content:flex-end;
+                    margin-top:25px;
+                "
+            >
 
-            <p>
-                <strong>Subtotal:</strong>
-                ${formatMoney(invoice.subtotal || 0)}
-            </p>
+                <div
+                    style="
+                        width:330px;
+                        max-width:100%;
+                    "
+                >
 
-            <p>
-                <strong>Discount:</strong>
-                ${formatMoney(invoice.discount || 0)}
-            </p>
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            padding:8px 0;
+                        "
+                    >
+                        <span>Subtotal</span>
+                        <strong>
+                            ${formatMoney(invoice.subtotal || 0)}
+                        </strong>
+                    </div>
 
-            <p>
-                <strong>Tax:</strong>
-                ${formatMoney(invoice.taxAmount || 0)}
-            </p>
 
-            <h2>
-                Grand Total:
-                ${formatMoney(invoice.total || 0)}
-            </h2>
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            padding:8px 0;
+                        "
+                    >
+                        <span>Discount</span>
+                        <strong>
+                            ${formatMoney(invoice.discount || 0)}
+                        </strong>
+                    </div>
 
-            <div class="form-buttons">
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            padding:8px 0;
+                        "
+                    >
+                        <span>
+                            Tax ${
+                                invoice.taxPercent
+                                    ? "(" + invoice.taxPercent + "%)"
+                                    : ""
+                            }
+                        </span>
+
+                        <strong>
+                            ${formatMoney(invoice.taxAmount || 0)}
+                        </strong>
+                    </div>
+
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            padding:14px 0;
+                            margin-top:5px;
+                            border-top:2px solid #111827;
+                            font-size:20px;
+                        "
+                    >
+
+                        <strong>
+                            Grand Total
+                        </strong>
+
+                        <strong>
+                            ${formatMoney(invoice.total || 0)}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:30px;
+                    padding-top:20px;
+                    border-top:1px solid #e5e7eb;
+                    text-align:center;
+                    color:#6b7280;
+                "
+            >
+                Thank you for your business.
+                <br>
+                Generated by THEA Books
+            </div>
+
+
+            <div
+                class="form-buttons"
+                style="
+                    margin-top:25px;
+                "
+            >
 
                 <button
                     type="button"
@@ -1994,6 +2340,14 @@ function viewInvoice(invoiceId) {
                     onclick="printInvoice(${invoice.id})"
                 >
                     🖨️ Print Invoice
+                </button>
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="downloadInvoice(${invoice.id})"
+                >
+                    ⬇️ Download Invoice
                 </button>
 
                 <button
@@ -2007,7 +2361,6 @@ function viewInvoice(invoiceId) {
             </div>
 
         </div>
-
     `;
 }
 function openInvoiceEditForm(invoiceId) {
@@ -3142,6 +3495,421 @@ function removeEditInvoiceItem(button) {
     calculateEditInvoiceTotals();
 }
 
+function downloadInvoice(invoiceId) {
+
+    const invoice = invoices.find(
+        invoice =>
+            String(invoice.id) === String(invoiceId)
+    );
+
+    if (!invoice) {
+        alert("Invoice not found.");
+        return;
+    }
+
+    const printWindow =
+        window.open("", "_blank");
+
+    if (!printWindow) {
+        alert(
+            "Please allow pop-ups for THEA Books to download the invoice."
+        );
+        return;
+    }
+
+    const companyName =
+        companyAccount.name || "THEA Books";
+
+    const companyPhone =
+        companyAccount.phone || "";
+
+    const companyEmail =
+        companyAccount.email || "";
+
+    const companyAddress =
+        companyAccount.address || "";
+
+    const items =
+        Array.isArray(invoice.items)
+            ? invoice.items
+            : [];
+
+    printWindow.document.write(`
+
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+            <title>
+                ${invoice.invoiceNumber}
+            </title>
+
+            <style>
+
+                * {
+                    box-sizing:border-box;
+                }
+
+                body {
+                    font-family:Arial,Helvetica,sans-serif;
+                    margin:0;
+                    padding:30px;
+                    color:#111827;
+                    background:#fff;
+                }
+
+                .invoice {
+                    max-width:800px;
+                    margin:auto;
+                }
+
+                .header {
+                    display:flex;
+                    justify-content:space-between;
+                    gap:30px;
+                    padding-bottom:20px;
+                    border-bottom:2px solid #111827;
+                }
+
+                .company h1 {
+                    margin:0 0 8px;
+                    font-size:28px;
+                }
+
+                .company p {
+                    margin:3px 0;
+                    color:#4b5563;
+                }
+
+                .invoice-title {
+                    text-align:right;
+                }
+
+                .invoice-title h2 {
+                    margin:0 0 8px;
+                    font-size:30px;
+                }
+
+                .invoice-title p {
+                    margin:5px 0;
+                }
+
+                .bill-to {
+                    margin-top:25px;
+                    padding:15px;
+                    background:#f8fafc;
+                    border:1px solid #e5e7eb;
+                }
+
+                table {
+                    width:100%;
+                    border-collapse:collapse;
+                    margin-top:25px;
+                }
+
+                th {
+                    background:#111827;
+                    color:white;
+                    padding:11px;
+                    text-align:left;
+                }
+
+                td {
+                    padding:11px;
+                    border-bottom:1px solid #e5e7eb;
+                }
+
+                .right {
+                    text-align:right;
+                }
+
+                .totals {
+                    width:330px;
+                    margin-left:auto;
+                    margin-top:25px;
+                }
+
+                .total-row {
+                    display:flex;
+                    justify-content:space-between;
+                    padding:8px 0;
+                }
+
+                .grand-total {
+                    border-top:2px solid #111827;
+                    margin-top:5px;
+                    padding-top:12px;
+                    font-size:20px;
+                    font-weight:bold;
+                }
+
+                .footer {
+                    margin-top:40px;
+                    padding-top:15px;
+                    border-top:1px solid #e5e7eb;
+                    text-align:center;
+                    color:#6b7280;
+                }
+
+                @media print {
+
+                    body {
+                        padding:0;
+                    }
+
+                    .invoice {
+                        max-width:none;
+                    }
+
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <div class="invoice">
+
+                <div class="header">
+
+                    <div class="company">
+
+                        <h1>
+                            ${companyName}
+                        </h1>
+
+                        ${
+                            companyPhone
+                                ? `<p>${companyPhone}</p>`
+                                : ""
+                        }
+
+                        ${
+                            companyEmail
+                                ? `<p>${companyEmail}</p>`
+                                : ""
+                        }
+
+                        ${
+                            companyAddress
+                                ? `<p>${companyAddress}</p>`
+                                : ""
+                        }
+
+                    </div>
+
+
+                    <div class="invoice-title">
+
+                        <h2>
+                            INVOICE
+                        </h2>
+
+                        <p>
+                            <strong>
+                                Invoice #:
+                            </strong>
+                            ${invoice.invoiceNumber}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Date:
+                            </strong>
+                            ${invoice.date}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Status:
+                            </strong>
+                            ${invoice.status}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="bill-to">
+
+                    <strong>
+                        Bill To
+                    </strong>
+
+                    <div style="margin-top:6px;">
+                        ${invoice.customer || "Customer"}
+                    </div>
+
+                </div>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th class="right">
+                                Qty
+                            </th>
+
+                            <th class="right">
+                                Rate
+                            </th>
+
+                            <th class="right">
+                                Amount
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        ${
+                            items.map(
+                                (item, index) => `
+
+                                    <tr>
+
+                                        <td>
+                                            ${index + 1}
+                                        </td>
+
+                                        <td>
+                                            ${item.product || ""}
+                                        </td>
+
+                                        <td class="right">
+                                            ${item.quantity || 0}
+                                        </td>
+
+                                        <td class="right">
+                                            ${formatMoney(item.rate || 0)}
+                                        </td>
+
+                                        <td class="right">
+                                            ${formatMoney(item.amount || 0)}
+                                        </td>
+
+                                    </tr>
+
+                                `
+                            ).join("")
+                        }
+
+                    </tbody>
+
+                </table>
+
+
+                <div class="totals">
+
+                    <div class="total-row">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong>
+                            ${formatMoney(invoice.subtotal || 0)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="total-row">
+
+                        <span>
+                            Discount
+                        </span>
+
+                        <strong>
+                            ${formatMoney(invoice.discount || 0)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="total-row">
+
+                        <span>
+                            Tax
+                        </span>
+
+                        <strong>
+                            ${formatMoney(invoice.taxAmount || 0)}
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="total-row grand-total"
+                    >
+
+                        <span>
+                            Grand Total
+                        </span>
+
+                        <strong>
+                            ${formatMoney(invoice.total || 0)}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="footer">
+
+                    <strong>
+                        ${invoice.status === "paid"
+                            ? "PAID"
+                            : "PAYMENT DUE"
+                        }
+                    </strong>
+
+                    <br><br>
+
+                    Thank you for your business.
+
+                    <br>
+
+                    Generated by THEA Books
+
+                </div>
+
+            </div>
+
+            <script>
+
+                window.onload = function() {
+
+                    window.print();
+
+                };
+
+            <\/script>
+
+        </body>
+
+        </html>
+    `);
+
+    printWindow.document.close();
+}
 
 function calculateInvoiceTotals() {
 
