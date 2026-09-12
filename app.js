@@ -3870,9 +3870,7 @@ function addProduct(event) {
     showPage("inventory");
 }
 
-/* =========================
-   REPORTS
-========================= */
+
 /* =========================
    BALANCE SHEET
 ========================= */
@@ -4282,10 +4280,462 @@ function showBalanceSheet() {
 
             </div>
 
+        </div>               
+
+       `;
+}
+
+
+/* =========================
+   TRIAL BALANCE
+========================= */
+
+function showTrialBalance() {
+
+    pageTitle.innerText = "Trial Balance";
+
+    /* =========================
+       CALCULATIONS
+    ========================= */
+
+    const totalSales = invoices.reduce(
+        (sum, invoice) =>
+            sum + Number(invoice.total || 0),
+        0
+    );
+
+    const totalPurchases = purchases.reduce(
+        (sum, purchase) =>
+            sum + Number(purchase.amount || 0),
+        0
+    );
+
+    const totalExpenses = transactions
+        .filter(t => t.type === "expense")
+        .reduce(
+            (sum, t) =>
+                sum + Number(t.amount || 0),
+            0
+        );
+
+    const receivables = invoices
+        .filter(invoice => invoice.status === "unpaid")
+        .reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const payables = purchases
+        .filter(purchase => purchase.status === "unpaid")
+        .reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+    const inventoryValue = products.reduce(
+        (sum, product) =>
+            sum +
+            (
+                Number(product.stock || 0) *
+                Number(product.cost || 0)
+            ),
+        0
+    );
+
+    const paidSales = invoices
+        .filter(invoice => invoice.status === "paid")
+        .reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const paidPurchases = purchases
+        .filter(purchase => purchase.status === "paid")
+        .reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+    const cashBalance =
+        paidSales -
+        paidPurchases -
+        totalExpenses;
+
+
+    /* =========================
+       DISPLAY
+    ========================= */
+
+    const debitTotal =
+        cashBalance +
+        receivables +
+        inventoryValue +
+        totalPurchases +
+        totalExpenses;
+
+    const creditTotal =
+        totalSales +
+        payables;
+
+
+    content.innerHTML = `
+
+        <!-- HEADER -->
+
+        <div class="dashboard-section">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:15px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+
+                    <h2 style="margin:0 0 5px 0;">
+                        📊 Trial Balance
+                    </h2>
+
+                    <p style="
+                        margin:0;
+                        color:#718096;
+                        font-size:13px;
+                    ">
+                        Summary of debit and credit balances.
+                    </p>
+
+                </div>
+
+                <button
+                    class="new-btn"
+                    onclick="showPage('trial-balance')"
+                >
+                    🔄 Refresh
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="cards">
+
+            <div class="card" style="
+                border-top:4px solid #2563eb;
+            ">
+
+                <h3>📥 Total Debit</h3>
+
+                <p style="color:#2563eb;">
+                    ${formatMoney(debitTotal)}
+                </p>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #059669;
+            ">
+
+                <h3>📤 Total Credit</h3>
+
+                <p style="color:#059669;">
+                    ${formatMoney(creditTotal)}
+                </p>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #7c3aed;
+            ">
+
+                <h3>📑 Accounts</h3>
+
+                <p style="color:#7c3aed;">
+                    7
+                </p>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #0f766e;
+            ">
+
+                <h3>⚖️ Difference</h3>
+
+                <p style="color:#0f766e;">
+                    ${formatMoney(Math.abs(debitTotal - creditTotal))}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- TRIAL BALANCE TABLE -->
+
+        <div class="panel">
+
+            <h2>📑 Trial Balance Statement</h2>
+
+            <p style="
+                color:#718096;
+                font-size:13px;
+                margin-bottom:20px;
+            ">
+                Debit and credit balances of the business.
+            </p>
+
+
+            <div style="
+                overflow-x:auto;
+            ">
+
+                <table style="
+                    width:100%;
+                    border-collapse:collapse;
+                    min-width:650px;
+                ">
+
+                    <thead>
+
+                        <tr style="
+                            background:#f8fafc;
+                            border-bottom:2px solid #e2e8f0;
+                        ">
+
+                            <th style="
+                                text-align:left;
+                                padding:13px;
+                            ">
+                                Account
+                            </th>
+
+                            <th style="
+                                text-align:right;
+                                padding:13px;
+                            ">
+                                Debit
+                            </th>
+
+                            <th style="
+                                text-align:right;
+                                padding:13px;
+                            ">
+                                Credit
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+                            <td style="padding:13px;">
+                                Cash & Bank
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(cashBalance)}
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td style="padding:13px;">
+                                Accounts Receivable
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(receivables)}
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td style="padding:13px;">
+                                Inventory
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(inventoryValue)}
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td style="padding:13px;">
+                                Purchases
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(totalPurchases)}
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td style="padding:13px;">
+                                Expenses
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(totalExpenses)}
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td style="padding:13px;">
+                                Sales
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(totalSales)}
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td style="padding:13px;">
+                                Accounts Payable
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(payables)}
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+
+
+                    <tfoot>
+
+                        <tr style="
+                            border-top:2px solid #cbd5e1;
+                            background:#f8fafc;
+                        ">
+
+                            <th style="
+                                padding:15px 13px;
+                                text-align:left;
+                            ">
+                                Total
+                            </th>
+
+                            <th style="
+                                padding:15px 13px;
+                                text-align:right;
+                                color:#2563eb;
+                            ">
+                                ${formatMoney(debitTotal)}
+                            </th>
+
+                            <th style="
+                                padding:15px 13px;
+                                text-align:right;
+                                color:#059669;
+                            ">
+                                ${formatMoney(creditTotal)}
+                            </th>
+
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+            </div>
+
         </div>
 
     `;
 }
+
+
 function showReports() {
 
     pageTitle.innerText = "Reports";
