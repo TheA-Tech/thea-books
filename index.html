@@ -14,8 +14,484 @@
 
     <link
         rel="stylesheet"
-        href="styles.css?v=6"
+        href="styles.css?v=7"
     >
+
+    <style>
+
+        /* =====================================================
+           THEA BOOKS - SIDEBAR & TOOLBAR UPGRADE
+        ===================================================== */
+
+        /* SIDEBAR */
+
+        .sidebar {
+            overflow: hidden;
+        }
+
+        /* MAIN NAVIGATION SCROLL */
+
+        #mainNavigation {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 4px;
+            scrollbar-width: thin;
+        }
+
+        #mainNavigation::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        #mainNavigation::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+        }
+
+
+        /* SIDEBAR MENU BUTTON */
+
+        #mainNavigation button,
+        .sidebar-bottom button {
+
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            min-height: 46px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            transition:
+                background .2s ease,
+                transform .2s ease;
+
+        }
+
+
+        /* MENU ICON */
+
+        #mainNavigation .menu-icon,
+        .sidebar-bottom .menu-icon {
+
+            min-width: 42px;
+
+            width: 42px;
+
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            font-size: 18px;
+
+        }
+
+
+        /* MENU LABEL */
+
+        #mainNavigation .menu-label,
+        .sidebar-bottom .menu-label {
+
+            opacity: 0;
+
+            transform: translateX(-12px);
+
+            transition:
+                opacity .2s ease,
+                transform .25s ease;
+
+            pointer-events: none;
+
+        }
+
+
+        /* SIDEBAR HOVER */
+
+        .sidebar:hover #mainNavigation .menu-label,
+        .sidebar:hover .sidebar-bottom .menu-label {
+
+            opacity: 1;
+
+            transform: translateX(0);
+
+        }
+
+
+        /* SIDEBAR WIDTH */
+
+        .sidebar {
+
+            width: 76px;
+
+            transition: width .25s ease;
+
+        }
+
+
+        /* EXPAND SIDEBAR */
+
+        .sidebar:hover {
+
+            width: 250px;
+
+        }
+
+
+        /* BRAND */
+
+        .brand-row {
+
+            overflow: hidden;
+
+        }
+
+        .brand-name {
+
+            white-space: nowrap;
+
+            opacity: 0;
+
+            transform: translateX(-10px);
+
+            transition:
+                opacity .2s ease,
+                transform .25s ease;
+
+        }
+
+        .sidebar:hover .brand-name {
+
+            opacity: 1;
+
+            transform: translateX(0);
+
+        }
+
+
+        /* COMPANY ACCOUNT */
+
+        .company-account {
+
+            overflow: hidden;
+
+        }
+
+        .company-text {
+
+            opacity: 0;
+
+            transform: translateX(-10px);
+
+            transition:
+                opacity .2s ease,
+                transform .25s ease;
+
+            white-space: nowrap;
+
+        }
+
+        .sidebar:hover .company-text {
+
+            opacity: 1;
+
+            transform: translateX(0);
+
+        }
+
+
+        /* COMPANY BUTTON */
+
+        .company-account-btn {
+
+            overflow: hidden;
+
+        }
+
+
+        /* SIDEBAR BOTTOM */
+
+        .sidebar-bottom {
+
+            overflow: hidden;
+
+        }
+
+
+        /* FOOTER */
+
+        .sidebar-brand-footer {
+
+            overflow: hidden;
+
+            white-space: nowrap;
+
+            opacity: 0;
+
+            transition: opacity .2s ease;
+
+        }
+
+        .sidebar:hover .sidebar-brand-footer {
+
+            opacity: 1;
+
+        }
+
+
+        /* =====================================================
+           TOOLBAR
+        ===================================================== */
+
+        .top-header {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            min-height: 68px;
+
+        }
+
+
+        /* GLOBAL SEARCH */
+
+        .global-search {
+
+            flex: 1;
+
+            max-width: 520px;
+
+        }
+
+
+        /* TOOLBAR ACTIONS */
+
+        .toolbar-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-end;
+
+            gap: 6px;
+
+            flex-wrap: nowrap;
+
+        }
+
+
+        /* NORMAL TOOLBAR BUTTON */
+
+        .toolbar-btn {
+
+            min-width: 76px;
+
+            height: 48px;
+
+            padding: 5px 9px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 2px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .toolbar-btn span {
+
+            font-size: 17px;
+
+            line-height: 18px;
+
+        }
+
+
+        .toolbar-btn small {
+
+            font-size: 10px;
+
+        }
+
+
+        /* ICON BUTTON */
+
+        .toolbar-icon-btn {
+
+            width: 42px;
+
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+
+        }
+
+
+        /* COMPANY */
+
+        .toolbar-company {
+
+            height: 46px;
+
+            padding: 5px 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            white-space: nowrap;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .toolbar-company-icon {
+
+            font-size: 18px;
+
+        }
+
+
+        .toolbar-company-text {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            line-height: 15px;
+
+        }
+
+
+        .toolbar-company-text small {
+
+            font-size: 10px;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+
+                width: 250px;
+
+            }
+
+            .sidebar:hover {
+
+                width: 250px;
+
+            }
+
+            .sidebar .menu-label,
+            .sidebar .brand-name,
+            .sidebar .company-text,
+            .sidebar .sidebar-brand-footer {
+
+                opacity: 1;
+
+                transform: translateX(0);
+
+            }
+
+            .toolbar-actions {
+
+                gap: 4px;
+
+            }
+
+            .toolbar-btn {
+
+                min-width: 58px;
+
+            }
+
+            .toolbar-btn small {
+
+                display: none;
+
+            }
+
+            .toolbar-company-text {
+
+                display: none;
+
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .toolbar-btn {
+
+                width: 40px;
+
+                min-width: 40px;
+
+                padding: 4px;
+
+            }
+
+            .toolbar-company {
+
+                width: 42px;
+
+                padding: 4px;
+
+                justify-content: center;
+
+            }
+
+            .toolbar-company > span:last-child {
+
+                display: none;
+
+            }
+
+            .global-search {
+
+                max-width: none;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -34,10 +510,14 @@
              SIDEBAR
         ================================================== -->
 
-        <aside class="sidebar" id="sidebar">
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
 
 
             <!-- BRAND -->
+
             <div class="brand-row">
 
                 <div class="brand-left">
@@ -55,7 +535,6 @@
                             ←
                         </button>
 
-
                         <button
                             class="nav-arrow"
                             onclick="goForward()"
@@ -63,7 +542,6 @@
                         >
                             →
                         </button>
-
 
                         <button
                             class="nav-arrow"
@@ -122,7 +600,6 @@
                     <span class="company-icon">
                         🏢
                     </span>
-
 
                     <span class="company-text">
 
@@ -367,6 +844,8 @@
             <div class="sidebar-bottom">
 
 
+                <!-- COMPANY SETTINGS -->
+
                 <button
                     onclick="showCompanyAccount()"
                     title="Company Account"
@@ -383,6 +862,8 @@
                 </button>
 
 
+                <!-- HELP -->
+
                 <button
                     title="Help & Support"
                     onclick="alert('THEA Books Help & Support')"
@@ -398,6 +879,8 @@
 
                 </button>
 
+
+                <!-- SIDEBAR FOOTER -->
 
                 <div class="sidebar-brand-footer">
 
@@ -431,7 +914,7 @@
             <header class="top-header">
 
 
-                <!-- MOBILE / SIDEBAR TOGGLE -->
+                <!-- MOBILE MENU -->
 
                 <button
                     class="toolbar-menu-btn"
@@ -440,7 +923,6 @@
                 >
                     ☰
                 </button>
-
 
 
                 <!-- SEARCH -->
@@ -461,7 +943,6 @@
                 </div>
 
 
-
                 <!-- TOOLBAR ACTIONS -->
 
                 <div class="toolbar-actions">
@@ -480,14 +961,13 @@
                         </span>
 
                         <small>
-                            New Invoice
+                            Invoice
                         </small>
 
                     </button>
 
 
-
-                    <!-- NEW PURCHASE -->
+                    <!-- PURCHASE -->
 
                     <button
                         class="toolbar-btn"
@@ -504,7 +984,6 @@
                         </small>
 
                     </button>
-
 
 
                     <!-- EXPENSE -->
@@ -526,7 +1005,6 @@
                     </button>
 
 
-
                     <!-- CUSTOMER -->
 
                     <button
@@ -544,7 +1022,6 @@
                         </small>
 
                     </button>
-
 
 
                     <!-- VENDOR -->
@@ -566,7 +1043,6 @@
                     </button>
 
 
-
                     <!-- PRODUCT -->
 
                     <button
@@ -584,7 +1060,6 @@
                         </small>
 
                     </button>
-
 
 
                     <!-- REPORTS -->
@@ -606,17 +1081,15 @@
                     </button>
 
 
-
                     <!-- HELP -->
 
                     <button
                         class="toolbar-icon-btn"
                         onclick="alert('THEA Books Help & Support')"
-                        title="Help"
+                        title="Help & Support"
                     >
                         ?
                     </button>
-
 
 
                     <!-- SETTINGS -->
@@ -628,7 +1101,6 @@
                     >
                         ⚙
                     </button>
-
 
 
                     <!-- COMPANY -->
@@ -686,8 +1158,7 @@
                 </div>
 
 
-
-                <!-- MAIN NEW TRANSACTION -->
+                <!-- NEW TRANSACTION -->
 
                 <button
                     class="new-btn"
@@ -736,7 +1207,7 @@
          JAVASCRIPT
     ====================================================== -->
 
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=7"></script>
 
 
 </body>
