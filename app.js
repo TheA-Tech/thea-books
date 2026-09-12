@@ -4304,12 +4304,6 @@ function showTrialBalance() {
         0
     );
 
-    const totalPurchases = purchases.reduce(
-        (sum, purchase) =>
-            sum + Number(purchase.amount || 0),
-        0
-    );
-
     const totalExpenses = transactions
         .filter(t => t.type === "expense")
         .reduce(
@@ -4323,14 +4317,6 @@ function showTrialBalance() {
         .reduce(
             (sum, invoice) =>
                 sum + Number(invoice.total || 0),
-            0
-        );
-
-    const payables = purchases
-        .filter(purchase => purchase.status === "unpaid")
-        .reduce(
-            (sum, purchase) =>
-                sum + Number(purchase.amount || 0),
             0
         );
 
@@ -4360,6 +4346,14 @@ function showTrialBalance() {
             0
         );
 
+    const payables = purchases
+        .filter(purchase => purchase.status === "unpaid")
+        .reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
     const cashBalance =
         paidSales -
         paidPurchases -
@@ -4367,24 +4361,56 @@ function showTrialBalance() {
 
 
     /* =========================
-       DISPLAY
+       TOTAL ASSETS
+    ========================= */
+
+    const totalAssets =
+        cashBalance +
+        receivables +
+        inventoryValue;
+
+
+    /* =========================
+       NET PROFIT
+    ========================= */
+
+    const netProfit =
+        totalSales -
+        totalExpenses;
+
+
+    /* =========================
+       OPENING / OWNER EQUITY
+       Used to balance Trial Balance
+    ========================= */
+
+    const ownerEquity =
+        totalAssets -
+        payables -
+        netProfit;
+
+
+    /* =========================
+       DEBIT / CREDIT TOTALS
     ========================= */
 
     const debitTotal =
         cashBalance +
         receivables +
         inventoryValue +
-        totalPurchases +
         totalExpenses;
 
     const creditTotal =
         totalSales +
-        payables;
+        payables +
+        ownerEquity;
 
+
+    /* =========================
+       DISPLAY
+    ========================= */
 
     content.innerHTML = `
-
-        <!-- HEADER -->
 
         <div class="dashboard-section">
 
@@ -4423,8 +4449,6 @@ function showTrialBalance() {
 
         </div>
 
-
-        <!-- SUMMARY -->
 
         <div class="cards">
 
@@ -4474,15 +4498,15 @@ function showTrialBalance() {
                 <h3>⚖️ Difference</h3>
 
                 <p style="color:#0f766e;">
-                    ${formatMoney(Math.abs(debitTotal - creditTotal))}
+                    ${formatMoney(
+                        Math.abs(debitTotal - creditTotal)
+                    )}
                 </p>
 
             </div>
 
         </div>
 
-
-        <!-- TRIAL BALANCE TABLE -->
 
         <div class="panel">
 
@@ -4607,27 +4631,6 @@ function showTrialBalance() {
 
                         <tr>
                             <td style="padding:13px;">
-                                Purchases
-                            </td>
-
-                            <td style="
-                                padding:13px;
-                                text-align:right;
-                            ">
-                                ${formatMoney(totalPurchases)}
-                            </td>
-
-                            <td style="
-                                padding:13px;
-                                text-align:right;
-                            ">
-                                —
-                            </td>
-                        </tr>
-
-
-                        <tr>
-                            <td style="padding:13px;">
                                 Expenses
                             </td>
 
@@ -4689,6 +4692,26 @@ function showTrialBalance() {
                         </tr>
 
 
+                        <tr>
+                            <td style="padding:13px;">
+                                Owner's Capital / Equity
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                —
+                            </td>
+
+                            <td style="
+                                padding:13px;
+                                text-align:right;
+                            ">
+                                ${formatMoney(ownerEquity)}
+                            </td>
+                        </tr>
+
                     </tbody>
 
 
@@ -4734,7 +4757,6 @@ function showTrialBalance() {
 
     `;
 }
-
 
 function showReports() {
 
