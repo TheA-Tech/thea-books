@@ -3389,7 +3389,6 @@ function showCustomers() {
     pageTitle.innerText = "Customers";
 
     // Link old invoices to existing customers using name
-    // This is only for old invoices that do not have customerId.
     let dataChanged = false;
 
     invoices.forEach(invoice => {
@@ -3428,13 +3427,16 @@ function showCustomers() {
 
         </div>
 
+
         <div class="panel">
 
             <h2>Customer List</h2>
 
             ${
                 customers.length === 0
+
                     ? `<p>No customers added yet.</p>`
+
                     : customers
                         .slice()
                         .reverse()
@@ -3450,7 +3452,7 @@ function showCustomers() {
                             const totalSales =
                                 customerInvoices.reduce(
                                     (sum, invoice) =>
-                                        sum + Number(invoice.total),
+                                        sum + Number(invoice.total || 0),
                                     0
                                 );
 
@@ -3462,7 +3464,7 @@ function showCustomers() {
                                     )
                                     .reduce(
                                         (sum, invoice) =>
-                                            sum + Number(invoice.total),
+                                            sum + Number(invoice.total || 0),
                                         0
                                     );
 
@@ -3492,9 +3494,72 @@ function showCustomers() {
 
                                     </div>
 
-                                    <strong>
-                                        ${formatMoney(receivable)}
-                                    </strong>
+
+                                    <div style="
+                                        display:flex;
+                                        align-items:center;
+                                        gap:14px;
+                                    ">
+
+                                        <strong>
+                                            ${formatMoney(receivable)}
+                                        </strong>
+
+                                        <button
+                                            type="button"
+                                            onclick="toggleCustomerMenu(${customer.id})"
+                                            style="
+                                                border:none;
+                                                background:#f3f4f6;
+                                                width:34px;
+                                                height:34px;
+                                                border-radius:8px;
+                                                cursor:pointer;
+                                                font-size:20px;
+                                                color:#374151;
+                                            "
+                                            title="Actions"
+                                        >
+                                            ⋮
+                                        </button>
+
+                                        <div
+                                            id="customer-menu-${customer.id}"
+                                            style="
+                                                display:none;
+                                                position:absolute;
+                                                right:25px;
+                                                margin-top:85px;
+                                                background:#fff;
+                                                border:1px solid #e5e7eb;
+                                                border-radius:10px;
+                                                box-shadow:0 8px 25px rgba(0,0,0,.12);
+                                                min-width:150px;
+                                                z-index:100;
+                                                overflow:hidden;
+                                            "
+                                        >
+
+                                            <button
+                                                type="button"
+                                                onclick="deleteCustomer(${customer.id})"
+                                                style="
+                                                    width:100%;
+                                                    border:none;
+                                                    background:#fff;
+                                                    padding:12px 15px;
+                                                    text-align:left;
+                                                    cursor:pointer;
+                                                    color:#dc2626;
+                                                    font-size:14px;
+                                                "
+                                            >
+                                                🗑️ Delete Customer
+                                            </button>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
@@ -3507,6 +3572,108 @@ function showCustomers() {
         </div>
     `;
 }
+
+
+/* =========================
+   CUSTOMER ACTIONS
+========================= */
+
+function toggleCustomerMenu(customerId) {
+
+    const menu =
+        document.getElementById(
+            "customer-menu-" + customerId
+        );
+
+    if (!menu) {
+        return;
+    }
+
+    const isOpen =
+        menu.style.display === "block";
+
+    document
+        .querySelectorAll('[id^="customer-menu-"]')
+        .forEach(item => {
+            item.style.display = "none";
+        });
+
+    menu.style.display =
+        isOpen ? "none" : "block";
+}
+
+
+function deleteCustomer(customerId) {
+
+    const customer =
+        customers.find(
+            customer =>
+                String(customer.id) ===
+                String(customerId)
+        );
+
+    if (!customer) {
+        alert("Customer not found.");
+        return;
+    }
+
+    const customerInvoices =
+        invoices.filter(
+            invoice =>
+                String(invoice.customerId) ===
+                String(customerId)
+        );
+
+    const message =
+        customerInvoices.length > 0
+
+            ? `Delete "${customer.name}"?\n\n` +
+              `This customer has ${customerInvoices.length} invoice(s).\n` +
+              `The invoices will NOT be deleted.\n\n` +
+              `Are you sure you want to delete this customer?`
+
+            : `Delete "${customer.name}"?\n\n` +
+              `This action cannot be undone.\n\n` +
+              `Are you sure?`;
+
+    const confirmed =
+        confirm(message);
+
+    if (!confirmed) {
+        return;
+    }
+
+    // Keep old invoices safe.
+    // Only remove the customer relationship.
+    invoices.forEach(invoice => {
+
+        if (
+            String(invoice.customerId) ===
+            String(customerId)
+        ) {
+
+            delete invoice.customerId;
+        }
+    });
+
+    saveInvoices();
+
+    // Delete selected customer only
+    customers =
+        customers.filter(
+            customer =>
+                String(customer.id) !==
+                String(customerId)
+        );
+
+    saveCustomers();
+
+    alert("Customer deleted successfully!");
+
+    showPage("customers");
+}
+
+
 /* =========================
    VENDORS
 ========================= */
