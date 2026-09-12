@@ -4284,6 +4284,9 @@ function createInvoice(event) {
    THEA BOOKS ERP MODULES
 ========================================= */
 
+let invoices =
+    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
+
 let vendors =
     JSON.parse(localStorage.getItem("theaBooksVendors")) || [];
 
@@ -6373,7 +6376,6 @@ function showCustomers() {
                                         </button>
 
                                         <div
-
     id="customer-menu-${customer.id}"
     style="
         display:none;
