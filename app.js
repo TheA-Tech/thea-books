@@ -10072,7 +10072,7 @@ function showCloudSync() {
 
             <p style="color:#6b7280;font-size:13px;">
                 Your cloud synchronization system will manage
-                company data between THEA Books and Supabase.
+                your business data securely in the cloud.
             </p>
 
             <div class="form-buttons">
