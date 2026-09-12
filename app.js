@@ -5146,6 +5146,98 @@ async function saveCompany(event) {
     }
 }
 
+async function loadCompanyProfile() {
+
+    try {
+
+        const {
+            data: { session },
+            error: sessionError
+        } = await theaSupabase.auth.getSession();
+
+        if (sessionError) {
+            throw sessionError;
+        }
+
+        if (!session) {
+            return;
+        }
+
+        const {
+            data: profile,
+            error: profileError
+        } = await theaSupabase
+            .from("profiles")
+            .select("company_id")
+            .eq("id", session.user.id)
+            .single();
+
+        if (profileError) {
+            throw profileError;
+        }
+
+        if (!profile || !profile.company_id) {
+            return;
+        }
+
+        const {
+            data: company,
+            error: companyError
+        } = await theaSupabase
+            .from("companies")
+            .select(`
+                id,
+                name,
+                owner_name,
+                phone,
+                email,
+                address,
+                currency
+            `)
+            .eq("id", profile.company_id)
+            .single();
+
+        if (companyError) {
+            throw companyError;
+        }
+
+        if (!company) {
+            return;
+        }
+
+        companyAccount.name =
+            company.name || "";
+
+        companyAccount.owner =
+            company.owner_name || "";
+
+        companyAccount.phone =
+            company.phone || "";
+
+        companyAccount.email =
+            company.email || "";
+
+        companyAccount.address =
+            company.address || "";
+
+        companyAccount.currency =
+            company.currency || "PKR";
+
+        saveCompanyAccount();
+
+        console.log(
+            "Company profile loaded from cloud."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Company profile cloud load error:",
+            error
+        );
+    }
+}
+
 /* =========================
    VENDORS
 ========================= */
