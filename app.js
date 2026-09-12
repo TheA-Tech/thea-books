@@ -10155,7 +10155,6 @@ async function checkLogin() {
 
     loginScreen.style.display = "none";
 
-    await loadCompanyProfile();
 
 } else {
 
