@@ -1,5 +1,5 @@
 const SUPABASE_URL = "https://iruedykdeuyejrrcsaed.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_PUBLISHABLE_KEY";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlydWVkeWtkZXV5ZWpycmNzYWVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxNzIxODIsImV4cCI6MjEwNDc0ODE4Mn0.VKuAv1goH4hebSobkkfddeUpwfM3t-FtG2VvMPOk6HU";
 const pageTitle = document.getElementById("pageTitle");
 const content = document.getElementById("content");
 
