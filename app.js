@@ -3,6 +3,15 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const pageTitle = document.getElementById("pageTitle");
 const content = document.getElementById("content");
 
+let theaSupabase = null;
+
+if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
+    theaSupabase = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+}
+
 let products =
     JSON.parse(localStorage.getItem("theaBooksProducts")) || [];
 
