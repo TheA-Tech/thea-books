@@ -4832,10 +4832,10 @@ function showSoftwareSettings() {
             <div class="settings-grid">
 
                 <button type="button"
-                    class="settings-card"
-                    onclick="showCompanyAccount()">
+    class="settings-card"
+    onclick="showInvoiceSettings()">
 
-                    <span class="settings-icon">🏢</span>
+    <span class="settings-icon">🧾</span>
 
                     <span>
                         <strong>Company Profile</strong>
@@ -4864,10 +4864,10 @@ function showSoftwareSettings() {
 
 
                 <button type="button"
-                    class="settings-card"
-                   onclick="showCurrencySettings()"
+    class="settings-card"
+    onclick="showCurrencySettings()">
 
-                    <span class="settings-icon">💱</span>
+    <span class="settings-icon">💱</span>
 
                     <span>
                         <strong>Currency</strong>
@@ -4879,11 +4879,11 @@ function showSoftwareSettings() {
                 </button>
 
 
-                <button type="button"
-                    class="settings-card"
-                   onclick="showFinancialSettings()"
+               <button type="button"
+    class="settings-card"
+    onclick="showFinancialSettings()">
 
-                    <span class="settings-icon">📊</span>
+    <span class="settings-icon">📊</span>
 
                     <span>
                         <strong>Financial Settings</strong>
@@ -4902,11 +4902,11 @@ function showSoftwareSettings() {
 
             <div class="settings-grid">
 
-                <button type="button"
-                    class="settings-card"
-                    onclick="showSecuritySettings()"
+               <button type="button"
+    class="settings-card"
+    onclick="showSecuritySettings()">
 
-                    <span class="settings-icon">🔐</span>
+    <span class="settings-icon">🔐</span>
 
                     <span>
                         <strong>Security</strong>
@@ -4919,10 +4919,10 @@ function showSoftwareSettings() {
 
 
                 <button type="button"
-                    class="settings-card"
-                    onclick="showCloudSync()"
+    class="settings-card"
+    onclick="showCloudSync()">
 
-                    <span class="settings-icon">☁️</span>
+    <span class="settings-icon">☁️</span>
 
                     <span>
                         <strong>Cloud & Sync</strong>
