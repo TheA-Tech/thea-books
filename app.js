@@ -2590,7 +2590,7 @@ function addVendor(event) {
 ========================= */
 
 function openPurchaseForm() {
-
+console.log("VENDORS:", vendors);
     pageTitle.innerText = "New Purchase";
 
     content.innerHTML = `
@@ -3527,115 +3527,7 @@ function showVendors() {
 
             <button
                 class="new-btn"
-                onclick="openVendorForm()">
-                + Add Vendor
-            </button>
-
-        </div>
-
-        <div class="panel">
-
-            <h2>Vendor List</h2>
-
-            ${
-                vendors.length === 0
-
-                    ? `<p>No vendors added yet.</p>`
-
-                    :
-
-                    vendors
-                        .slice()
-                        .reverse()
-                        .map(vendor => {
-
-                            const vendorPurchases =
-                                purchases.filter(
-                                    purchase =>
-                                        String(
-                                            purchase.vendorId
-                                        ) ===
-                                        String(vendor.id)
-                                );
-
-                            const total =
-                                vendorPurchases.reduce(
-                                    (sum, purchase) =>
-                                        sum +
-                                        Number(
-                                            purchase.amount || 0
-                                        ),
-                                    0
-                                );
-
-                            const payable =
-                                vendorPurchases
-                                    .filter(
-                                        purchase =>
-                                            purchase.status ===
-                                            "unpaid"
-                                    )
-                                    .reduce(
-                                        (sum, purchase) =>
-                                            sum +
-                                            Number(
-                                                purchase.amount || 0
-                                            ),
-                                        0
-                                    );
-
-                            return `
-
-                                <div class="transaction-row">
-
-                                    <div>
-
-                                        <strong>
-                                            ${vendor.name}
-                                        </strong>
-
-                                        <small>
-                                            ${vendor.phone || "No phone"}
-                                            ${
-                                                vendor.email
-                                                    ? " • " +
-                                                      vendor.email
-                                                    : ""
-                                            }
-                                        </small>
-
-                                        <small>
-                                            Purchases:
-                                            ${vendorPurchases.length}
-                                            • Total:
-                                            ${formatMoney(total)}
-                                            • Payable:
-                                            ${formatMoney(payable)}
-                                        </small>
-
-                                    </div>
-
-                                    <strong>
-                                        ${formatMoney(payable)}
-                                    </strong>
-
-                                </div>
-
-                            `;
-
-                        })
-                        .join("")
-            }
-
-        </div>
-    `;
-}
-
-
-/* =========================
-   INVENTORY
-========================= */
-
+                openVendorForm()
 function showInventory() {
 
     pageTitle.innerText = "Inventory";
