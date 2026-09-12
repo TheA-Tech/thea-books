@@ -2010,6 +2010,243 @@ function viewInvoice(invoiceId) {
 
     `;
 }
+function openInvoiceEditForm(invoiceId) {
+
+    const invoice = invoices.find(
+        invoice =>
+            String(invoice.id) === String(invoiceId)
+    );
+
+    if (!invoice) {
+        alert("Invoice not found.");
+        return;
+    }
+
+    pageTitle.innerText = "Edit Invoice";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>✏️ Edit Invoice</h2>
+
+            <form onsubmit="updateInvoice(event, ${invoice.id})">
+
+                <label>Customer</label>
+
+                <select id="editInvoiceCustomer" required>
+
+                    <option value="">
+                        Select Customer
+                    </option>
+
+                    ${
+                        customers.map(customer => `
+                            <option
+                                value="${customer.id}"
+                                ${String(customer.id) === String(invoice.customerId) ? "selected" : ""}
+                            >
+                                ${customer.name}
+                            </option>
+                        `).join("")
+                    }
+
+                </select>
+
+
+                <label>Invoice Date</label>
+
+                <input
+                    type="date"
+                    id="editInvoiceDate"
+                    value="${invoice.date}"
+                    required
+                >
+
+
+                <label>Invoice Items</label>
+
+                <div id="editInvoiceItems">
+
+                    ${
+                        invoice.items.map((item, index) => `
+
+                            <div
+                                class="invoice-item"
+                                style="
+                                    display:grid;
+                                    grid-template-columns:2fr 1fr 1fr 1fr auto;
+                                    gap:8px;
+                                    margin-bottom:10px;
+                                "
+                            >
+
+                                <input
+                                    type="text"
+                                    class="edit-item-product"
+                                    value="${item.product}"
+                                    required
+                                >
+
+                                <input
+                                    type="number"
+                                    class="edit-item-quantity"
+                                    value="${item.quantity}"
+                                    min="1"
+                                    step="1"
+                                    oninput="calculateEditInvoiceTotals()"
+                                    required
+                                >
+
+                                <input
+                                    type="number"
+                                    class="edit-item-rate"
+                                    value="${item.rate}"
+                                    min="0"
+                                    step="0.01"
+                                    oninput="calculateEditInvoiceTotals()"
+                                    required
+                                >
+
+                                <input
+                                    type="text"
+                                    class="edit-item-amount"
+                                    value="${formatMoney(item.amount)}"
+                                    readonly
+                                >
+
+                                <button
+                                    type="button"
+                                    class="cancel-btn"
+                                    onclick="removeEditInvoiceItem(this)"
+                                >
+                                    ×
+                                </button>
+
+                            </div>
+
+                        `).join("")
+                    }
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="addEditInvoiceItem()"
+                >
+                    + Add Item
+                </button>
+
+
+                <label>Discount</label>
+
+                <input
+                    type="number"
+                    id="editInvoiceDiscount"
+                    value="${invoice.discount || 0}"
+                    min="0"
+                    step="0.01"
+                    oninput="calculateEditInvoiceTotals()"
+                >
+
+
+                <label>Tax (%)</label>
+
+                <input
+                    type="number"
+                    id="editInvoiceTax"
+                    value="${invoice.taxPercent || 0}"
+                    min="0"
+                    step="0.01"
+                    oninput="calculateEditInvoiceTotals()"
+                >
+
+
+                <div
+                    class="panel"
+                    style="margin-top:15px;padding:15px;"
+                >
+
+                    <p>
+                        <strong>Subtotal:</strong>
+                        <span id="editInvoiceSubtotal">
+                            Rs. 0
+                        </span>
+                    </p>
+
+                    <p>
+                        <strong>Discount:</strong>
+                        <span id="editInvoiceDiscountDisplay">
+                            Rs. 0
+                        </span>
+                    </p>
+
+                    <p>
+                        <strong>Tax:</strong>
+                        <span id="editInvoiceTaxDisplay">
+                            Rs. 0
+                        </span>
+                    </p>
+
+                    <h2>
+                        Grand Total:
+                        <span id="editInvoiceGrandTotal">
+                            Rs. 0
+                        </span>
+                    </h2>
+
+                </div>
+
+
+                <label>Payment Status</label>
+
+                <select id="editInvoiceStatus" required>
+
+                    <option
+                        value="paid"
+                        ${invoice.status === "paid" ? "selected" : ""}
+                    >
+                        Paid
+                    </option>
+
+                    <option
+                        value="unpaid"
+                        ${invoice.status === "unpaid" ? "selected" : ""}
+                    >
+                        Unpaid
+                    </option>
+
+                </select>
+
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Changes
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('sales')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+
+    calculateEditInvoiceTotals();
+}
 function openInvoiceForm(customerId = "") {
 
     pageTitle.innerText = "Create Invoice";
@@ -2321,6 +2558,332 @@ function removeInvoiceItem(button) {
    CALCULATE INVOICE TOTALS
 ========================= */
 
+function calculateEditInvoiceTotals() {
+
+    const items =
+        document.querySelectorAll(
+            "#editInvoiceItems .invoice-item"
+        );
+
+    let subtotal = 0;
+
+    items.forEach(item => {
+
+        const quantity =
+            Number(
+                item.querySelector(
+                    ".edit-item-quantity"
+                ).value
+            ) || 0;
+
+        const rate =
+            Number(
+                item.querySelector(
+                    ".edit-item-rate"
+                ).value
+            ) || 0;
+
+        const amount =
+            quantity * rate;
+
+        subtotal += amount;
+
+        item.querySelector(
+            ".edit-item-amount"
+        ).value = formatMoney(amount);
+    });
+
+    const discount =
+        Number(
+            document.getElementById(
+                "editInvoiceDiscount"
+            )?.value
+        ) || 0;
+
+    const taxPercent =
+        Number(
+            document.getElementById(
+                "editInvoiceTax"
+            )?.value
+        ) || 0;
+
+    const afterDiscount =
+        Math.max(0, subtotal - discount);
+
+    const taxAmount =
+        afterDiscount *
+        (taxPercent / 100);
+
+    const grandTotal =
+        afterDiscount + taxAmount;
+
+    document.getElementById(
+        "editInvoiceSubtotal"
+    ).innerText =
+        formatMoney(subtotal);
+
+    document.getElementById(
+        "editInvoiceDiscountDisplay"
+    ).innerText =
+        formatMoney(discount);
+
+    document.getElementById(
+        "editInvoiceTaxDisplay"
+    ).innerText =
+        formatMoney(taxAmount);
+
+    document.getElementById(
+        "editInvoiceGrandTotal"
+    ).innerText =
+        formatMoney(grandTotal);
+
+    return {
+        subtotal: subtotal,
+        discount: discount,
+        taxPercent: taxPercent,
+        taxAmount: taxAmount,
+        grandTotal: grandTotal
+    };
+}
+
+
+function addEditInvoiceItem() {
+
+    const container =
+        document.getElementById(
+            "editInvoiceItems"
+        );
+
+    if (!container) return;
+
+    const item =
+        document.createElement("div");
+
+    item.className =
+        "invoice-item";
+
+    item.style =
+        "display:grid;" +
+        "grid-template-columns:2fr 1fr 1fr 1fr auto;" +
+        "gap:8px;" +
+        "margin-bottom:10px;";
+
+    item.innerHTML = `
+
+        <input
+            type="text"
+            class="edit-item-product"
+            placeholder="Product / Service"
+            required
+        >
+
+        <input
+            type="number"
+            class="edit-item-quantity"
+            value="1"
+            min="1"
+            step="1"
+            oninput="calculateEditInvoiceTotals()"
+            required
+        >
+
+        <input
+            type="number"
+            class="edit-item-rate"
+            placeholder="Rate"
+            min="0"
+            step="0.01"
+            oninput="calculateEditInvoiceTotals()"
+            required
+        >
+
+        <input
+            type="text"
+            class="edit-item-amount"
+            value="Rs. 0"
+            readonly
+        >
+
+        <button
+            type="button"
+            class="cancel-btn"
+            onclick="removeEditInvoiceItem(this)"
+        >
+            ×
+        </button>
+    `;
+
+    container.appendChild(item);
+
+    calculateEditInvoiceTotals();
+}
+
+
+function removeEditInvoiceItem(button) {
+
+    const items =
+        document.querySelectorAll(
+            "#editInvoiceItems .invoice-item"
+        );
+
+    if (items.length <= 1) {
+        alert(
+            "At least one invoice item is required."
+        );
+        return;
+    }
+
+    button
+        .closest(".invoice-item")
+        .remove();
+
+    calculateEditInvoiceTotals();
+}
+
+
+function updateInvoice(event, invoiceId) {
+
+    event.preventDefault();
+
+    const invoice =
+        invoices.find(
+            invoice =>
+                String(invoice.id) ===
+                String(invoiceId)
+        );
+
+    if (!invoice) {
+        alert("Invoice not found.");
+        return;
+    }
+
+    const customerId =
+        document.getElementById(
+            "editInvoiceCustomer"
+        ).value;
+
+    const date =
+        document.getElementById(
+            "editInvoiceDate"
+        ).value;
+
+    const status =
+        document.getElementById(
+            "editInvoiceStatus"
+        ).value;
+
+    const customer =
+        customers.find(
+            customer =>
+                String(customer.id) ===
+                String(customerId)
+        );
+
+    if (!customer || !date) {
+        alert(
+            "Please select customer and invoice date."
+        );
+        return;
+    }
+
+    const itemElements =
+        document.querySelectorAll(
+            "#editInvoiceItems .invoice-item"
+        );
+
+    const items = [];
+
+    itemElements.forEach(item => {
+
+        const product =
+            item.querySelector(
+                ".edit-item-product"
+            ).value.trim();
+
+        const quantity =
+            Number(
+                item.querySelector(
+                    ".edit-item-quantity"
+                ).value
+            );
+
+        const rate =
+            Number(
+                item.querySelector(
+                    ".edit-item-rate"
+                ).value
+            );
+
+        if (
+            product &&
+            quantity > 0 &&
+            rate > 0
+        ) {
+            items.push({
+                product: product,
+                quantity: quantity,
+                rate: rate,
+                amount: quantity * rate
+            });
+        }
+    });
+
+    if (items.length === 0) {
+        alert(
+            "Please add at least one valid invoice item."
+        );
+        return;
+    }
+
+    const totals =
+        calculateEditInvoiceTotals();
+
+    if (totals.grandTotal <= 0) {
+        alert(
+            "Invoice total must be greater than zero."
+        );
+        return;
+    }
+
+    invoice.customerId =
+        customer.id;
+
+    invoice.customer =
+        customer.name;
+
+    invoice.date =
+        date;
+
+    invoice.items =
+        items;
+
+    invoice.subtotal =
+        totals.subtotal;
+
+    invoice.discount =
+        totals.discount;
+
+    invoice.taxPercent =
+        totals.taxPercent;
+
+    invoice.taxAmount =
+        totals.taxAmount;
+
+    invoice.total =
+        totals.grandTotal;
+
+    invoice.status =
+        status;
+
+    saveInvoices();
+
+    alert(
+        invoice.invoiceNumber +
+        " updated successfully!"
+    );
+
+    showPage("sales");
+}
 function calculateInvoiceTotals() {
 
     const items =
