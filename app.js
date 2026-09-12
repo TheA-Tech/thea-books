@@ -1,3 +1,5 @@
+const SUPABASE_URL = "https://iruedykdeuyejrrcsaed.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_PUBLISHABLE_KEY";
 const pageTitle = document.getElementById("pageTitle");
 const content = document.getElementById("content");
 
