@@ -4829,7 +4829,7 @@ function showSoftwareSettings() {
 
                 <button type="button"
                     class="settings-card"
-                    onclick="alert('Security settings will be added here.')">
+                    onclick="showSecuritySettings()"
 
                     <span class="settings-icon">🔐</span>
 
