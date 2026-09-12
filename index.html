@@ -1842,7 +1842,435 @@
     }
 
 }
-        
+
+        /* =====================================================
+   THEA BOOKS - 3D ERP VISUAL
+===================================================== */
+
+.erp-visual {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    margin: 25px 0 28px;
+    perspective: 1000px;
+}
+
+
+/* MAIN REVENUE CARD */
+
+.erp-main-card {
+    position: absolute;
+    left: 8%;
+    top: 25px;
+    width: 68%;
+    min-height: 175px;
+    padding: 18px;
+    border-radius: 16px;
+
+    background: rgba(255,255,255,0.96);
+
+    border: 1px solid rgba(255,255,255,0.75);
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,0.18),
+        0 5px 15px rgba(0,0,0,0.08);
+
+    transform:
+        rotateX(3deg)
+        rotateY(-5deg);
+
+    animation:
+        erpCardFloat 5s ease-in-out infinite;
+}
+
+
+.erp-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+
+.erp-card-top small {
+    display: block;
+    color: #6b7280;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+
+.erp-card-top strong {
+    display: block;
+    margin-top: 5px;
+    color: #111827;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+
+.erp-growth {
+    padding: 6px 9px;
+    border-radius: 20px;
+
+    background: #ecfdf5;
+    color: #059669;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+
+/* CHART */
+
+.erp-chart {
+    position: relative;
+    height: 105px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+
+.erp-chart svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+.chart-grid {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(37,99,235,0.07) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(37,99,235,0.05) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        100% 25px,
+        45px 100%;
+}
+
+
+.erp-chart-line {
+    fill: none;
+    stroke: #2563eb;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+
+    animation:
+        drawERPChart 2.5s ease forwards;
+}
+
+
+.erp-chart-area {
+    fill: rgba(37,99,235,0.08);
+    stroke: none;
+
+    opacity: 0;
+
+    animation:
+        showERPChartArea 1s ease 1.3s forwards;
+}
+
+
+/* FLOATING CARDS */
+
+.erp-floating-card {
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 10px 13px;
+
+    background: rgba(255,255,255,0.97);
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 15px 30px rgba(0,0,0,0.16);
+
+    border: 1px solid rgba(255,255,255,0.8);
+
+    z-index: 5;
+}
+
+
+.erp-floating-card small {
+    display: block;
+    color: #6b7280;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+
+.erp-floating-card strong {
+    display: block;
+    margin-top: 2px;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+
+.erp-mini-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 13px;
+}
+
+
+.erp-sales-card {
+    right: 1%;
+    top: 12px;
+
+    animation:
+        erpSmallFloat 4s ease-in-out infinite;
+}
+
+
+.erp-customers-card {
+    right: -1%;
+    bottom: 58px;
+
+    animation:
+        erpSmallFloat 4.5s ease-in-out infinite .5s;
+}
+
+
+.erp-inventory-card {
+    left: 0;
+    bottom: 4px;
+
+    animation:
+        erpSmallFloat 5s ease-in-out infinite 1s;
+}
+
+
+/* INVOICE CARD */
+
+.erp-invoice-card {
+    position: absolute;
+
+    right: 4%;
+    bottom: 3px;
+
+    width: 145px;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8fafc
+        );
+
+    box-shadow:
+        0 18px 35px rgba(0,0,0,0.17);
+
+    z-index: 6;
+
+    transform:
+        rotate(3deg);
+
+    animation:
+        invoiceFloat 5s ease-in-out infinite;
+}
+
+
+.invoice-top {
+    display: flex;
+    justify-content: space-between;
+
+    color: #6b7280;
+
+    font-size: 7px;
+    font-weight: 800;
+}
+
+
+.invoice-line {
+    height: 1px;
+
+    margin: 8px 0;
+
+    background: #e5e7eb;
+}
+
+
+.invoice-row {
+    display: flex;
+    justify-content: space-between;
+
+    margin: 5px 0;
+
+    color: #6b7280;
+
+    font-size: 8px;
+}
+
+
+.invoice-total {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 9px;
+    padding-top: 7px;
+
+    border-top: 1px dashed #d1d5db;
+
+    color: #111827;
+
+    font-size: 9px;
+}
+
+
+.invoice-total strong {
+    color: #2563eb;
+}
+
+
+/* ANIMATIONS */
+
+@keyframes erpCardFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotateX(3deg)
+            rotateY(-5deg);
+    }
+
+    50% {
+        transform:
+            translateY(-7px)
+            rotateX(4deg)
+            rotateY(-3deg);
+    }
+
+}
+
+
+@keyframes erpSmallFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+
+}
+
+
+@keyframes invoiceFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(3deg);
+    }
+
+    50% {
+        transform:
+            translateY(-8px)
+            rotate(1deg);
+    }
+
+}
+
+
+@keyframes drawERPChart {
+
+    to {
+        stroke-dashoffset: 0;
+    }
+
+}
+
+
+@keyframes showERPChartArea {
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .erp-visual {
+        height: 270px;
+        transform: scale(.95);
+        transform-origin: center;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .erp-visual {
+        height: 250px;
+        margin-top: 20px;
+    }
+
+    .erp-main-card {
+        left: 5%;
+        width: 76%;
+    }
+
+    .erp-floating-card {
+        transform: scale(.9);
+    }
+
+    .erp-customers-card {
+        right: 0;
+    }
+
+    .erp-invoice-card {
+        right: 0;
+        width: 125px;
+        transform: scale(.9) rotate(3deg);
+    }
+
+}
 /* =====================================================
    MOBILE
 ===================================================== */
