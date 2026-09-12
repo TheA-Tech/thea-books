@@ -2590,7 +2590,7 @@ function addVendor(event) {
 ========================= */
 
 function openPurchaseForm() {
-console.log("VENDORS:", vendors);
+
     pageTitle.innerText = "New Purchase";
 
     content.innerHTML = `
