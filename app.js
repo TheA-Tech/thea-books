@@ -3873,7 +3873,419 @@ function addProduct(event) {
 /* =========================
    REPORTS
 ========================= */
+/* =========================
+   BALANCE SHEET
+========================= */
 
+function showBalanceSheet() {
+
+    pageTitle.innerText = "Balance Sheet";
+
+    /* =========================
+       ASSETS
+    ========================= */
+
+    const receivables = invoices
+        .filter(invoice => invoice.status === "unpaid")
+        .reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const inventoryValue = products.reduce(
+        (sum, product) =>
+            sum +
+            (Number(product.stock || 0) *
+             Number(product.cost || 0)),
+        0
+    );
+
+    const paidSales = invoices
+        .filter(invoice => invoice.status === "paid")
+        .reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const paidPurchases = purchases
+        .filter(purchase => purchase.status === "paid")
+        .reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+    const expenses = transactions
+        .filter(t => t.type === "expense")
+        .reduce(
+            (sum, t) =>
+                sum + Number(t.amount || 0),
+            0
+        );
+
+    const cashBalance =
+        paidSales -
+        paidPurchases -
+        expenses;
+
+
+    /* =========================
+       LIABILITIES
+    ========================= */
+
+    const payables = purchases
+        .filter(purchase => purchase.status === "unpaid")
+        .reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+
+    /* =========================
+       PROFIT
+    ========================= */
+
+    const totalSales = invoices.reduce(
+        (sum, invoice) =>
+            sum + Number(invoice.total || 0),
+        0
+    );
+
+    const netProfit =
+        totalSales - expenses;
+
+
+    /* =========================
+       TOTAL ASSETS
+    ========================= */
+
+    const totalAssets =
+        cashBalance +
+        receivables +
+        inventoryValue;
+
+
+    /* =========================
+       EQUITY
+    ========================= */
+
+    const equity =
+        totalAssets -
+        payables;
+
+
+    /* =========================
+       DISPLAY
+    ========================= */
+
+    content.innerHTML = `
+
+        <!-- HEADER -->
+
+        <div class="dashboard-section">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:15px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+
+                    <h2 style="margin:0 0 5px 0;">
+                        ⚖️ Balance Sheet
+                    </h2>
+
+                    <p style="
+                        margin:0;
+                        color:#718096;
+                        font-size:13px;
+                    ">
+                        Summary of your business assets,
+                        liabilities and equity.
+                    </p>
+
+                </div>
+
+                <button
+                    class="new-btn"
+                    onclick="showPage('balance-sheet')"
+                >
+                    🔄 Refresh
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY CARDS -->
+
+        <div class="cards">
+
+            <div class="card" style="
+                border-top:4px solid #0f766e;
+            ">
+
+                <h3>🏦 Total Assets</h3>
+
+                <p style="color:#0f766e;">
+                    ${formatMoney(totalAssets)}
+                </p>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #dc2626;
+            ">
+
+                <h3>📋 Total Liabilities</h3>
+
+                <p style="color:#dc2626;">
+                    ${formatMoney(payables)}
+                </p>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #2563eb;
+            ">
+
+                <h3>💼 Equity</h3>
+
+                <p style="color:#2563eb;">
+                    ${formatMoney(equity)}
+                </p>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #059669;
+            ">
+
+                <h3>📈 Net Profit</h3>
+
+                <p style="color:#059669;">
+                    ${formatMoney(netProfit)}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- BALANCE SHEET -->
+
+        <div class="panel">
+
+            <h2>📑 Statement of Financial Position</h2>
+
+            <p style="
+                color:#718096;
+                font-size:13px;
+                margin-bottom:20px;
+            ">
+                Current financial position of the business.
+            </p>
+
+
+            <!-- ASSETS -->
+
+            <div style="
+                padding:18px;
+                background:#f8fafc;
+                border-radius:10px;
+                margin-bottom:15px;
+            ">
+
+                <h3 style="
+                    margin-top:0;
+                    margin-bottom:15px;
+                ">
+                    🏦 Assets
+                </h3>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                    border-bottom:1px solid #e2e8f0;
+                ">
+
+                    <span>Cash & Bank</span>
+
+                    <strong>
+                        ${formatMoney(cashBalance)}
+                    </strong>
+
+                </div>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                    border-bottom:1px solid #e2e8f0;
+                ">
+
+                    <span>Accounts Receivable</span>
+
+                    <strong>
+                        ${formatMoney(receivables)}
+                    </strong>
+
+                </div>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                ">
+
+                    <span>Inventory</span>
+
+                    <strong>
+                        ${formatMoney(inventoryValue)}
+                    </strong>
+
+                </div>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    margin-top:12px;
+                    padding-top:12px;
+                    border-top:2px solid #cbd5e1;
+                ">
+
+                    <strong>Total Assets</strong>
+
+                    <strong style="color:#0f766e;">
+                        ${formatMoney(totalAssets)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- LIABILITIES -->
+
+            <div style="
+                padding:18px;
+                background:#fef2f2;
+                border-radius:10px;
+                margin-bottom:15px;
+            ">
+
+                <h3 style="
+                    margin-top:0;
+                    margin-bottom:15px;
+                ">
+                    📋 Liabilities
+                </h3>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                ">
+
+                    <span>Accounts Payable</span>
+
+                    <strong>
+                        ${formatMoney(payables)}
+                    </strong>
+
+                </div>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    margin-top:12px;
+                    padding-top:12px;
+                    border-top:2px solid #fecaca;
+                ">
+
+                    <strong>Total Liabilities</strong>
+
+                    <strong style="color:#dc2626;">
+                        ${formatMoney(payables)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- EQUITY -->
+
+            <div style="
+                padding:18px;
+                background:#eff6ff;
+                border-radius:10px;
+            ">
+
+                <h3 style="
+                    margin-top:0;
+                    margin-bottom:15px;
+                ">
+                    💼 Equity
+                </h3>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                ">
+
+                    <span>Business Equity</span>
+
+                    <strong>
+                        ${formatMoney(equity)}
+                    </strong>
+
+                </div>
+
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    margin-top:12px;
+                    padding-top:12px;
+                    border-top:2px solid #bfdbfe;
+                ">
+
+                    <strong>
+                        Liabilities + Equity
+                    </strong>
+
+                    <strong style="color:#2563eb;">
+                        ${formatMoney(payables + equity)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+}
 function showReports() {
 
     pageTitle.innerText = "Reports";
@@ -4171,41 +4583,25 @@ function showReports() {
                 Additional accounting reports will be added here.
             </p>
 
+                <div
+    class="quick-action"
+    onclick="showPage('balance-sheet')"
+    style="cursor:pointer;"
+>
 
-            <div class="quick-actions">
+    <div class="quick-action-icon">
+        📋
+    </div>
 
-                <div class="quick-action">
+    <strong>
+        Balance Sheet
+    </strong>
 
-                    <div class="quick-action-icon">
-                        📋
-                    </div>
+    <span>
+        View Report
+    </span>
 
-                    <strong>
-                        Balance Sheet
-                    </strong>
-
-                    <span>
-                        Coming next
-                    </span>
-
-                </div>
-
-
-                <div class="quick-action">
-
-                    <div class="quick-action-icon">
-                        💵
-                    </div>
-
-                    <strong>
-                        Cash Flow
-                    </strong>
-
-                    <span>
-                        Coming next
-                    </span>
-
-                </div>
+</div>
 
 
                 <div class="quick-action">
@@ -4364,8 +4760,12 @@ else if (page === "reports") {
     showReports();
 
 }
+else if (page === "balance-sheet") {
 
+    showBalanceSheet();
 
+}
+    
     /* Close mobile menu after navigation */
 
     const navigation =
