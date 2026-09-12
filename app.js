@@ -1677,13 +1677,22 @@ function showSales() {
 
             ${
                 invoices.length === 0
+
                     ? `<p>No invoices yet.</p>`
-                    : invoices
+
+                    :
+
+                    invoices
                         .slice()
                         .reverse()
                         .map(invoice => `
 
-                            <div class="transaction-row">
+                            <div
+                                class="transaction-row"
+                                style="
+                                    position:relative;
+                                "
+                            >
 
                                 <div>
 
@@ -1699,24 +1708,308 @@ function showSales() {
 
                                 </div>
 
-                                <strong>
-                                    ${formatMoney(invoice.total)}
-                                </strong>
+
+                                <div
+                                    style="
+                                        position:relative;
+                                        display:flex;
+                                        align-items:center;
+                                        gap:14px;
+                                    "
+                                >
+
+                                    <strong>
+                                        ${formatMoney(invoice.total)}
+                                    </strong>
+
+
+                                    <button
+                                        type="button"
+                                        onclick="toggleInvoiceMenu(${invoice.id})"
+                                        style="
+                                            border:none;
+                                            background:#f3f4f6;
+                                            width:36px;
+                                            height:36px;
+                                            border-radius:8px;
+                                            cursor:pointer;
+                                            font-size:20px;
+                                            color:#374151;
+                                        "
+                                        title="Actions"
+                                    >
+                                        ⋮
+                                    </button>
+
+
+                                    <div
+                                        id="invoice-menu-${invoice.id}"
+                                        style="
+                                            display:none;
+                                            position:absolute;
+                                            right:0;
+                                            top:42px;
+                                            background:#fff;
+                                            border:1px solid #e5e7eb;
+                                            border-radius:10px;
+                                            box-shadow:0 8px 25px rgba(0,0,0,.12);
+                                            min-width:200px;
+                                            z-index:100;
+                                            overflow:hidden;
+                                        "
+                                    >
+
+                                        <button
+                                            type="button"
+                                            onclick="viewInvoice(${invoice.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            👁️ View Invoice
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="openInvoiceEditForm(${invoice.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            ✏️ Edit Invoice
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="duplicateInvoice(${invoice.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            📋 Duplicate Invoice
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="printInvoice(${invoice.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            🖨️ Print Invoice
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="deleteInvoice(${invoice.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                color:#dc2626;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            🗑️ Delete Invoice
+                                        </button>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
-                        `).join("")
+                        `)
+                        .join("")
             }
 
         </div>
     `;
 }
 
-
 /* =========================
    CREATE PROFESSIONAL INVOICE
 ========================= */
+function toggleInvoiceMenu(invoiceId) {
 
+    const menu = document.getElementById(
+        "invoice-menu-" + invoiceId
+    );
+
+    if (!menu) return;
+
+    document.querySelectorAll(
+        '[id^="invoice-menu-"]'
+    ).forEach(item => {
+        if (item !== menu) {
+            item.style.display = "none";
+        }
+    });
+
+    menu.style.display =
+        menu.style.display === "none"
+            ? "block"
+            : "none";
+}
+
+
+function viewInvoice(invoiceId) {
+
+    const invoice = invoices.find(
+        invoice =>
+            String(invoice.id) === String(invoiceId)
+    );
+
+    if (!invoice) {
+        alert("Invoice not found.");
+        return;
+    }
+
+    pageTitle.innerText =
+        "Invoice " + invoice.invoiceNumber;
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>🧾 Invoice ${invoice.invoiceNumber}</h2>
+
+            <p>
+                <strong>Customer:</strong>
+                ${invoice.customer}
+            </p>
+
+            <p>
+                <strong>Date:</strong>
+                ${invoice.date}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                ${invoice.status}
+            </p>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Invoice Items</h2>
+
+            ${
+                invoice.items && invoice.items.length > 0
+
+                    ? invoice.items.map(item => `
+
+                        <div
+                            class="transaction-row"
+                        >
+
+                            <div>
+
+                                <strong>
+                                    ${item.product}
+                                </strong>
+
+                                <small>
+                                    Qty: ${item.quantity}
+                                    • Rate:
+                                    ${formatMoney(item.rate)}
+                                </small>
+
+                            </div>
+
+                            <strong>
+                                ${formatMoney(item.amount)}
+                            </strong>
+
+                        </div>
+
+                    `).join("")
+
+                    : `<p>No invoice items found.</p>`
+            }
+
+        </div>
+
+
+        <div class="panel">
+
+            <p>
+                <strong>Subtotal:</strong>
+                ${formatMoney(invoice.subtotal || 0)}
+            </p>
+
+            <p>
+                <strong>Discount:</strong>
+                ${formatMoney(invoice.discount || 0)}
+            </p>
+
+            <p>
+                <strong>Tax:</strong>
+                ${formatMoney(invoice.taxAmount || 0)}
+            </p>
+
+            <h2>
+                Grand Total:
+                ${formatMoney(invoice.total || 0)}
+            </h2>
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="printInvoice(${invoice.id})"
+                >
+                    🖨️ Print Invoice
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showPage('sales')"
+                >
+                    Back to Sales
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
 function openInvoiceForm(customerId = "") {
 
     pageTitle.innerText = "Create Invoice";
