@@ -4284,17 +4284,23 @@ function createInvoice(event) {
    THEA BOOKS ERP MODULES
 ========================================= */
 
-let invoices =
-    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
+let customers =
+    JSON.parse(localStorage.getItem("theaBooksCustomers")) || [];
 
 let vendors =
     JSON.parse(localStorage.getItem("theaBooksVendors")) || [];
 
-let transactions =
-    JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
+let products =
+    JSON.parse(localStorage.getItem("theaBooksProducts")) || [];
 
 let purchases =
     JSON.parse(localStorage.getItem("theaBooksPurchases")) || [];
+
+let transactions =
+    JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
+
+let invoices =
+    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
 
 let companyAccount =
     JSON.parse(localStorage.getItem("theaBooksCompany")) || {
@@ -4305,7 +4311,6 @@ let companyAccount =
         address: "",
         currency: "PKR"
     };
-
 
 function saveVendors() {
     localStorage.setItem(
