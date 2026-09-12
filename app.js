@@ -1717,7 +1717,7 @@ function showSales() {
    CREATE PROFESSIONAL INVOICE
 ========================= */
 
-function openInvoiceForm() {
+function openInvoiceForm(customerId = "") {
 
     pageTitle.innerText = "Create Invoice";
 
@@ -1924,6 +1924,10 @@ function openInvoiceForm() {
     document.getElementById("invoiceDate").value =
         new Date().toISOString().split("T")[0];
 
+    if (customerId) {
+    document.getElementById("invoiceCustomer").value =
+        String(customerId);
+}
     calculateInvoiceTotals();
 }
 
@@ -3673,6 +3677,472 @@ function deleteCustomer(customerId) {
     showPage("customers");
 }
 
+
+
+/* =========================
+   VIEW CUSTOMER
+========================= */
+
+function viewCustomer(customerId) {
+
+    const customer =
+        customers.find(
+            item =>
+                String(item.id) ===
+                String(customerId)
+        );
+
+    if (!customer) {
+        alert("Customer not found.");
+        return;
+    }
+
+    const customerInvoices =
+        invoices.filter(
+            invoice =>
+                String(invoice.customerId) ===
+                String(customerId)
+        );
+
+    const totalSales =
+        customerInvoices.reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const paidAmount =
+        customerInvoices
+            .filter(
+                invoice =>
+                    invoice.status === "paid"
+            )
+            .reduce(
+                (sum, invoice) =>
+                    sum + Number(invoice.total || 0),
+                0
+            );
+
+    const receivable =
+        totalSales - paidAmount;
+
+    pageTitle.innerText =
+        "Customer Details";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>👤 ${customer.name}</h2>
+
+            <p>
+                <strong>Phone:</strong>
+                ${customer.phone || "Not provided"}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                ${customer.email || "Not provided"}
+            </p>
+
+            <p>
+                <strong>Address:</strong>
+                ${customer.address || "Not provided"}
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>🧾 Invoices</h3>
+                <p>${customerInvoices.length}</p>
+            </div>
+
+            <div class="card">
+                <h3>💰 Total Sales</h3>
+                <p>${formatMoney(totalSales)}</p>
+            </div>
+
+            <div class="card">
+                <h3>💵 Paid</h3>
+                <p>${formatMoney(paidAmount)}</p>
+            </div>
+
+            <div class="card">
+                <h3>📋 Receivable</h3>
+                <p>${formatMoney(receivable)}</p>
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <button
+                class="new-btn"
+                onclick="openCustomerEditForm(${customer.id})"
+            >
+                ✏️ Edit Customer
+            </button>
+
+            <button
+                class="new-btn"
+                onclick="openInvoiceForm(${customer.id})"
+                style="margin-left:8px;"
+            >
+                🧾 Create Invoice
+            </button>
+
+            <button
+                class="cancel-btn"
+                onclick="showPage('customers')"
+                style="margin-left:8px;"
+            >
+                ← Back
+            </button>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================
+   VIEW CUSTOMER INVOICES
+========================= */
+
+function viewCustomerInvoices(customerId) {
+
+    const customer =
+        customers.find(
+            item =>
+                String(item.id) ===
+                String(customerId)
+        );
+
+    if (!customer) {
+        alert("Customer not found.");
+        return;
+    }
+
+    const customerInvoices =
+        invoices
+            .filter(
+                invoice =>
+                    String(invoice.customerId) ===
+                    String(customerId)
+            )
+            .slice()
+            .reverse();
+
+    pageTitle.innerText =
+        customer.name + " - Invoices";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>📄 ${customer.name} - Invoices</h2>
+
+            <p>
+                Total invoices:
+                <strong>${customerInvoices.length}</strong>
+            </p>
+
+        </div>
+
+
+        <div class="panel">
+
+            ${
+                customerInvoices.length === 0
+
+                    ? `
+                        <p>
+                            No invoices found for this customer.
+                        </p>
+                    `
+
+                    :
+
+                    customerInvoices.map(invoice => `
+
+                        <div class="transaction-row">
+
+                            <div>
+
+                                <strong>
+                                    ${invoice.invoiceNumber}
+                                </strong>
+
+                                <small>
+                                    ${invoice.date}
+                                    • ${invoice.status}
+                                </small>
+
+                            </div>
+
+                            <strong>
+                                ${formatMoney(invoice.total)}
+                            </strong>
+
+                        </div>
+
+                    `).join("")
+            }
+
+        </div>
+
+        <div class="panel">
+
+            <button
+                class="new-btn"
+                onclick="openInvoiceForm(${customer.id})"
+            >
+                🧾 Create Invoice
+            </button>
+
+            <button
+                class="cancel-btn"
+                onclick="showPage('customers')"
+                style="margin-left:8px;"
+            >
+                ← Back
+            </button>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================
+   EDIT CUSTOMER
+========================= */
+
+function openCustomerEditForm(customerId) {
+
+    const customer =
+        customers.find(
+            item =>
+                String(item.id) ===
+                String(customerId)
+        );
+
+    if (!customer) {
+        alert("Customer not found.");
+        return;
+    }
+
+    pageTitle.innerText =
+        "Edit Customer";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>✏️ Edit Customer</h2>
+
+            <form
+                onsubmit="updateCustomer(event, ${customer.id})"
+            >
+
+                <label>Customer Name</label>
+
+                <input
+                    type="text"
+                    id="editCustomerName"
+                    value="${customer.name || ""}"
+                    required
+                >
+
+
+                <label>Phone</label>
+
+                <input
+                    type="text"
+                    id="editCustomerPhone"
+                    value="${customer.phone || ""}"
+                >
+
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="editCustomerEmail"
+                    value="${customer.email || ""}"
+                >
+
+
+                <label>Address</label>
+
+                <input
+                    type="text"
+                    id="editCustomerAddress"
+                    value="${customer.address || ""}"
+                >
+
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Changes
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('customers')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    `;
+}
+
+
+function updateCustomer(event, customerId) {
+
+    event.preventDefault();
+
+    const customer =
+        customers.find(
+            item =>
+                String(item.id) ===
+                String(customerId)
+        );
+
+    if (!customer) {
+        alert("Customer not found.");
+        return;
+    }
+
+    const name =
+        document
+            .getElementById("editCustomerName")
+            .value
+            .trim();
+
+    const phone =
+        document
+            .getElementById("editCustomerPhone")
+            .value
+            .trim();
+
+    const email =
+        document
+            .getElementById("editCustomerEmail")
+            .value
+            .trim();
+
+    const address =
+        document
+            .getElementById("editCustomerAddress")
+            .value
+            .trim();
+
+    if (!name) {
+        alert("Customer name is required.");
+        return;
+    }
+
+    customer.name = name;
+    customer.phone = phone;
+    customer.email = email;
+    customer.address = address;
+
+    saveCustomers();
+
+    alert("Customer updated successfully!");
+
+    showPage("customers");
+}
+
+
+/* =========================
+   DELETE CUSTOMER
+========================= */
+
+function deleteCustomer(customerId) {
+
+    const customer =
+        customers.find(
+            item =>
+                String(item.id) ===
+                String(customerId)
+        );
+
+    if (!customer) {
+        alert("Customer not found.");
+        return;
+    }
+
+    const customerInvoices =
+        invoices.filter(
+            invoice =>
+                String(invoice.customerId) ===
+                String(customerId)
+        );
+
+    const message =
+        customerInvoices.length > 0
+
+            ? `Delete "${customer.name}"?\n\n` +
+              `This customer has ${customerInvoices.length} invoice(s).\n` +
+              `The invoices will NOT be deleted.\n\n` +
+              `Are you sure?`
+
+            : `Delete "${customer.name}"?\n\n` +
+              `This action cannot be undone.\n\n` +
+              `Are you sure?`;
+
+    if (!confirm(message)) {
+        return;
+    }
+
+    /*
+       Keep invoices safe.
+       Remove only customer relationship.
+    */
+
+    invoices.forEach(invoice => {
+
+        if (
+            String(invoice.customerId) ===
+            String(customerId)
+        ) {
+
+            delete invoice.customerId;
+        }
+    });
+
+    saveInvoices();
+
+    customers =
+        customers.filter(
+            item =>
+                String(item.id) !==
+                String(customerId)
+        );
+
+    saveCustomers();
+
+    alert("Customer deleted successfully!");
+
+    showPage("customers");
+}
 
 /* =========================
    VENDORS
