@@ -4254,9 +4254,7 @@ function saveCompanyAccount() {
    COMPANY ACCOUNT
 ========================= */
 
-function showCompanyAccount() {
-
-    function showSoftwareSettings() {
+function showSoftwareSettings() {
 
     pageTitle.textContent = "Software Settings";
 
@@ -4286,6 +4284,17 @@ function showCompanyAccount() {
         </div>
     `;
 }
+
+
+function showCompanyAccount() {
+
+    pageTitle.innerText = "Company Account";
+
+    content.innerHTML = `
+
+        <div class="panel">
+function showCompanyAccount() {
+
     pageTitle.innerText = "Company Account";
 
     content.innerHTML = `
