@@ -2593,7 +2593,7 @@ function addVendor(event) {
    PURCHASE BILL
 ========================= */
 
-function openPurchaseForm() {
+function openPurchaseForm(vendorId = "") {
 
     pageTitle.innerText = "New Purchase";
 
@@ -2690,7 +2690,10 @@ function openPurchaseForm() {
     document.getElementById("purchaseDate").value =
         new Date().toISOString().split("T")[0];
 }
-
+if (vendorId) {
+    document.getElementById("purchaseVendor").value =
+        String(vendorId);
+}
 
 function savePurchase(event) {
 
@@ -4209,10 +4212,6 @@ function deleteCustomer(customerId) {
     showPage("customers");
 }
 
-/* =========================
-   VENDORS
-========================= */
-
 function showVendors() {
 
     pageTitle.innerText = "Vendors";
@@ -4236,6 +4235,7 @@ function showVendors() {
 
         </div>
 
+
         <div class="panel">
 
             <h2>Vendor List</h2>
@@ -4249,7 +4249,10 @@ function showVendors() {
                         .reverse()
                         .map(vendor => `
 
-                            <div class="transaction-row">
+                            <div
+                                class="transaction-row"
+                                style="position:relative;"
+                            >
 
                                 <div>
 
@@ -4268,6 +4271,138 @@ function showVendors() {
 
                                 </div>
 
+
+                                <div style="
+                                    position:relative;
+                                    display:flex;
+                                    align-items:center;
+                                ">
+
+                                    <button
+                                        type="button"
+                                        onclick="toggleVendorMenu(${vendor.id})"
+                                        style="
+                                            border:none;
+                                            background:#f3f4f6;
+                                            width:36px;
+                                            height:36px;
+                                            border-radius:8px;
+                                            cursor:pointer;
+                                            font-size:20px;
+                                            color:#374151;
+                                        "
+                                        title="Actions"
+                                    >
+                                        ⋮
+                                    </button>
+
+
+                                    <div
+                                        id="vendor-menu-${vendor.id}"
+                                        style="
+                                            display:none;
+                                            position:absolute;
+                                            right:0;
+                                            top:42px;
+                                            background:#fff;
+                                            border:1px solid #e5e7eb;
+                                            border-radius:10px;
+                                            box-shadow:0 8px 25px rgba(0,0,0,.12);
+                                            min-width:190px;
+                                            z-index:100;
+                                            overflow:hidden;
+                                        "
+                                    >
+
+                                        <button
+                                            type="button"
+                                            onclick="viewVendor(${vendor.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            👁️ View Vendor
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="openVendorEditForm(${vendor.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            ✏️ Edit Vendor
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="viewVendorPurchases(${vendor.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            📄 View Purchases
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="openPurchaseForm(${vendor.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            🛒 Add Purchase
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            onclick="deleteVendor(${vendor.id})"
+                                            style="
+                                                width:100%;
+                                                border:none;
+                                                background:#fff;
+                                                padding:12px 15px;
+                                                text-align:left;
+                                                cursor:pointer;
+                                                color:#dc2626;
+                                                font-size:14px;
+                                            "
+                                        >
+                                            🗑️ Delete Vendor
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
                         `)
@@ -4279,6 +4414,481 @@ function showVendors() {
     `;
 }
 
+/* =========================
+   VENDOR ACTIONS
+========================= */
+
+function toggleVendorMenu(vendorId) {
+
+    const menu =
+        document.getElementById(
+            "vendor-menu-" + vendorId
+        );
+
+    if (!menu) {
+        return;
+    }
+
+    const isOpen =
+        menu.style.display === "block";
+
+    document
+        .querySelectorAll('[id^="vendor-menu-"]')
+        .forEach(item => {
+            item.style.display = "none";
+        });
+
+    menu.style.display =
+        isOpen ? "none" : "block";
+}
+
+
+function viewVendor(vendorId) {
+
+    const vendor =
+        vendors.find(
+            item =>
+                String(item.id) ===
+                String(vendorId)
+        );
+
+    if (!vendor) {
+        alert("Vendor not found.");
+        return;
+    }
+
+    const vendorPurchases =
+        purchases.filter(
+            purchase =>
+                String(purchase.vendorId) ===
+                String(vendorId)
+        );
+
+    const totalPurchases =
+        vendorPurchases.reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+    const paidAmount =
+        vendorPurchases
+            .filter(
+                purchase =>
+                    purchase.status === "paid"
+            )
+            .reduce(
+                (sum, purchase) =>
+                    sum + Number(purchase.amount || 0),
+                0
+            );
+
+    const payable =
+        totalPurchases - paidAmount;
+
+    pageTitle.innerText =
+        "Vendor Details";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>🏢 ${vendor.name}</h2>
+
+            <p>
+                <strong>Phone:</strong>
+                ${vendor.phone || "Not provided"}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                ${vendor.email || "Not provided"}
+            </p>
+
+            <p>
+                <strong>Address:</strong>
+                ${vendor.address || "Not provided"}
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>🛒 Purchases</h3>
+                <p>${vendorPurchases.length}</p>
+            </div>
+
+            <div class="card">
+                <h3>💰 Total Purchases</h3>
+                <p>${formatMoney(totalPurchases)}</p>
+            </div>
+
+            <div class="card">
+                <h3>💵 Paid</h3>
+                <p>${formatMoney(paidAmount)}</p>
+            </div>
+
+            <div class="card">
+                <h3>📋 Payable</h3>
+                <p>${formatMoney(payable)}</p>
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <button
+                class="new-btn"
+                onclick="openVendorEditForm(${vendor.id})"
+            >
+                ✏️ Edit Vendor
+            </button>
+
+            <button
+                class="new-btn"
+                onclick="openPurchaseForm(${vendor.id})"
+                style="margin-left:8px;"
+            >
+                🛒 Add Purchase
+            </button>
+
+            <button
+                class="cancel-btn"
+                onclick="showPage('vendors')"
+                style="margin-left:8px;"
+            >
+                ← Back
+            </button>
+
+        </div>
+
+    `;
+}
+
+
+function viewVendorPurchases(vendorId) {
+
+    const vendor =
+        vendors.find(
+            item =>
+                String(item.id) ===
+                String(vendorId)
+        );
+
+    if (!vendor) {
+        alert("Vendor not found.");
+        return;
+    }
+
+    const vendorPurchases =
+        purchases
+            .filter(
+                purchase =>
+                    String(purchase.vendorId) ===
+                    String(vendorId)
+            )
+            .slice()
+            .reverse();
+
+    pageTitle.innerText =
+        vendor.name + " - Purchases";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>📄 ${vendor.name} - Purchases</h2>
+
+            <p>
+                Total purchases:
+                <strong>${vendorPurchases.length}</strong>
+            </p>
+
+        </div>
+
+
+        <div class="panel">
+
+            ${
+                vendorPurchases.length === 0
+
+                    ? `
+                        <p>
+                            No purchases found for this vendor.
+                        </p>
+                    `
+
+                    :
+
+                    vendorPurchases.map(purchase => `
+
+                        <div class="transaction-row">
+
+                            <div>
+
+                                <strong>
+                                    ${purchase.description}
+                                </strong>
+
+                                <small>
+                                    ${purchase.date}
+                                    • ${purchase.status}
+                                </small>
+
+                            </div>
+
+                            <strong>
+                                ${formatMoney(purchase.amount)}
+                            </strong>
+
+                        </div>
+
+                    `).join("")
+            }
+
+        </div>
+
+
+        <div class="panel">
+
+            <button
+                class="new-btn"
+                onclick="openPurchaseForm(${vendor.id})"
+            >
+                🛒 Add Purchase
+            </button>
+
+            <button
+                class="cancel-btn"
+                onclick="showPage('vendors')"
+                style="margin-left:8px;"
+            >
+                ← Back
+            </button>
+
+        </div>
+
+    `;
+}
+
+
+function openVendorEditForm(vendorId) {
+
+    const vendor =
+        vendors.find(
+            item =>
+                String(item.id) ===
+                String(vendorId)
+        );
+
+    if (!vendor) {
+        alert("Vendor not found.");
+        return;
+    }
+
+    pageTitle.innerText =
+        "Edit Vendor";
+
+    content.innerHTML = `
+
+        <div class="panel">
+
+            <h2>✏️ Edit Vendor</h2>
+
+            <form onsubmit="updateVendor(event, ${vendor.id})">
+
+                <label>Vendor Name</label>
+
+                <input
+                    type="text"
+                    id="editVendorName"
+                    value="${vendor.name || ""}"
+                    required
+                >
+
+                <label>Phone</label>
+
+                <input
+                    type="text"
+                    id="editVendorPhone"
+                    value="${vendor.phone || ""}"
+                >
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="editVendorEmail"
+                    value="${vendor.email || ""}"
+                >
+
+                <label>Address</label>
+
+                <input
+                    type="text"
+                    id="editVendorAddress"
+                    value="${vendor.address || ""}"
+                >
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="new-btn"
+                    >
+                        Save Changes
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="showPage('vendors')"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    `;
+}
+
+
+function updateVendor(event, vendorId) {
+
+    event.preventDefault();
+
+    const vendor =
+        vendors.find(
+            item =>
+                String(item.id) ===
+                String(vendorId)
+        );
+
+    if (!vendor) {
+        alert("Vendor not found.");
+        return;
+    }
+
+    const name =
+        document
+            .getElementById("editVendorName")
+            .value
+            .trim();
+
+    const phone =
+        document
+            .getElementById("editVendorPhone")
+            .value
+            .trim();
+
+    const email =
+        document
+            .getElementById("editVendorEmail")
+            .value
+            .trim();
+
+    const address =
+        document
+            .getElementById("editVendorAddress")
+            .value
+            .trim();
+
+    if (!name) {
+        alert("Vendor name is required.");
+        return;
+    }
+
+    vendor.name =
+        name;
+
+    vendor.phone =
+        phone;
+
+    vendor.email =
+        email;
+
+    vendor.address =
+        address;
+
+    saveVendors();
+
+    alert("Vendor updated successfully!");
+
+    showPage("vendors");
+}
+
+
+function deleteVendor(vendorId) {
+
+    const vendor =
+        vendors.find(
+            item =>
+                String(item.id) ===
+                String(vendorId)
+        );
+
+    if (!vendor) {
+        alert("Vendor not found.");
+        return;
+    }
+
+    const vendorPurchases =
+        purchases.filter(
+            purchase =>
+                String(purchase.vendorId) ===
+                String(vendorId)
+        );
+
+    const message =
+        vendorPurchases.length > 0
+
+            ? `Delete "${vendor.name}"?\n\n` +
+              `This vendor has ${vendorPurchases.length} purchase record(s).\n` +
+              `The purchase records will NOT be deleted.\n\n` +
+              `Are you sure?`
+
+            : `Delete "${vendor.name}"?\n\n` +
+              `This action cannot be undone.\n\n` +
+              `Are you sure?`;
+
+    if (!confirm(message)) {
+        return;
+    }
+
+    // Keep historical purchases safe.
+    purchases.forEach(purchase => {
+
+        if (
+            String(purchase.vendorId) ===
+            String(vendorId)
+        ) {
+
+            delete purchase.vendorId;
+        }
+    });
+
+    savePurchases();
+
+    vendors =
+        vendors.filter(
+            item =>
+                String(item.id) !==
+                String(vendorId)
+        );
+
+    saveVendors();
+
+    alert("Vendor deleted successfully!");
+
+    showPage("vendors");
+}
 
 /* =========================
    INVENTORY
