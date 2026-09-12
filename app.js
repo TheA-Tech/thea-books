@@ -4269,24 +4269,122 @@ function showSoftwareSettings() {
 
             <hr>
 
-            <h3>General Settings</h3>
+            <h3>🏢 Company Preferences</h3>
 
             <p>
-                Software configuration and preferences.
+                Manage your company profile, invoice identity,
+                currency and basic business information.
             </p>
 
-            <button
-                type="button"
-                class="new-btn"
-                onclick="alert('More software settings will be added here.')"
-            >
-                Manage Settings
-            </button>
+            <div class="settings-grid">
+
+                <button type="button"
+                    class="settings-card"
+                    onclick="showCompanyAccount()">
+
+                    <span class="settings-icon">🏢</span>
+
+                    <span>
+                        <strong>Company Profile</strong>
+                        <small>
+                            Company name, owner, contact and address.
+                        </small>
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="settings-card"
+                    onclick="showCompanyAccount()">
+
+                    <span class="settings-icon">🧾</span>
+
+                    <span>
+                        <strong>Invoice Settings</strong>
+                        <small>
+                            Company information used on invoices.
+                        </small>
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="settings-card"
+                    onclick="showCompanyAccount()">
+
+                    <span class="settings-icon">💱</span>
+
+                    <span>
+                        <strong>Currency</strong>
+                        <small>
+                            Configure your business currency.
+                        </small>
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="settings-card"
+                    onclick="alert('Financial settings will be added here.')">
+
+                    <span class="settings-icon">📊</span>
+
+                    <span>
+                        <strong>Financial Settings</strong>
+                        <small>
+                            Financial year and accounting preferences.
+                        </small>
+                    </span>
+
+                </button>
+
+            </div>
+
+            <hr>
+
+            <h3>🔒 Security & Account</h3>
+
+            <div class="settings-grid">
+
+                <button type="button"
+                    class="settings-card"
+                    onclick="alert('Security settings will be added here.')">
+
+                    <span class="settings-icon">🔐</span>
+
+                    <span>
+                        <strong>Security</strong>
+                        <small>
+                            Account security and access controls.
+                        </small>
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="settings-card"
+                    onclick="alert('Cloud synchronization will be configured here.')">
+
+                    <span class="settings-icon">☁️</span>
+
+                    <span>
+                        <strong>Cloud & Sync</strong>
+                        <small>
+                            Manage cloud data synchronization.
+                        </small>
+                    </span>
+
+                </button>
+
+            </div>
 
         </div>
     `;
 }
-
 
 function showCompanyAccount() {
 
