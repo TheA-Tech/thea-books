@@ -9965,6 +9965,139 @@ async function checkLogin() {
 
 checkLogin();
 
+function showCloudSync() {
+
+    pageTitle.textContent = "Cloud & Sync";
+
+    content.innerHTML = `
+        <div class="panel">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:16px;
+                margin-bottom:20px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+                    <h2>☁️ Cloud & Sync</h2>
+
+                    <p style="color:#6b7280;">
+                        Monitor your THEA Books cloud connection
+                        and synchronization status.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    ← Back to Settings
+                </button>
+
+            </div>
+
+            <hr>
+
+            <h3>☁️ Cloud Database</h3>
+
+            <div style="
+                padding:18px;
+                border:1px solid #e5e7eb;
+                border-radius:12px;
+                background:#ffffff;
+                margin-top:15px;
+            ">
+
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:12px;
+                ">
+
+                    <span style="font-size:24px;">
+                        ☁️
+                    </span>
+
+                    <div>
+                        <strong>Supabase Cloud</strong>
+
+                        <div
+                            id="cloudConnectionStatus"
+                            style="
+                                margin-top:5px;
+                                color:#6b7280;
+                                font-size:13px;
+                            ">
+                            Checking connection...
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <h3 style="margin-top:25px;">
+                👤 Account
+            </h3>
+
+            <div style="
+                padding:18px;
+                border:1px solid #e5e7eb;
+                border-radius:12px;
+                background:#ffffff;
+            ">
+
+                <div>
+                    <strong>Logged-in Account</strong>
+
+                    <div
+                        id="cloudUserEmail"
+                        style="
+                            margin-top:5px;
+                            color:#6b7280;
+                            font-size:13px;
+                        ">
+                            Checking account...
+                    </div>
+                </div>
+
+            </div>
+
+            <h3 style="margin-top:25px;">
+                🔄 Synchronization
+            </h3>
+
+            <p style="color:#6b7280;font-size:13px;">
+                Your cloud synchronization system will manage
+                company data between THEA Books and Supabase.
+            </p>
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="checkCloudConnection()">
+                    🔄 Check Connection
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    checkCloudConnection();
+}
 function showSecuritySettings() {
 
     pageTitle.textContent = "Security Settings";
