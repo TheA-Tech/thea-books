@@ -4388,19 +4388,53 @@ function showSoftwareSettings() {
 
 function showCompanyAccount() {
 
-    pageTitle.innerText = "Company Account";
+    pageTitle.textContent = "Company Profile";
 
     content.innerHTML = `
 
         <div class="panel">
 
-            <h2>🏢 Company Account</h2>
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:16px;
+                margin-bottom:20px;
+                flex-wrap:wrap;
+            ">
 
-            <p>
-                Manage your company information.
-            </p>
+                <div>
+                    <h2 style="margin-bottom:6px;">
+                        🏢 Company Profile
+                    </h2>
+
+                    <p style="margin:0;color:#6b7280;">
+                        Manage your business identity and contact information.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    ← Back to Settings
+                </button>
+
+            </div>
+
+
+            <hr>
+
 
             <form onsubmit="saveCompany(event)">
+
+                <h3>Business Information</h3>
+
+                <p style="color:#6b7280;font-size:13px;">
+                    This information will be used throughout THEA Books
+                    and can later appear on invoices and reports.
+                </p>
+
 
                 <label>Company Name</label>
 
@@ -4408,9 +4442,10 @@ function showCompanyAccount() {
                     type="text"
                     id="companyName"
                     value="${companyAccount.name || ""}"
-                    placeholder="Company Name"
+                    placeholder="Enter company name"
                     required
                 >
+
 
                 <label>Owner / Manager</label>
 
@@ -4418,8 +4453,9 @@ function showCompanyAccount() {
                     type="text"
                     id="companyOwner"
                     value="${companyAccount.owner || ""}"
-                    placeholder="Owner Name"
+                    placeholder="Owner or manager name"
                 >
+
 
                 <label>Phone</label>
 
@@ -4430,6 +4466,7 @@ function showCompanyAccount() {
                     placeholder="03XXXXXXXXX"
                 >
 
+
                 <label>Email</label>
 
                 <input
@@ -4439,16 +4476,18 @@ function showCompanyAccount() {
                     placeholder="company@email.com"
                 >
 
-                <label>Address</label>
+
+                <label>Business Address</label>
 
                 <input
                     type="text"
                     id="companyAddress"
                     value="${companyAccount.address || ""}"
-                    placeholder="Business Address"
+                    placeholder="Business address"
                 >
 
-                <label>Currency</label>
+
+                <label>Default Currency</label>
 
                 <select id="companyCurrency">
 
@@ -4469,18 +4508,19 @@ function showCompanyAccount() {
 
                 </select>
 
+
                 <div class="form-buttons">
 
                     <button
                         type="submit"
                         class="new-btn">
-                        Save Company
+                        Save Company Profile
                     </button>
 
                     <button
                         type="button"
                         class="cancel-btn"
-                        onclick="showPage('dashboard')">
+                        onclick="showSoftwareSettings()">
                         Cancel
                     </button>
 
@@ -4491,7 +4531,6 @@ function showCompanyAccount() {
         </div>
     `;
 }
-
 
 function saveCompany(event) {
 
