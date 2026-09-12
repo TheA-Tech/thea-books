@@ -4498,7 +4498,200 @@ function showCurrencySettings() {
     `;
 }
 
+function showFinancialSettings() {
 
+    pageTitle.textContent = "Financial Settings";
+
+    content.innerHTML = `
+        <div class="panel">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:16px;
+                margin-bottom:20px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+                    <h2>📊 Financial Settings</h2>
+
+                    <p style="color:#6b7280;">
+                        Configure your accounting period and
+                        financial preferences.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    ← Back to Settings
+                </button>
+
+            </div>
+
+            <hr>
+
+            <h3>📅 Financial Year</h3>
+
+            <label>Financial Year Start</label>
+
+            <input
+                type="date"
+                id="financialYearStart"
+                value="2026-07-01"
+            >
+
+            <label>Financial Year End</label>
+
+            <input
+                type="date"
+                id="financialYearEnd"
+                value="2027-06-30"
+            >
+
+
+            <h3 style="margin-top:25px;">
+                📚 Accounting Method
+            </h3>
+
+            <label>Accounting Method</label>
+
+            <select id="accountingMethod">
+
+                <option value="accrual">
+                    Accrual Accounting
+                </option>
+
+                <option value="cash">
+                    Cash Accounting
+                </option>
+
+            </select>
+
+
+            <h3 style="margin-top:25px;">
+                🧾 Invoice & Payment Terms
+            </h3>
+
+            <label>Default Payment Terms</label>
+
+            <select id="paymentTerms">
+
+                <option value="due">Due on Receipt</option>
+
+                <option value="7">Net 7 Days</option>
+
+                <option value="15">Net 15 Days</option>
+
+                <option value="30" selected>Net 30 Days</option>
+
+                <option value="60">Net 60 Days</option>
+
+            </select>
+
+
+            <label>Default Invoice Due Days</label>
+
+            <input
+                type="number"
+                id="invoiceDueDays"
+                value="30"
+                min="0"
+                max="365"
+            >
+
+
+            <h3 style="margin-top:25px;">
+                🔢 Invoice Numbering
+            </h3>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="autoInvoiceNumber"
+                    checked
+                    style="width:auto;margin-right:8px;"
+                >
+                Enable Automatic Invoice Numbering
+            </label>
+
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="saveFinancialSettings()">
+                    Save Financial Settings
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+function saveFinancialSettings() {
+
+    const startDate =
+        document.getElementById("financialYearStart").value;
+
+    const endDate =
+        document.getElementById("financialYearEnd").value;
+
+    const accountingMethod =
+        document.getElementById("accountingMethod").value;
+
+    const paymentTerms =
+        document.getElementById("paymentTerms").value;
+
+    const invoiceDueDays =
+        Number(
+            document.getElementById("invoiceDueDays").value || 0
+        );
+
+    const autoInvoiceNumber =
+        document.getElementById("autoInvoiceNumber").checked;
+
+
+    companyAccount.financialYearStart =
+        startDate;
+
+    companyAccount.financialYearEnd =
+        endDate;
+
+    companyAccount.accountingMethod =
+        accountingMethod;
+
+    companyAccount.paymentTerms =
+        paymentTerms;
+
+    companyAccount.invoiceDueDays =
+        invoiceDueDays;
+
+    companyAccount.autoInvoiceNumber =
+        autoInvoiceNumber;
+
+
+    saveCompanyAccount();
+
+
+    alert("Financial settings saved successfully!");
+
+
+    showSoftwareSettings();
+}
 function saveCurrencySettings() {
 
     const currency =
@@ -4613,7 +4806,7 @@ function showSoftwareSettings() {
 
                 <button type="button"
                     class="settings-card"
-                    onclick="alert('Financial settings will be added here.')">
+                   onclick="showFinancialSettings()"
 
                     <span class="settings-icon">📊</span>
 
