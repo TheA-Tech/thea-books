@@ -2687,14 +2687,14 @@ function openPurchaseForm(vendorId = "") {
         </div>
     `;
 
-    document.getElementById("purchaseDate").value =
-        new Date().toISOString().split("T")[0];
-}
+  document.getElementById("purchaseDate").value =
+    new Date().toISOString().split("T")[0];
+
 if (vendorId) {
     document.getElementById("purchaseVendor").value =
         String(vendorId);
 }
-
+}
 function savePurchase(event) {
 
     event.preventDefault();
