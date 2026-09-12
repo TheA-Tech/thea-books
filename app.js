@@ -3528,40 +3528,105 @@ function showCustomers() {
                                         </button>
 
                                         <div
-                                            id="customer-menu-${customer.id}"
-                                            style="
-                                                display:none;
-                                                position:absolute;
-                                                right:25px;
-                                                margin-top:85px;
-                                                background:#fff;
-                                                border:1px solid #e5e7eb;
-                                                border-radius:10px;
-                                                box-shadow:0 8px 25px rgba(0,0,0,.12);
-                                                min-width:150px;
-                                                z-index:100;
-                                                overflow:hidden;
-                                            "
-                                        >
+                                           <div
+    id="customer-menu-${customer.id}"
+    style="
+        display:none;
+        position:absolute;
+        right:0;
+        top:42px;
+        background:#fff;
+        border:1px solid #e5e7eb;
+        border-radius:10px;
+        box-shadow:0 8px 25px rgba(0,0,0,.12);
+        min-width:190px;
+        z-index:100;
+        overflow:hidden;
+    "
+>
 
-                                            <button
-                                                type="button"
-                                                onclick="deleteCustomer(${customer.id})"
-                                                style="
-                                                    width:100%;
-                                                    border:none;
-                                                    background:#fff;
-                                                    padding:12px 15px;
-                                                    text-align:left;
-                                                    cursor:pointer;
-                                                    color:#dc2626;
-                                                    font-size:14px;
-                                                "
-                                            >
-                                                🗑️ Delete Customer
-                                            </button>
+    <button
+        type="button"
+        onclick="viewCustomer(${customer.id})"
+        style="
+            width:100%;
+            border:none;
+            background:#fff;
+            padding:12px 15px;
+            text-align:left;
+            cursor:pointer;
+            font-size:14px;
+        "
+    >
+        👁️ View Customer
+    </button>
 
-                                        </div>
+    <button
+        type="button"
+        onclick="openCustomerEditForm(${customer.id})"
+        style="
+            width:100%;
+            border:none;
+            background:#fff;
+            padding:12px 15px;
+            text-align:left;
+            cursor:pointer;
+            font-size:14px;
+        "
+    >
+        ✏️ Edit Customer
+    </button>
+
+    <button
+        type="button"
+        onclick="openInvoiceForm(${customer.id})"
+        style="
+            width:100%;
+            border:none;
+            background:#fff;
+            padding:12px 15px;
+            text-align:left;
+            cursor:pointer;
+            font-size:14px;
+        "
+    >
+        🧾 Create Invoice
+    </button>
+
+    <button
+        type="button"
+        onclick="viewCustomerInvoices(${customer.id})"
+        style="
+            width:100%;
+            border:none;
+            background:#fff;
+            padding:12px 15px;
+            text-align:left;
+            cursor:pointer;
+            font-size:14px;
+        "
+    >
+        📄 View Invoices
+    </button>
+
+    <button
+        type="button"
+        onclick="deleteCustomer(${customer.id})"
+        style="
+            width:100%;
+            border:none;
+            background:#fff;
+            padding:12px 15px;
+            text-align:left;
+            cursor:pointer;
+            color:#dc2626;
+            font-size:14px;
+        "
+    >
+        🗑️ Delete Customer
+    </button>
+
+</div>
 
                                     </div>
 
