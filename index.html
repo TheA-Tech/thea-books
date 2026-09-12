@@ -16,7 +16,390 @@
         rel="stylesheet"
         href="styles.css?v=7"
     >
+/* =====================================================
+   FINAL SIDEBAR + DASHBOARD SLIDE
+===================================================== */
 
+/* APP LAYOUT */
+
+.app-shell {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 82px !important;
+    min-width: 82px !important;
+    height: 100vh;
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    transition:
+        width .28s ease,
+        min-width .28s ease;
+
+    z-index: 1000;
+}
+
+
+/* SIDEBAR OPEN */
+
+.sidebar:hover {
+    width: 250px !important;
+    min-width: 250px !important;
+}
+
+
+/* MAIN DASHBOARD */
+
+.main {
+    flex: 1;
+    min-width: 0;
+
+    width: calc(100% - 82px);
+
+    transition:
+        width .28s ease,
+        margin-left .28s ease;
+
+    overflow-x: hidden;
+}
+
+
+/* MAIN NAVIGATION */
+
+#mainNavigation {
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 6px 5px;
+
+    scrollbar-width: thin;
+}
+
+
+/* EVERY MENU BUTTON */
+
+#mainNavigation button,
+.sidebar-bottom button {
+
+    width: 100%;
+    min-width: 0;
+
+    height: 46px;
+    min-height: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+
+}
+
+
+/* SAME ICON SIZE */
+
+#mainNavigation .menu-icon,
+.sidebar-bottom .menu-icon {
+
+    width: 42px;
+    min-width: 42px;
+
+    height: 42px;
+    min-height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    font-size: 18px;
+
+    line-height: 1;
+}
+
+
+/* COLLAPSED LABEL */
+
+#mainNavigation .menu-label,
+.sidebar-bottom .menu-label {
+
+    display: block;
+
+    white-space: nowrap;
+
+    margin-left: 4px;
+
+    opacity: 0;
+
+    transform: translateX(-15px);
+
+    transition:
+        opacity .18s ease,
+        transform .25s ease;
+
+    pointer-events: none;
+}
+
+
+/* OPEN LABEL */
+
+.sidebar:hover #mainNavigation .menu-label,
+.sidebar:hover .sidebar-bottom .menu-label {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+}
+
+
+/* =====================================================
+   BRAND
+===================================================== */
+
+.brand-row {
+
+    width: 100%;
+
+    min-height: 70px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+}
+
+
+/* BRAND NAME CLOSED */
+
+.brand-name {
+
+    white-space: nowrap;
+
+    opacity: 0;
+
+    transform: translateX(-15px);
+
+    transition:
+        opacity .2s ease,
+        transform .25s ease;
+
+}
+
+
+/* BRAND NAME OPEN */
+
+.sidebar:hover .brand-name {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+}
+
+
+/* =====================================================
+   BACK / FORWARD / REFRESH
+===================================================== */
+
+.app-navigation {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 3px;
+
+    flex-shrink: 0;
+
+    width: 100%;
+
+}
+
+
+/* NAV BUTTON SAME SIZE */
+
+.app-navigation .nav-arrow {
+
+    width: 24px !important;
+    min-width: 24px !important;
+
+    height: 28px !important;
+    min-height: 28px !important;
+
+    padding: 0 !important;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+/* =====================================================
+   COMPANY
+===================================================== */
+
+.company-account {
+
+    width: 100%;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+}
+
+
+.company-account-btn {
+
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+
+}
+
+
+.company-icon {
+
+    width: 42px;
+    min-width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+/* COMPANY TEXT CLOSED */
+
+.company-text {
+
+    white-space: nowrap;
+
+    opacity: 0;
+
+    transform: translateX(-15px);
+
+    transition:
+        opacity .18s ease,
+        transform .25s ease;
+
+}
+
+
+/* COMPANY TEXT OPEN */
+
+.sidebar:hover .company-text {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+}
+
+
+/* =====================================================
+   SIDEBAR FOOTER
+===================================================== */
+
+.sidebar-brand-footer {
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    transition: opacity .2s ease;
+
+}
+
+
+.sidebar:hover .sidebar-brand-footer {
+
+    opacity: 1;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+
+        width: 250px !important;
+        min-width: 250px !important;
+
+    }
+
+    .sidebar:hover {
+
+        width: 250px !important;
+        min-width: 250px !important;
+
+    }
+
+    .sidebar .menu-label,
+    .sidebar .brand-name,
+    .sidebar .company-text,
+    .sidebar .sidebar-brand-footer {
+
+        opacity: 1;
+
+        transform: translateX(0);
+
+    }
+
+    .main {
+
+        width: 100%;
+
+    }
+
+}
     <style>
 
         /* =====================================================
