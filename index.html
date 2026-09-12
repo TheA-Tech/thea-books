@@ -2,302 +2,742 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>THEA Books</title>
 
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link
+        rel="stylesheet"
+        href="styles.css?v=6"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
 
-        <!-- Brand / Navigation -->
-        <div class="brand-row">
+    <!-- =====================================================
+         APP WRAPPER
+    ====================================================== -->
 
-            <div class="brand-left">
+    <div class="app-shell">
 
-                <div class="app-navigation">
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside class="sidebar" id="sidebar">
+
+
+            <!-- BRAND -->
+            <div class="brand-row">
+
+                <div class="brand-left">
+
+
+                    <!-- BACK / FORWARD / REFRESH -->
+
+                    <div class="app-navigation">
+
+                        <button
+                            class="nav-arrow"
+                            onclick="goBack()"
+                            title="Back"
+                        >
+                            ←
+                        </button>
+
+
+                        <button
+                            class="nav-arrow"
+                            onclick="goForward()"
+                            title="Forward"
+                        >
+                            →
+                        </button>
+
+
+                        <button
+                            class="nav-arrow"
+                            onclick="location.reload()"
+                            title="Refresh"
+                        >
+                            ↻
+                        </button>
+
+                    </div>
+
+
+                    <!-- LOGO -->
+
+                    <h2 class="brand-name">
+
+                        <span class="brand-thea">
+                            THEA
+                        </span>
+
+                        <span class="brand-books">
+                            Books
+                        </span>
+
+                    </h2>
+
+                </div>
+
+
+                <!-- MOBILE MENU -->
+
+                <button
+                    class="mobile-menu-btn"
+                    onclick="toggleMobileMenu()"
+                    title="Menu"
+                >
+                    ☰
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 COMPANY ACCOUNT
+            ================================================== -->
+
+            <div class="company-account">
+
+                <button
+                    class="company-account-btn"
+                    onclick="showCompanyAccount()"
+                    title="Company Account"
+                >
+
+                    <span class="company-icon">
+                        🏢
+                    </span>
+
+
+                    <span class="company-text">
+
+                        <strong id="currentCompanyName">
+                            Company Account
+                        </strong>
+
+                        <small id="currentCompanyStatus">
+                            Set up company
+                        </small>
+
+                    </span>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MAIN NAVIGATION
+            ================================================== -->
+
+            <nav id="mainNavigation">
+
+
+                <!-- DASHBOARD -->
+
+                <button
+                    onclick="showPage('dashboard')"
+                    title="Dashboard"
+                >
+
+                    <span class="menu-icon">
+                        📊
+                    </span>
+
+                    <span class="menu-label">
+                        Dashboard
+                    </span>
+
+                </button>
+
+
+
+                <!-- SALES -->
+
+                <button
+                    onclick="showPage('sales')"
+                    title="Sales"
+                >
+
+                    <span class="menu-icon">
+                        🧾
+                    </span>
+
+                    <span class="menu-label">
+                        Sales
+                    </span>
+
+                </button>
+
+
+
+                <!-- PURCHASES -->
+
+                <button
+                    onclick="showPage('purchases')"
+                    title="Purchases"
+                >
+
+                    <span class="menu-icon">
+                        🛒
+                    </span>
+
+                    <span class="menu-label">
+                        Purchases
+                    </span>
+
+                </button>
+
+
+
+                <!-- EXPENSES -->
+
+                <button
+                    onclick="showPage('expenses')"
+                    title="Expenses"
+                >
+
+                    <span class="menu-icon">
+                        💰
+                    </span>
+
+                    <span class="menu-label">
+                        Expenses
+                    </span>
+
+                </button>
+
+
+
+                <!-- CUSTOMERS -->
+
+                <button
+                    onclick="showPage('customers')"
+                    title="Customers"
+                >
+
+                    <span class="menu-icon">
+                        👥
+                    </span>
+
+                    <span class="menu-label">
+                        Customers
+                    </span>
+
+                </button>
+
+
+
+                <!-- VENDORS -->
+
+                <button
+                    onclick="showPage('vendors')"
+                    title="Vendors"
+                >
+
+                    <span class="menu-icon">
+                        🏢
+                    </span>
+
+                    <span class="menu-label">
+                        Vendors
+                    </span>
+
+                </button>
+
+
+
+                <!-- INVENTORY -->
+
+                <button
+                    onclick="showPage('inventory')"
+                    title="Inventory"
+                >
+
+                    <span class="menu-icon">
+                        📦
+                    </span>
+
+                    <span class="menu-label">
+                        Inventory
+                    </span>
+
+                </button>
+
+
+
+                <!-- ACCOUNTING -->
+
+                <button
+                    onclick="showPage('accounting')"
+                    title="Accounting"
+                >
+
+                    <span class="menu-icon">
+                        📚
+                    </span>
+
+                    <span class="menu-label">
+                        Accounting
+                    </span>
+
+                </button>
+
+
+
+                <!-- RECEIVABLES -->
+
+                <button
+                    onclick="showPage('receivables')"
+                    title="Accounts Receivable"
+                >
+
+                    <span class="menu-icon">
+                        💵
+                    </span>
+
+                    <span class="menu-label">
+                        Receivables
+                    </span>
+
+                </button>
+
+
+
+                <!-- PAYABLES -->
+
+                <button
+                    onclick="showPage('payables')"
+                    title="Accounts Payable"
+                >
+
+                    <span class="menu-icon">
+                        📋
+                    </span>
+
+                    <span class="menu-label">
+                        Payables
+                    </span>
+
+                </button>
+
+
+
+                <!-- REPORTS -->
+
+                <button
+                    onclick="showPage('reports')"
+                    title="Reports"
+                >
+
+                    <span class="menu-icon">
+                        📈
+                    </span>
+
+                    <span class="menu-label">
+                        Reports
+                    </span>
+
+                </button>
+
+            </nav>
+
+
+
+            <!-- =================================================
+                 SIDEBAR BOTTOM
+            ================================================== -->
+
+            <div class="sidebar-bottom">
+
+
+                <button
+                    onclick="showCompanyAccount()"
+                    title="Company Account"
+                >
+
+                    <span class="menu-icon">
+                        ⚙️
+                    </span>
+
+                    <span class="menu-label">
+                        Company Account
+                    </span>
+
+                </button>
+
+
+                <button
+                    title="Help & Support"
+                    onclick="alert('THEA Books Help & Support')"
+                >
+
+                    <span class="menu-icon">
+                        ❓
+                    </span>
+
+                    <span class="menu-label">
+                        Help & Support
+                    </span>
+
+                </button>
+
+
+                <div class="sidebar-brand-footer">
+
+                    <strong>
+                        THEA <span>Books</span>
+                    </strong>
+
+                    <small>
+                        Business Accounting System
+                    </small>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =====================================================
+             MAIN AREA
+        ====================================================== -->
+
+        <main class="main">
+
+
+            <!-- =================================================
+                 TOP TOOLBAR
+            ================================================== -->
+
+            <header class="top-header">
+
+
+                <!-- MOBILE / SIDEBAR TOGGLE -->
+
+                <button
+                    class="toolbar-menu-btn"
+                    onclick="toggleMobileMenu()"
+                    title="Menu"
+                >
+                    ☰
+                </button>
+
+
+
+                <!-- SEARCH -->
+
+                <div class="global-search">
+
+                    <span class="search-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="search"
+                        id="globalSearch"
+                        placeholder="Search anything..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+
+                <!-- TOOLBAR ACTIONS -->
+
+                <div class="toolbar-actions">
+
+
+                    <!-- NEW INVOICE -->
 
                     <button
-                        class="nav-arrow"
-                        onclick="goBack()"
-                        title="Back"
+                        class="toolbar-btn"
+                        onclick="openInvoiceForm()"
+                        title="New Invoice"
                     >
-                        ←
+
+                        <span>
+                            🧾
+                        </span>
+
+                        <small>
+                            New Invoice
+                        </small>
+
                     </button>
 
-                    <button
-                        class="nav-arrow"
-                        onclick="goForward()"
-                        title="Forward"
-                    >
-                        →
-                    </button>
+
+
+                    <!-- NEW PURCHASE -->
 
                     <button
-                        class="nav-arrow"
-                        onclick="location.reload()"
-                        title="Refresh"
+                        class="toolbar-btn"
+                        onclick="openPurchaseForm()"
+                        title="New Purchase"
                     >
-                        ↻
+
+                        <span>
+                            🛒
+                        </span>
+
+                        <small>
+                            Purchase
+                        </small>
+
+                    </button>
+
+
+
+                    <!-- EXPENSE -->
+
+                    <button
+                        class="toolbar-btn"
+                        onclick="openExpenseForm()"
+                        title="Record Expense"
+                    >
+
+                        <span>
+                            💸
+                        </span>
+
+                        <small>
+                            Expense
+                        </small>
+
+                    </button>
+
+
+
+                    <!-- CUSTOMER -->
+
+                    <button
+                        class="toolbar-btn"
+                        onclick="openCustomerForm()"
+                        title="Add Customer"
+                    >
+
+                        <span>
+                            👥
+                        </span>
+
+                        <small>
+                            Customer
+                        </small>
+
+                    </button>
+
+
+
+                    <!-- VENDOR -->
+
+                    <button
+                        class="toolbar-btn"
+                        onclick="openVendorForm()"
+                        title="Add Vendor"
+                    >
+
+                        <span>
+                            🏢
+                        </span>
+
+                        <small>
+                            Vendor
+                        </small>
+
+                    </button>
+
+
+
+                    <!-- PRODUCT -->
+
+                    <button
+                        class="toolbar-btn"
+                        onclick="openProductForm()"
+                        title="Add Product"
+                    >
+
+                        <span>
+                            📦
+                        </span>
+
+                        <small>
+                            Product
+                        </small>
+
+                    </button>
+
+
+
+                    <!-- REPORTS -->
+
+                    <button
+                        class="toolbar-btn"
+                        onclick="showReports()"
+                        title="Reports"
+                    >
+
+                        <span>
+                            📈
+                        </span>
+
+                        <small>
+                            Reports
+                        </small>
+
+                    </button>
+
+
+
+                    <!-- HELP -->
+
+                    <button
+                        class="toolbar-icon-btn"
+                        onclick="alert('THEA Books Help & Support')"
+                        title="Help"
+                    >
+                        ?
+                    </button>
+
+
+
+                    <!-- SETTINGS -->
+
+                    <button
+                        class="toolbar-icon-btn"
+                        onclick="showCompanyAccount()"
+                        title="Settings"
+                    >
+                        ⚙
+                    </button>
+
+
+
+                    <!-- COMPANY -->
+
+                    <button
+                        class="toolbar-company"
+                        onclick="showCompanyAccount()"
+                        title="Company Account"
+                    >
+
+                        <span class="toolbar-company-icon">
+                            👤
+                        </span>
+
+                        <span class="toolbar-company-text">
+
+                            <strong id="toolbarCompanyName">
+                                Company
+                            </strong>
+
+                            <small>
+                                Admin
+                            </small>
+
+                        </span>
+
+                        <span>
+                            ▾
+                        </span>
+
                     </button>
 
                 </div>
 
-                <h2>
-                    THEA <span>Books</span>
-                </h2>
+            </header>
+
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1 id="pageTitle">
+                        Dashboard
+                    </h1>
+
+                    <p>
+                        Business Accounting System
+                    </p>
+
+                </div>
+
+
+
+                <!-- MAIN NEW TRANSACTION -->
+
+                <button
+                    class="new-btn"
+                    onclick="openTransactionForm()"
+                >
+                    + New Transaction
+                </button>
 
             </div>
 
-            <!-- Mobile Menu -->
-            <button
-                class="mobile-menu-btn"
-                onclick="toggleMobileMenu()"
-            >
-                ☰
-            </button>
 
-        </div>
 
+            <!-- =================================================
+                 DYNAMIC CONTENT
+            ================================================== -->
 
-        <!-- Company Account -->
-        <div class="company-account">
+            <section id="content">
 
-            <button
-                class="company-account-btn"
-                onclick="showCompanyAccount()"
-            >
+                <!--
+                    Dashboard and all ERP pages
+                    are loaded here by app.js.
+                -->
 
-                <span class="company-icon">
-                    🏢
-                </span>
+            </section>
 
-                <span>
 
-                    <strong id="currentCompanyName">
-                        Company Account
-                    </strong>
+        </main>
 
-                    <small id="currentCompanyStatus">
-                        Set up company
-                    </small>
+    </div>
 
-                </span>
 
-            </button>
 
-        </div>
+    <!-- =====================================================
+         MOBILE OVERLAY
+    ====================================================== -->
 
+    <div
+        id="mobileOverlay"
+        class="mobile-overlay"
+        onclick="toggleMobileMenu()"
+    ></div>
 
-        <!-- Main Navigation -->
-        <nav id="mainNavigation">
 
-            <!-- Dashboard -->
-            <button onclick="showPage('dashboard')">
 
-                <span class="menu-icon">
-                    📊
-                </span>
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
 
-                <span>
-                    Dashboard
-                </span>
+    <script src="app.js?v=6"></script>
 
-            </button>
-
-
-            <!-- Sales -->
-            <button onclick="showPage('sales')">
-
-                <span class="menu-icon">
-                    🧾
-                </span>
-
-                <span>
-                    Sales
-                </span>
-
-            </button>
-
-
-            <!-- Purchases -->
-            <button onclick="showPage('purchases')">
-
-                <span class="menu-icon">
-                    🛒
-                </span>
-
-                <span>
-                    Purchases
-                </span>
-
-            </button>
-
-
-            <!-- Expenses -->
-            <button onclick="showPage('expenses')">
-
-                <span class="menu-icon">
-                    💰
-                </span>
-
-                <span>
-                    Expenses
-                </span>
-
-            </button>
-
-
-            <!-- Customers -->
-            <button onclick="showPage('customers')">
-
-                <span class="menu-icon">
-                    👥
-                </span>
-
-                <span>
-                    Customers
-                </span>
-
-            </button>
-
-
-            <!-- Vendors -->
-            <button onclick="showPage('vendors')">
-
-                <span class="menu-icon">
-                    🏢
-                </span>
-
-                <span>
-                    Vendors
-                </span>
-
-            </button>
-
-
-            <!-- Inventory -->
-            <button onclick="showPage('inventory')">
-
-                <span class="menu-icon">
-                    📦
-                </span>
-
-                <span>
-                    Inventory
-                </span>
-
-            </button>
-
-
-            <!-- Accounting -->
-            <button onclick="showPage('accounting')">
-
-                <span class="menu-icon">
-                    📚
-                </span>
-
-                <span>
-                    Accounting
-                </span>
-
-            </button>
-
-
-            <!-- Receivables -->
-            <button onclick="showPage('receivables')">
-
-                <span class="menu-icon">
-                    💵
-                </span>
-
-                <span>
-                    Receivables
-                </span>
-
-            </button>
-
-
-            <!-- Payables -->
-            <button onclick="showPage('payables')">
-
-                <span class="menu-icon">
-                    📋
-                </span>
-
-                <span>
-                    Payables
-                </span>
-
-            </button>
-
-
-            <!-- Reports -->
-            <button onclick="showPage('reports')">
-
-                <span class="menu-icon">
-                    📈
-                </span>
-
-                <span>
-                    Reports
-                </span>
-
-            </button>
-
-        </nav>
-
-    </aside>
-
-
-    <!-- Main Content -->
-    <main class="main">
-
-
-        <!-- Header -->
-        <header>
-
-            <div>
-
-                <h1 id="pageTitle">
-                    Dashboard
-                </h1>
-
-                <p>
-                    Business Accounting System
-                </p>
-
-            </div>
-
-
-            <!-- New Transaction -->
-            <button
-                class="new-btn"
-                onclick="openTransactionForm()"
-            >
-                + New Transaction
-            </button>
-
-        </header>
-
-
-        <!-- Dynamic Content -->
-        <section id="content">
-
-            <!-- Dashboard will be loaded by app.js -->
-
-        </section>
-
-    </main>
-
-
-    <!-- JavaScript -->
-    <script src="app.js?v=5"></script>
 
 </body>
 
