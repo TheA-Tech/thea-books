@@ -10152,10 +10152,14 @@ async function checkLogin() {
         document.getElementById("loginScreen");
 
     if (session) {
-        loginScreen.style.display = "none";
-    } else {
-        loginScreen.style.display = "flex";
-    }
+
+    loginScreen.style.display = "none";
+
+    await loadCompanyProfile();
+
+} else {
+
+    loginScreen.style.display = "flex";
 }
 
 checkLogin();
