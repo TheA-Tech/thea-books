@@ -326,84 +326,120 @@ const receivables = invoices
         </div>
 
 
-        <!-- =========================
-             KPI CARDS
-        ========================== -->
+      <!-- =========================
+     KPI CARDS
+========================== -->
 
-        <div class="cards">
+<div class="cards">
 
-            <div class="card">
+    <div class="card">
 
-                <h3>💰 Total Sales</h3>
+        <h3>💰 Total Sales</h3>
 
-                <p>
-                    ${formatMoney(totalSales)}
-                </p>
+        <p>
+            ${formatMoney(totalSales)}
+        </p>
 
-                <small style="
-                    color:#059669;
-                    font-weight:600;
-                ">
-                    ↑ Business Revenue
-                </small>
+        <small style="
+            color:#059669;
+            font-weight:600;
+        ">
+            ↑ Business Revenue
+        </small>
 
-            </div>
-
-
-            <div class="card">
-
-                <h3>💸 Total Expenses</h3>
-
-                <p>
-                    ${formatMoney(totalExpenses)}
-                </p>
-
-                <small style="
-                    color:#dc2626;
-                    font-weight:600;
-                ">
-                    Business Expenses
-                </small>
-
-            </div>
+    </div>
 
 
-            <div class="card">
+    <div class="card">
 
-                <h3>📈 Net Profit</h3>
+        <h3>🛒 Total Purchases</h3>
 
-                <p>
-                    ${formatMoney(netProfit)}
-                </p>
+        <p>
+            ${formatMoney(totalPurchases)}
+        </p>
 
-                <small style="
-                    color:#059669;
-                    font-weight:600;
-                ">
-                    Sales − Expenses
-                </small>
+        <small style="
+            color:#b45309;
+            font-weight:600;
+        ">
+            Purchase Bills
+        </small>
 
-            </div>
+    </div>
 
 
-            <div class="card">
+    <div class="card">
 
-                <h3>🧾 Receivables</h3>
+        <h3>💸 Total Expenses</h3>
 
-                <p>
-                    ${formatMoney(receivables)}
-                </p>
+        <p>
+            ${formatMoney(totalExpenses)}
+        </p>
 
-                <small style="
-                    color:#7c3aed;
-                    font-weight:600;
-                ">
-                    Unpaid Invoices
-                </small>
+        <small style="
+            color:#dc2626;
+            font-weight:600;
+        ">
+            Business Expenses
+        </small>
 
-            </div>
+    </div>
 
-        </div>
+
+    <div class="card">
+
+        <h3>📈 Net Profit</h3>
+
+        <p>
+            ${formatMoney(netProfit)}
+        </p>
+
+        <small style="
+            color:#059669;
+            font-weight:600;
+        ">
+            Sales − Expenses
+        </small>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>🧾 Receivables</h3>
+
+        <p>
+            ${formatMoney(receivables)}
+        </p>
+
+        <small style="
+            color:#7c3aed;
+            font-weight:600;
+        ">
+            Unpaid Invoices
+        </small>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>📋 Payables</h3>
+
+        <p>
+            ${formatMoney(payables)}
+        </p>
+
+        <small style="
+            color:#dc2626;
+            font-weight:600;
+        ">
+            Unpaid Vendor Bills
+        </small>
+
+    </div>
+
+</div>
 
 
         <!-- =========================
