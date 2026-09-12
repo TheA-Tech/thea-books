@@ -4845,7 +4845,7 @@ function showSoftwareSettings() {
 
                 <button type="button"
                     class="settings-card"
-                    onclick="alert('Cloud synchronization will be configured here.')">
+                    onclick="showCloudSync()"
 
                     <span class="settings-icon">☁️</span>
 
