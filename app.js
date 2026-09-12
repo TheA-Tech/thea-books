@@ -4253,7 +4253,111 @@ function saveCompanyAccount() {
 /* =========================
    COMPANY ACCOUNT
 ========================= */
+function showInvoiceSettings() {
 
+    pageTitle.textContent = "Invoice Settings";
+
+    content.innerHTML = `
+        <div class="panel">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:16px;
+                margin-bottom:20px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+                    <h2>🧾 Invoice Settings</h2>
+
+                    <p style="color:#6b7280;">
+                        Configure how your professional invoices appear.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    ← Back to Settings
+                </button>
+
+            </div>
+
+            <hr>
+
+            <h3>Invoice Appearance</h3>
+
+            <label>Invoice Title</label>
+
+            <input
+                type="text"
+                id="invoiceTitle"
+                value="INVOICE"
+                placeholder="INVOICE"
+            >
+
+            <label>Invoice Slogan</label>
+
+            <input
+                type="text"
+                id="invoiceSlogan"
+                placeholder="Your business slogan"
+            >
+
+            <label>Invoice Footer Message</label>
+
+            <input
+                type="text"
+                id="invoiceFooter"
+                placeholder="Thank you for your business!"
+            >
+
+            <h3 style="margin-top:25px;">
+                Invoice Numbering
+            </h3>
+
+            <label>Invoice Prefix</label>
+
+            <input
+                type="text"
+                id="invoicePrefix"
+                value="INV-"
+                placeholder="INV-"
+            >
+
+            <label>Starting Invoice Number</label>
+
+            <input
+                type="number"
+                id="invoiceStartNumber"
+                value="1001"
+                min="1"
+            >
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="alert('Invoice settings saved successfully!')">
+                    Save Invoice Settings
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
 function showSoftwareSettings() {
 
     pageTitle.textContent = "Software Settings";
