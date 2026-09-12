@@ -5010,38 +5010,141 @@ function showCompanyAccount() {
     `;
 }
 
-function saveCompany(event) {
+async function saveCompany(event) {
 
     event.preventDefault();
 
+    const companyName =
+        document.getElementById("companyName").value.trim();
+
+    const companyOwner =
+        document.getElementById("companyOwner").value.trim();
+
+    const companyPhone =
+        document.getElementById("companyPhone").value.trim();
+
+    const companyEmail =
+        document.getElementById("companyEmail").value.trim();
+
+    const companyAddress =
+        document.getElementById("companyAddress").value.trim();
+
+    const companyCurrency =
+        document.getElementById("companyCurrency").value;
+
+
     companyAccount = {
 
-        name:
-            document.getElementById("companyName").value.trim(),
+        name: companyName,
 
-        owner:
-            document.getElementById("companyOwner").value.trim(),
+        owner: companyOwner,
 
-        phone:
-            document.getElementById("companyPhone").value.trim(),
+        phone: companyPhone,
 
-        email:
-            document.getElementById("companyEmail").value.trim(),
+        email: companyEmail,
 
-        address:
-            document.getElementById("companyAddress").value.trim(),
+        address: companyAddress,
 
-        currency:
-            document.getElementById("companyCurrency").value
+        currency: companyCurrency
     };
+
+
+    /* =========================
+       SAVE LOCAL COPY
+    ========================= */
 
     saveCompanyAccount();
 
-    alert("Company account saved successfully!");
 
-    showPage("dashboard");
+    /* =========================
+       SAVE TO CLOUD
+    ========================= */
+
+    try {
+
+        const {
+            data: { session },
+            error: sessionError
+        } = await theaSupabase.auth.getSession();
+
+
+        if (sessionError) {
+            throw sessionError;
+        }
+
+
+        if (!session) {
+
+            alert("Your session has expired. Please sign in again.");
+
+            return;
+        }
+
+
+        const { data: profile, error: profileError } =
+            await theaSupabase
+                .from("profiles")
+                .select("company_id")
+                .eq("id", session.user.id)
+                .single();
+
+
+        if (profileError) {
+            throw profileError;
+        }
+
+
+        if (!profile || !profile.company_id) {
+
+            alert("Company account could not be found.");
+
+            return;
+        }
+
+
+        const { error: companyError } =
+            await theaSupabase
+                .from("companies")
+                .update({
+
+                    name: companyName,
+
+                    owner_name: companyOwner,
+
+                    phone: companyPhone,
+
+                    email: companyEmail,
+
+                    address: companyAddress,
+
+                    currency: companyCurrency
+
+                })
+                .eq("id", profile.company_id);
+
+
+        if (companyError) {
+            throw companyError;
+        }
+
+
+        alert("Company profile saved successfully to the cloud.");
+
+        showPage("dashboard");
+
+
+    } catch (error) {
+
+        console.error(
+            "Company cloud save error:",
+            error
+        );
+
+        alert(
+            "Company profile was saved locally, but cloud save failed."
+        );
+    }
 }
-
 
 /* =========================
    VENDORS
