@@ -4597,7 +4597,7 @@ function showSoftwareSettings() {
 
                 <button type="button"
                     class="settings-card"
-                    onclick="showCompanyAccount()">
+                   onclick="showCurrencySettings()"
 
                     <span class="settings-icon">💱</span>
 
