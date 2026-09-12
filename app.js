@@ -3878,24 +3878,375 @@ function showReports() {
 
     pageTitle.innerText = "Reports";
 
+    /* =========================
+       PROFIT & LOSS CALCULATION
+    ========================= */
+
+    const totalSales =
+        invoices.reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const totalExpenses =
+        transactions
+            .filter(t => t.type === "expense")
+            .reduce(
+                (sum, t) =>
+                    sum + Number(t.amount || 0),
+                0
+            );
+
+    const netProfit =
+        totalSales - totalExpenses;
+
+
     content.innerHTML = `
+
+        <!-- =========================
+             REPORT HEADER
+        ========================= -->
+
+        <div class="dashboard-section">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:15px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+
+                    <h2 style="margin:0 0 5px 0;">
+                        📊 Financial Reports
+                    </h2>
+
+                    <p style="
+                        margin:0;
+                        color:#718096;
+                        font-size:13px;
+                    ">
+                        View your business financial performance.
+                    </p>
+
+                </div>
+
+                <button
+                    class="new-btn"
+                    onclick="showPage('reports')"
+                >
+                    🔄 Refresh
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             REPORT CARDS
+        ========================= -->
+
+        <div class="cards">
+
+            <div class="card" style="
+                border-top:4px solid #0f766e;
+            ">
+
+                <h3>💰 Total Sales</h3>
+
+                <p style="color:#0f766e;">
+                    ${formatMoney(totalSales)}
+                </p>
+
+                <small style="color:#718096;">
+                    Total invoice revenue
+                </small>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #dc2626;
+            ">
+
+                <h3>💸 Total Expenses</h3>
+
+                <p style="color:#dc2626;">
+                    ${formatMoney(totalExpenses)}
+                </p>
+
+                <small style="color:#718096;">
+                    Recorded business expenses
+                </small>
+
+            </div>
+
+
+            <div class="card" style="
+                border-top:4px solid #059669;
+            ">
+
+                <h3>📈 Net Profit</h3>
+
+                <p style="color:#059669;">
+                    ${formatMoney(netProfit)}
+                </p>
+
+                <small style="color:#718096;">
+                    Sales − Expenses
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             PROFIT & LOSS
+        ========================= -->
 
         <div class="panel">
 
-            <h2>Financial Reports</h2>
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-bottom:20px;
+            ">
 
-            <p>Profit & Loss</p>
-            <p>Balance Sheet</p>
-            <p>Cash Flow Statement</p>
-            <p>Trial Balance</p>
-            <p>Accounts Receivable Aging</p>
-            <p>Accounts Payable Aging</p>
+                <div>
+
+                    <h2 style="margin:0 0 5px 0;">
+                        📑 Profit & Loss Statement
+                    </h2>
+
+                    <p style="
+                        margin:0;
+                        color:#718096;
+                        font-size:12px;
+                    ">
+                        Summary of business income and expenses.
+                    </p>
+
+                </div>
+
+                <span style="
+                    background:#eef5fa;
+                    color:#175b87;
+                    padding:7px 11px;
+                    border-radius:8px;
+                    font-size:11px;
+                    font-weight:700;
+                ">
+                    Current Period
+                </span>
+
+            </div>
+
+
+            <!-- REVENUE -->
+
+            <div style="
+                padding:15px;
+                background:#f8fafc;
+                border-radius:10px;
+                margin-bottom:12px;
+            ">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                ">
+
+                    <strong>
+                        Revenue
+                    </strong>
+
+                    <strong style="color:#0f766e;">
+                        ${formatMoney(totalSales)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- EXPENSES -->
+
+            <div style="
+                padding:15px;
+                background:#fef2f2;
+                border-radius:10px;
+                margin-bottom:12px;
+            ">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                ">
+
+                    <strong>
+                        Operating Expenses
+                    </strong>
+
+                    <strong style="color:#dc2626;">
+                        ${formatMoney(totalExpenses)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- SEPARATOR -->
+
+            <div style="
+                border-top:2px solid #e2e8f0;
+                margin:18px 0;
+            "></div>
+
+
+            <!-- NET PROFIT -->
+
+            <div style="
+                padding:18px;
+                background:${
+                    netProfit >= 0
+                        ? "#ecfdf5"
+                        : "#fef2f2"
+                };
+                border-radius:10px;
+            ">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                ">
+
+                    <strong style="font-size:16px;">
+                        ${
+                            netProfit >= 0
+                                ? "Net Profit"
+                                : "Net Loss"
+                        }
+                    </strong>
+
+                    <strong style="
+                        font-size:18px;
+                        color:${
+                            netProfit >= 0
+                                ? "#059669"
+                                : "#dc2626"
+                        };
+                    ">
+                        ${formatMoney(netProfit)}
+                    </strong>
+
+                </div>
+
+            </div>
 
         </div>
+
+
+        <!-- =========================
+             OTHER REPORTS
+        ========================= -->
+
+        <div class="panel">
+
+            <h2>📚 Other Reports</h2>
+
+            <p style="
+                color:#718096;
+                font-size:13px;
+            ">
+                Additional accounting reports will be added here.
+            </p>
+
+
+            <div class="quick-actions">
+
+                <div class="quick-action">
+
+                    <div class="quick-action-icon">
+                        📋
+                    </div>
+
+                    <strong>
+                        Balance Sheet
+                    </strong>
+
+                    <span>
+                        Coming next
+                    </span>
+
+                </div>
+
+
+                <div class="quick-action">
+
+                    <div class="quick-action-icon">
+                        💵
+                    </div>
+
+                    <strong>
+                        Cash Flow
+                    </strong>
+
+                    <span>
+                        Coming next
+                    </span>
+
+                </div>
+
+
+                <div class="quick-action">
+
+                    <div class="quick-action-icon">
+                        ⚖️
+                    </div>
+
+                    <strong>
+                        Trial Balance
+                    </strong>
+
+                    <span>
+                        Coming next
+                    </span>
+
+                </div>
+
+
+                <div class="quick-action">
+
+                    <div class="quick-action-icon">
+                        🧾
+                    </div>
+
+                    <strong>
+                        Receivable Aging
+                    </strong>
+
+                    <span>
+                        Coming next
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
     `;
 }
-
-
 /* =========================================
    THEA BOOKS PAGE NAVIGATION
 ========================================= */
