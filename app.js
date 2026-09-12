@@ -10728,3 +10728,35 @@ function showLoginForm() {
     loginForm.style.display = "block";
 
 }
+
+/* =====================================================
+   ERP VISUAL - CONTINUOUS START
+===================================================== */
+
+function startERPVisualAnimation() {
+
+    animateERPNumber(
+        "animatedRevenue",
+        1284500,
+        1800
+    );
+
+    animateERPNumber(
+        "animatedCustomers",
+        1284,
+        1400
+    );
+
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        setTimeout(
+            startERPVisualAnimation,
+            350
+        );
+
+    }
+);
