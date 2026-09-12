@@ -2884,6 +2884,341 @@ function updateInvoice(event, invoiceId) {
 
     showPage("sales");
 }
+function calculateEditInvoiceTotals() {
+
+    const items =
+        document.querySelectorAll(
+            "#editInvoiceItems .invoice-item"
+        );
+
+    let subtotal = 0;
+
+    items.forEach(item => {
+
+        const quantity =
+            Number(
+                item.querySelector(
+                    ".edit-item-quantity"
+                ).value
+            ) || 0;
+
+        const rate =
+            Number(
+                item.querySelector(
+                    ".edit-item-rate"
+                ).value
+            ) || 0;
+
+        const amount =
+            quantity * rate;
+
+        subtotal += amount;
+
+        const amountField =
+            item.querySelector(
+                ".edit-item-amount"
+            );
+
+        if (amountField) {
+            amountField.value =
+                formatMoney(amount);
+        }
+    });
+
+    const discount =
+        Number(
+            document.getElementById(
+                "editInvoiceDiscount"
+            )?.value
+        ) || 0;
+
+    const taxPercent =
+        Number(
+            document.getElementById(
+                "editInvoiceTax"
+            )?.value
+        ) || 0;
+
+    const afterDiscount =
+        Math.max(
+            0,
+            subtotal - discount
+        );
+
+    const taxAmount =
+        afterDiscount *
+        (taxPercent / 100);
+
+    const grandTotal =
+        afterDiscount + taxAmount;
+
+    document.getElementById(
+        "editInvoiceSubtotal"
+    ).innerText =
+        formatMoney(subtotal);
+
+    document.getElementById(
+        "editInvoiceDiscountDisplay"
+    ).innerText =
+        formatMoney(discount);
+
+    document.getElementById(
+        "editInvoiceTaxDisplay"
+    ).innerText =
+        formatMoney(taxAmount);
+
+    document.getElementById(
+        "editInvoiceGrandTotal"
+    ).innerText =
+        formatMoney(grandTotal);
+
+    return {
+        subtotal: subtotal,
+        discount: discount,
+        taxPercent: taxPercent,
+        taxAmount: taxAmount,
+        grandTotal: grandTotal
+    };
+}
+
+
+function addEditInvoiceItem() {
+
+    const container =
+        document.getElementById(
+            "editInvoiceItems"
+        );
+
+    if (!container) return;
+
+    const item =
+        document.createElement("div");
+
+    item.className =
+        "invoice-item";
+
+    item.style =
+        "display:grid;" +
+        "grid-template-columns:2fr 1fr 1fr 1fr auto;" +
+        "gap:8px;" +
+        "margin-bottom:10px;";
+
+    item.innerHTML = `
+
+        <input
+            type="text"
+            class="edit-item-product"
+            placeholder="Product / Service"
+            required
+        >
+
+        <input
+            type="number"
+            class="edit-item-quantity"
+            value="1"
+            min="1"
+            step="1"
+            oninput="calculateEditInvoiceTotals()"
+            required
+        >
+
+        <input
+            type="number"
+            class="edit-item-rate"
+            placeholder="Rate"
+            min="0"
+            step="0.01"
+            oninput="calculateEditInvoiceTotals()"
+            required
+        >
+
+        <input
+            type="text"
+            class="edit-item-amount"
+            value="Rs. 0"
+            readonly
+        >
+
+        <button
+            type="button"
+            class="cancel-btn"
+            onclick="removeEditInvoiceItem(this)"
+        >
+            ×
+        </button>
+    `;
+
+    container.appendChild(item);
+
+    calculateEditInvoiceTotals();
+}
+
+
+function removeEditInvoiceItem(button) {
+
+    const items =
+        document.querySelectorAll(
+            "#editInvoiceItems .invoice-item"
+        );
+
+    if (items.length <= 1) {
+        alert(
+            "At least one invoice item is required."
+        );
+        return;
+    }
+
+    button
+        .closest(".invoice-item")
+        .remove();
+
+    calculateEditInvoiceTotals();
+}
+
+
+function updateInvoice(event, invoiceId) {
+
+    event.preventDefault();
+
+    const invoice =
+        invoices.find(
+            invoice =>
+                String(invoice.id) ===
+                String(invoiceId)
+        );
+
+    if (!invoice) {
+        alert("Invoice not found.");
+        return;
+    }
+
+    const customerId =
+        document.getElementById(
+            "editInvoiceCustomer"
+        ).value;
+
+    const date =
+        document.getElementById(
+            "editInvoiceDate"
+        ).value;
+
+    const status =
+        document.getElementById(
+            "editInvoiceStatus"
+        ).value;
+
+    const customer =
+        customers.find(
+            customer =>
+                String(customer.id) ===
+                String(customerId)
+        );
+
+    if (!customer || !date) {
+        alert(
+            "Please select customer and invoice date."
+        );
+        return;
+    }
+
+    const itemElements =
+        document.querySelectorAll(
+            "#editInvoiceItems .invoice-item"
+        );
+
+    const items = [];
+
+    itemElements.forEach(item => {
+
+        const product =
+            item.querySelector(
+                ".edit-item-product"
+            ).value.trim();
+
+        const quantity =
+            Number(
+                item.querySelector(
+                    ".edit-item-quantity"
+                ).value
+            );
+
+        const rate =
+            Number(
+                item.querySelector(
+                    ".edit-item-rate"
+                ).value
+            );
+
+        if (
+            product &&
+            quantity > 0 &&
+            rate > 0
+        ) {
+            items.push({
+                product: product,
+                quantity: quantity,
+                rate: rate,
+                amount: quantity * rate
+            });
+        }
+    });
+
+    if (items.length === 0) {
+        alert(
+            "Please add at least one valid invoice item."
+        );
+        return;
+    }
+
+    const totals =
+        calculateEditInvoiceTotals();
+
+    if (totals.grandTotal <= 0) {
+        alert(
+            "Invoice total must be greater than zero."
+        );
+        return;
+    }
+
+    invoice.customerId =
+        customer.id;
+
+    invoice.customer =
+        customer.name;
+
+    invoice.date =
+        date;
+
+    invoice.items =
+        items;
+
+    invoice.subtotal =
+        totals.subtotal;
+
+    invoice.discount =
+        totals.discount;
+
+    invoice.taxPercent =
+        totals.taxPercent;
+
+    invoice.taxAmount =
+        totals.taxAmount;
+
+    invoice.total =
+        totals.grandTotal;
+
+    invoice.status =
+        status;
+
+    saveInvoices();
+
+    alert(
+        invoice.invoiceNumber +
+        " updated successfully!"
+    );
+
+    showPage("sales");
+}
 function calculateInvoiceTotals() {
 
     const items =
