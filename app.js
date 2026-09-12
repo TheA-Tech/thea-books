@@ -3527,11 +3527,64 @@ function showVendors() {
 
             <button
                 class="new-btn"
-                openVendorForm()
+                onclick="openVendorForm()"
+            >
+                + Add Vendor
+            </button>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Vendor List</h2>
+
+            ${
+                vendors.length === 0
+                    ? `<p>No vendors added yet.</p>`
+
+                    : vendors
+                        .slice()
+                        .reverse()
+                        .map(vendor => `
+
+                            <div class="transaction-row">
+
+                                <div>
+
+                                    <strong>
+                                        ${vendor.name}
+                                    </strong>
+
+                                    <small>
+                                        ${vendor.phone || "No phone"}
+                                        ${vendor.email ? " • " + vendor.email : ""}
+                                    </small>
+
+                                    <small>
+                                        ${vendor.address || "No address"}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        `)
+                        .join("")
+            }
+
+        </div>
+
+    `;
+}
+
+
+/* =========================
+   INVENTORY
+========================= */
+
 function showInventory() {
 
     pageTitle.innerText = "Inventory";
-
     const totalProducts = products.length;
 
     const stockValue = products.reduce(
