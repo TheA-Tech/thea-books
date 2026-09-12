@@ -1092,18 +1092,28 @@ const receivables = invoices
      RECENT INVOICES
 ========================= -->
 
-<div class="dashboard-section" style="margin-top:22px;">
+<div class="dashboard-section" style="
+    margin-top:22px;
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    padding:20px;
+">
 
     <div style="
         display:flex;
         justify-content:space-between;
         align-items:center;
-        margin-bottom:15px;
+        margin-bottom:18px;
     ">
 
         <div>
 
-            <h3 style="margin:0 0 4px 0;">
+            <h3 style="
+                margin:0 0 5px 0;
+                font-size:18px;
+                color:#1a202c;
+            ">
                 🧾 Recent Invoices
             </h3>
 
@@ -1120,8 +1130,13 @@ const receivables = invoices
         <button
             class="action-btn"
             onclick="showPage('sales')"
+            style="
+                padding:8px 14px;
+                border-radius:7px;
+                font-size:12px;
+            "
         >
-            View All
+            View All →
         </button>
 
     </div>
@@ -1131,32 +1146,86 @@ const receivables = invoices
         recentInvoices.length === 0
 
             ? `
-                <div class="empty-state">
 
-                    <h3>No invoices yet</h3>
+                <div class="empty-state" style="
+                    padding:35px 20px;
+                    text-align:center;
+                    background:#f8fafc;
+                    border-radius:10px;
+                ">
 
-                    <p>
+                    <div style="
+                        font-size:32px;
+                        margin-bottom:8px;
+                    ">
+                        🧾
+                    </div>
+
+                    <h3 style="
+                        margin:0 0 6px 0;
+                    ">
+                        No invoices yet
+                    </h3>
+
+                    <p style="
+                        margin:0;
+                        color:#718096;
+                        font-size:13px;
+                    ">
                         Create your first invoice to see it here.
                     </p>
 
                 </div>
+
             `
 
             : `
 
                 <div class="table-container">
 
-                    <table>
+                    <table style="
+                        width:100%;
+                        border-collapse:collapse;
+                    ">
 
                         <thead>
 
                             <tr>
 
-                                <th>Invoice</th>
-                                <th>Customer</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Amount</th>
+                                <th style="
+                                    text-align:left;
+                                    padding:12px;
+                                ">
+                                    Invoice
+                                </th>
+
+                                <th style="
+                                    text-align:left;
+                                    padding:12px;
+                                ">
+                                    Customer
+                                </th>
+
+                                <th style="
+                                    text-align:left;
+                                    padding:12px;
+                                ">
+                                    Date
+                                </th>
+
+                                <th style="
+                                    text-align:left;
+                                    padding:12px;
+                                ">
+                                    Status
+                                </th>
+
+                                <th style="
+                                    text-align:right;
+                                    padding:12px;
+                                ">
+                                    Amount
+                                </th>
 
                             </tr>
 
@@ -1169,21 +1238,32 @@ const receivables = invoices
 
                                 <tr>
 
-                                    <td>
-                                        <strong>
-                                            ${invoice.invoiceNumber}
-                                        </strong>
+                                    <td style="
+                                        padding:13px 12px;
+                                        font-weight:600;
+                                    ">
+                                        ${invoice.invoiceNumber}
                                     </td>
 
-                                    <td>
+
+                                    <td style="
+                                        padding:13px 12px;
+                                    ">
                                         ${invoice.customer}
                                     </td>
 
-                                    <td>
+
+                                    <td style="
+                                        padding:13px 12px;
+                                        color:#718096;
+                                    ">
                                         ${invoice.date}
                                     </td>
 
-                                    <td>
+
+                                    <td style="
+                                        padding:13px 12px;
+                                    ">
 
                                         <span class="badge ${
                                             invoice.status === "paid"
@@ -1201,10 +1281,13 @@ const receivables = invoices
 
                                     </td>
 
-                                    <td>
-                                        <strong>
-                                            ${formatMoney(invoice.total)}
-                                        </strong>
+
+                                    <td style="
+                                        padding:13px 12px;
+                                        text-align:right;
+                                        font-weight:600;
+                                    ">
+                                        ${formatMoney(invoice.total)}
                                     </td>
 
                                 </tr>
