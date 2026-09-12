@@ -10055,6 +10055,64 @@ function showSecuritySettings() {
         </div>
     `;
 }
+
+async function changeSecurityPassword() {
+
+    const newPassword =
+        document.getElementById("newSecurityPassword").value;
+
+    const confirmPassword =
+        document.getElementById("confirmSecurityPassword").value;
+
+    const message =
+        document.getElementById("securityMessage");
+
+    if (!newPassword || !confirmPassword) {
+        message.textContent = "Please enter and confirm your new password.";
+        message.style.color = "#dc2626";
+        return;
+    }
+
+    if (newPassword.length < 6) {
+        message.textContent =
+            "Password must be at least 6 characters.";
+        message.style.color = "#dc2626";
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        message.textContent =
+            "Passwords do not match.";
+        message.style.color = "#dc2626";
+        return;
+    }
+
+    message.textContent = "Updating password...";
+    message.style.color = "#6b7280";
+
+    const { error } =
+        await theaSupabase.auth.updateUser({
+            password: newPassword
+        });
+
+    if (error) {
+        console.error("Password update error:", error);
+
+        message.textContent =
+            error.message;
+
+        message.style.color = "#dc2626";
+        return;
+    }
+
+    message.textContent =
+        "Password changed successfully.";
+
+    message.style.color = "#16a34a";
+
+    document.getElementById("newSecurityPassword").value = "";
+    document.getElementById("confirmSecurityPassword").value = "";
+}
 function togglePassword() {
 
     const password =
