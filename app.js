@@ -6373,7 +6373,7 @@ function showCustomers() {
                                         </button>
 
                                         <div
-                                           <div
+
     id="customer-menu-${customer.id}"
     style="
         display:none;
