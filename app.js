@@ -9965,6 +9965,96 @@ async function checkLogin() {
 
 checkLogin();
 
+function showSecuritySettings() {
+
+    pageTitle.textContent = "Security Settings";
+
+    content.innerHTML = `
+        <div class="panel">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:16px;
+                margin-bottom:20px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+                    <h2>🔐 Security Settings</h2>
+
+                    <p style="color:#6b7280;">
+                        Manage your account security and password.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    ← Back to Settings
+                </button>
+
+            </div>
+
+            <hr>
+
+            <h3>🔑 Change Password</h3>
+
+            <p style="color:#6b7280;font-size:13px;">
+                Update your account password securely using
+                THEA Books authentication.
+            </p>
+
+            <label>New Password</label>
+
+            <input
+                type="password"
+                id="newSecurityPassword"
+                placeholder="Enter new password"
+                autocomplete="new-password"
+            >
+
+            <label>Confirm New Password</label>
+
+            <input
+                type="password"
+                id="confirmSecurityPassword"
+                placeholder="Confirm new password"
+                autocomplete="new-password"
+            >
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="new-btn"
+                    onclick="changeSecurityPassword()">
+                    Change Password
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="showSoftwareSettings()">
+                    Cancel
+                </button>
+
+            </div>
+
+            <div
+                id="securityMessage"
+                style="
+                    margin-top:15px;
+                    font-size:13px;
+                    color:#6b7280;
+                ">
+            </div>
+
+        </div>
+    `;
+}
 function togglePassword() {
 
     const password =
