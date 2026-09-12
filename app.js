@@ -2068,8 +2068,8 @@ function openInvoiceEditForm(invoiceId) {
 
                 <div id="editInvoiceItems">
 
-                    ${
-                        invoice.items.map((item, index) => `
+                   ${
+    (invoice.items || []).map((item, index) => `
 
                             <div
                                 class="invoice-item"
