@@ -10231,23 +10231,64 @@ function toggleMobileMenu() {
 }
 
 async function checkLogin() {
-    const { data: { session } } =
-        await theaSupabase.auth.getSession();
 
     const loginScreen =
         document.getElementById("loginScreen");
 
-   if (session) {
+    const appShell =
+        document.querySelector(".app-shell");
 
-    loginScreen.style.display = "none";
-
-    await loadCompanyProfile();
-
-} else {
-
-    loginScreen.style.display = "flex";
-}
+    if (!loginScreen || !appShell) {
+        return;
     }
+
+    try {
+
+        const {
+            data: { session },
+            error
+        } = await theaSupabase.auth.getSession();
+
+        if (error) {
+            throw error;
+        }
+
+        if (session) {
+
+            /* =========================
+               USER IS LOGGED IN
+            ========================= */
+
+            loginScreen.style.display = "none";
+
+            appShell.style.display = "flex";
+
+            await loadCompanyProfile();
+
+        } else {
+
+            /* =========================
+               USER IS LOGGED OUT
+            ========================= */
+
+            loginScreen.style.display = "flex";
+
+            appShell.style.display = "none";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Authentication check error:",
+            error
+        );
+
+        loginScreen.style.display = "flex";
+
+        appShell.style.display = "none";
+    }
+}
 function showCloudSync() {
 
     pageTitle.textContent = "Cloud & Sync";
@@ -10640,3 +10681,11 @@ function togglePassword() {
 
     }
 }
+
+/* =========================
+   AUTH CHECK ON START
+========================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+    checkLogin();
+});
