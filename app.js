@@ -509,9 +509,10 @@ const receivables = invoices
     </div>
 
 
-    <div class="card" style="
-        border-top:4px solid #7c3aed;
-    ">
+   <div class="card" onclick="showPage('receivables')" style="
+    border-top:4px solid #7c3aed;
+    cursor:pointer;
+">
 
         <div style="
             display:flex;
@@ -542,9 +543,10 @@ const receivables = invoices
     </div>
 
 
-    <div class="card" style="
-        border-top:4px solid #b91c1c;
-    ">
+    <div class="card" onclick="showPage('payables')" style="
+    border-top:4px solid #b91c1c;
+    cursor:pointer;
+">
 
         <div style="
             display:flex;
