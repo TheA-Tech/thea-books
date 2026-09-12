@@ -4290,6 +4290,9 @@ let invoices =
 let vendors =
     JSON.parse(localStorage.getItem("theaBooksVendors")) || [];
 
+let transactions =
+    JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
+
 let purchases =
     JSON.parse(localStorage.getItem("theaBooksPurchases")) || [];
 
