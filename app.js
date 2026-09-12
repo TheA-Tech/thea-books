@@ -191,8 +191,7 @@ function showDashboard() {
         );
 
 
-    const totalSales =
-        invoiceSales + transactionSales;
+    const totalSales = invoiceSales;
 
 
     const totalExpenses = transactions
