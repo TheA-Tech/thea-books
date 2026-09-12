@@ -4755,8 +4755,177 @@ function showTrialBalance() {
 
         </div>
 
+      `;
+}
+
+
+/* =========================
+   CASH FLOW
+========================= */
+
+function showCashFlow() {
+
+    pageTitle.innerText = "Cash Flow Statement";
+
+    const cashInflow = invoices
+        .filter(invoice => invoice.status === "paid")
+        .reduce(
+            (sum, invoice) =>
+                sum + Number(invoice.total || 0),
+            0
+        );
+
+    const cashOutflow = purchases
+        .filter(purchase => purchase.status === "paid")
+        .reduce(
+            (sum, purchase) =>
+                sum + Number(purchase.amount || 0),
+            0
+        );
+
+    const expensesPaid = transactions
+        .filter(t => t.type === "expense")
+        .reduce(
+            (sum, t) =>
+                sum + Number(t.amount || 0),
+            0
+        );
+
+    const netCashFlow =
+        cashInflow -
+        cashOutflow -
+        expensesPaid;
+
+    content.innerHTML = `
+
+        <div class="dashboard-section">
+
+            <h2>💰 Cash Flow Statement</h2>
+
+            <p style="
+                color:#718096;
+                font-size:13px;
+            ">
+                Summary of cash received and cash paid by the business.
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>💵 Cash Inflow</h3>
+                <p>
+                    ${formatMoney(cashInflow)}
+                </p>
+            </div>
+
+
+            <div class="card">
+                <h3>🛒 Purchases Paid</h3>
+                <p>
+                    ${formatMoney(cashOutflow)}
+                </p>
+            </div>
+
+
+            <div class="card">
+                <h3>💸 Expenses Paid</h3>
+                <p>
+                    ${formatMoney(expensesPaid)}
+                </p>
+            </div>
+
+
+            <div class="card">
+                <h3>🏦 Net Cash Flow</h3>
+                <p>
+                    ${formatMoney(netCashFlow)}
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>📑 Cash Flow Details</h2>
+
+            <table style="
+                width:100%;
+                border-collapse:collapse;
+            ">
+
+                <tr>
+                    <td style="padding:13px;">
+                        Cash received from customers
+                    </td>
+
+                    <td style="
+                        padding:13px;
+                        text-align:right;
+                    ">
+                        ${formatMoney(cashInflow)}
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td style="padding:13px;">
+                        Purchases paid
+                    </td>
+
+                    <td style="
+                        padding:13px;
+                        text-align:right;
+                    ">
+                        - ${formatMoney(cashOutflow)}
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td style="padding:13px;">
+                        Expenses paid
+                    </td>
+
+                    <td style="
+                        padding:13px;
+                        text-align:right;
+                    ">
+                        - ${formatMoney(expensesPaid)}
+                    </td>
+                </tr>
+
+
+                <tr style="
+                    border-top:2px solid #cbd5e1;
+                    font-weight:bold;
+                ">
+
+                    <td style="padding:15px 13px;">
+                        Net Cash Flow
+                    </td>
+
+                    <td style="
+                        padding:15px 13px;
+                        text-align:right;
+                    ">
+                        ${formatMoney(netCashFlow)}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
     `;
 }
+
+
+function showReports() {
 
 function showReports() {
 
