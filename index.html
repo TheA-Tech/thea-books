@@ -16,616 +16,566 @@
         rel="stylesheet"
         href="styles.css?v=7"
     >
-/* =====================================================
-   FINAL SIDEBAR + DASHBOARD SLIDE
-===================================================== */
 
-/* APP LAYOUT */
-
-.app-shell {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
-    overflow: hidden;
-}
-
-
-/* SIDEBAR */
-
-.sidebar {
-    width: 82px !important;
-    min-width: 82px !important;
-    height: 100vh;
-    flex-shrink: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-
-    transition:
-        width .28s ease,
-        min-width .28s ease;
-
-    z-index: 1000;
-}
-
-
-/* SIDEBAR OPEN */
-
-.sidebar:hover {
-    width: 250px !important;
-    min-width: 250px !important;
-}
-
-
-/* MAIN DASHBOARD */
-
-.main {
-    flex: 1;
-    min-width: 0;
-
-    width: calc(100% - 82px);
-
-    transition:
-        width .28s ease,
-        margin-left .28s ease;
-
-    overflow-x: hidden;
-}
-
-
-/* MAIN NAVIGATION */
-
-#mainNavigation {
-    flex: 1;
-    min-height: 0;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding: 6px 5px;
-
-    scrollbar-width: thin;
-}
-
-
-/* EVERY MENU BUTTON */
-
-#mainNavigation button,
-.sidebar-bottom button {
-
-    width: 100%;
-    min-width: 0;
-
-    height: 46px;
-    min-height: 46px;
-
-    display: flex;
-
-    align-items: center;
-
-    box-sizing: border-box;
-
-    overflow: hidden;
-
-    transition:
-        background .2s ease,
-        transform .2s ease;
-
-}
-
-
-/* SAME ICON SIZE */
-
-#mainNavigation .menu-icon,
-.sidebar-bottom .menu-icon {
-
-    width: 42px;
-    min-width: 42px;
-
-    height: 42px;
-    min-height: 42px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink: 0;
-
-    font-size: 18px;
-
-    line-height: 1;
-}
-
-
-/* COLLAPSED LABEL */
-
-#mainNavigation .menu-label,
-.sidebar-bottom .menu-label {
-
-    display: block;
-
-    white-space: nowrap;
-
-    margin-left: 4px;
-
-    opacity: 0;
-
-    transform: translateX(-15px);
-
-    transition:
-        opacity .18s ease,
-        transform .25s ease;
-
-    pointer-events: none;
-}
-
-
-/* OPEN LABEL */
-
-.sidebar:hover #mainNavigation .menu-label,
-.sidebar:hover .sidebar-bottom .menu-label {
-
-    opacity: 1;
-
-    transform: translateX(0);
-
-}
-
-
-/* =====================================================
-   BRAND
-===================================================== */
-
-.brand-row {
-
-    width: 100%;
-
-    min-height: 70px;
-
-    flex-shrink: 0;
-
-    overflow: hidden;
-
-}
-
-
-/* BRAND NAME CLOSED */
-
-.brand-name {
-
-    white-space: nowrap;
-
-    opacity: 0;
-
-    transform: translateX(-15px);
-
-    transition:
-        opacity .2s ease,
-        transform .25s ease;
-
-}
-
-
-/* BRAND NAME OPEN */
-
-.sidebar:hover .brand-name {
-
-    opacity: 1;
-
-    transform: translateX(0);
-
-}
-
-
-/* =====================================================
-   BACK / FORWARD / REFRESH
-===================================================== */
-
-.app-navigation {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 3px;
-
-    flex-shrink: 0;
-
-    width: 100%;
-
-}
-
-
-/* NAV BUTTON SAME SIZE */
-
-.app-navigation .nav-arrow {
-
-    width: 24px !important;
-    min-width: 24px !important;
-
-    height: 28px !important;
-    min-height: 28px !important;
-
-    padding: 0 !important;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink: 0;
-
-}
-
-
-/* =====================================================
-   COMPANY
-===================================================== */
-
-.company-account {
-
-    width: 100%;
-
-    flex-shrink: 0;
-
-    overflow: hidden;
-
-}
-
-
-.company-account-btn {
-
-    width: 100%;
-
-    min-width: 0;
-
-    display: flex;
-
-    align-items: center;
-
-    overflow: hidden;
-
-}
-
-
-.company-icon {
-
-    width: 42px;
-    min-width: 42px;
-
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink: 0;
-
-}
-
-
-/* COMPANY TEXT CLOSED */
-
-.company-text {
-
-    white-space: nowrap;
-
-    opacity: 0;
-
-    transform: translateX(-15px);
-
-    transition:
-        opacity .18s ease,
-        transform .25s ease;
-
-}
-
-
-/* COMPANY TEXT OPEN */
-
-.sidebar:hover .company-text {
-
-    opacity: 1;
-
-    transform: translateX(0);
-
-}
-
-
-/* =====================================================
-   SIDEBAR FOOTER
-===================================================== */
-
-.sidebar-brand-footer {
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    opacity: 0;
-
-    transition: opacity .2s ease;
-
-}
-
-
-.sidebar:hover .sidebar-brand-footer {
-
-    opacity: 1;
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .sidebar {
-
-        width: 250px !important;
-        min-width: 250px !important;
-
-    }
-
-    .sidebar:hover {
-
-        width: 250px !important;
-        min-width: 250px !important;
-
-    }
-
-    .sidebar .menu-label,
-    .sidebar .brand-name,
-    .sidebar .company-text,
-    .sidebar .sidebar-brand-footer {
-
-        opacity: 1;
-
-        transform: translateX(0);
-
-    }
-
-    .main {
-
-        width: 100%;
-
-    }
-
-}
     <style>
 
         /* =====================================================
-           THEA BOOKS - SIDEBAR & TOOLBAR UPGRADE
+           THEA BOOKS - FINAL SIDEBAR + DASHBOARD LAYOUT
         ===================================================== */
 
-        /* SIDEBAR */
-
-        .sidebar {
-            overflow: hidden;
+        * {
+            box-sizing: border-box;
         }
 
-        /* MAIN NAVIGATION SCROLL */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
 
-        #mainNavigation {
-            flex: 1;
-            overflow-y: auto;
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+            color: #1f2937;
             overflow-x: hidden;
-            padding-right: 4px;
-            scrollbar-width: thin;
-        }
-
-        #mainNavigation::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        #mainNavigation::-webkit-scrollbar-thumb {
-            border-radius: 10px;
         }
 
 
-        /* SIDEBAR MENU BUTTON */
+        /* =====================================================
+           MAIN APP SHELL
+        ===================================================== */
 
-        #mainNavigation button,
-        .sidebar-bottom button {
+        .app-shell {
+
+            display: flex;
+
+            width: 100%;
+            min-height: 100vh;
 
             position: relative;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+
+            width: 82px !important;
+            min-width: 82px !important;
+
+            height: 100vh;
+
+            background: #111827;
+
+            color: #ffffff;
 
             display: flex;
-            align-items: center;
+            flex-direction: column;
 
-            min-height: 46px;
+            position: sticky;
+            top: 0;
 
-            white-space: nowrap;
+            z-index: 1000;
 
             overflow: hidden;
 
             transition:
-                background .2s ease,
-                transform .2s ease;
+                width 0.25s ease,
+                min-width 0.25s ease;
 
+            box-shadow:
+                3px 0 12px rgba(0, 0, 0, 0.08);
         }
 
 
-        /* MENU ICON */
-
-        #mainNavigation .menu-icon,
-        .sidebar-bottom .menu-icon {
-
-            min-width: 42px;
-
-            width: 42px;
-
-            height: 42px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            flex-shrink: 0;
-
-            font-size: 18px;
-
-        }
-
-
-        /* MENU LABEL */
-
-        #mainNavigation .menu-label,
-        .sidebar-bottom .menu-label {
-
-            opacity: 0;
-
-            transform: translateX(-12px);
-
-            transition:
-                opacity .2s ease,
-                transform .25s ease;
-
-            pointer-events: none;
-
-        }
-
-
-        /* SIDEBAR HOVER */
-
-        .sidebar:hover #mainNavigation .menu-label,
-        .sidebar:hover .sidebar-bottom .menu-label {
-
-            opacity: 1;
-
-            transform: translateX(0);
-
-        }
-
-
-        /* SIDEBAR WIDTH */
-
-        .sidebar {
-
-            width: 76px;
-
-            transition: width .25s ease;
-
-        }
-
-
-        /* EXPAND SIDEBAR */
+        /* SIDEBAR OPEN */
 
         .sidebar:hover {
 
-            width: 250px;
-
+            width: 250px !important;
+            min-width: 250px !important;
         }
 
 
-        /* BRAND */
+        /* =====================================================
+           SIDEBAR BRAND
+        ===================================================== */
 
-        .brand-row {
+        .sidebar-brand {
 
-            overflow: hidden;
+            height: 74px;
 
+            min-height: 74px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 12px;
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            white-space: nowrap;
         }
+
+
+        .brand-left {
+
+            display: flex;
+            align-items: center;
+
+            gap: 5px;
+
+            min-width: 0;
+        }
+
+
+        /* =====================================================
+           BACK / FORWARD / REFRESH
+        ===================================================== */
+
+        .app-navigation {
+
+            display: flex;
+            align-items: center;
+
+            gap: 3px;
+
+            flex-shrink: 0;
+        }
+
+
+        .app-navigation button {
+
+            width: 22px;
+            height: 28px;
+
+            min-width: 22px;
+
+            border: none;
+
+            background: transparent;
+
+            color: #ffffff;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 14px;
+
+            padding: 0;
+
+            transition:
+                background 0.2s ease;
+        }
+
+
+        .app-navigation button:hover {
+
+            background:
+                rgba(255, 255, 255, 0.12);
+        }
+
+
+        /* =====================================================
+           BRAND TEXT
+        ===================================================== */
 
         .brand-name {
 
-            white-space: nowrap;
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #ffffff;
 
             opacity: 0;
 
-            transform: translateX(-10px);
+            transform: translateX(-8px);
 
             transition:
-                opacity .2s ease,
-                transform .25s ease;
+                opacity 0.2s ease,
+                transform 0.2s ease;
 
+            white-space: nowrap;
         }
+
 
         .sidebar:hover .brand-name {
 
             opacity: 1;
 
             transform: translateX(0);
-
         }
 
 
-        /* COMPANY ACCOUNT */
-
-        .company-account {
-
-            overflow: hidden;
-
-        }
+        /* =====================================================
+           COMPANY TEXT
+        ===================================================== */
 
         .company-text {
 
             opacity: 0;
 
-            transform: translateX(-10px);
+            transform: translateX(-8px);
 
             transition:
-                opacity .2s ease,
-                transform .25s ease;
+                opacity 0.2s ease,
+                transform 0.2s ease;
 
             white-space: nowrap;
-
         }
+
 
         .sidebar:hover .company-text {
 
             opacity: 1;
 
             transform: translateX(0);
-
         }
 
 
-        /* COMPANY BUTTON */
+        /* =====================================================
+           SIDEBAR MENU
+        ===================================================== */
 
-        .company-account-btn {
+        #mainNavigation {
 
-            overflow: hidden;
+            flex: 1;
 
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            padding:
+                10px 8px;
+
+            scrollbar-width: thin;
         }
 
 
-        /* SIDEBAR BOTTOM */
+        #mainNavigation::-webkit-scrollbar {
 
-        .sidebar-bottom {
-
-            overflow: hidden;
-
+            width: 5px;
         }
 
 
-        /* FOOTER */
+        #mainNavigation::-webkit-scrollbar-thumb {
 
-        .sidebar-brand-footer {
+            background:
+                rgba(255, 255, 255, 0.2);
 
-            overflow: hidden;
+            border-radius: 10px;
+        }
+
+
+        /* =====================================================
+           SIDEBAR MENU BUTTONS
+        ===================================================== */
+
+        #mainNavigation button {
+
+            width: 100%;
+
+            height: 46px;
+
+            margin-bottom: 5px;
+
+            border: none;
+
+            background: transparent;
+
+            color: #d1d5db;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-start;
+
+            gap: 13px;
+
+            padding:
+                0 11px;
+
+            font-size: 14px;
+
+            font-weight: 500;
 
             white-space: nowrap;
 
+            transition:
+                background 0.2s ease,
+                color 0.2s ease;
+        }
+
+
+        #mainNavigation button:hover {
+
+            background:
+                rgba(255, 255, 255, 0.09);
+
+            color: #ffffff;
+        }
+
+
+        #mainNavigation button:active {
+
+            transform: scale(0.98);
+        }
+
+
+        /* =====================================================
+           SIDEBAR ICON
+        ===================================================== */
+
+        #mainNavigation button::first-letter {
+
+            font-size: 18px;
+        }
+
+
+        /* =====================================================
+           SIDEBAR LABEL
+        ===================================================== */
+
+        .menu-label {
+
             opacity: 0;
 
-            transition: opacity .2s ease;
+            transform: translateX(-8px);
 
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+
+            white-space: nowrap;
         }
+
+
+        .sidebar:hover .menu-label {
+
+            opacity: 1;
+
+            transform: translateX(0);
+        }
+
+
+        /* =====================================================
+           SIDEBAR BOTTOM
+        ===================================================== */
+
+        .sidebar-bottom {
+
+            padding:
+                8px;
+
+            border-top:
+                1px solid rgba(255, 255, 255, 0.08);
+        }
+
+
+        .sidebar-bottom button {
+
+            width: 100%;
+
+            height: 44px;
+
+            margin-bottom: 5px;
+
+            border: none;
+
+            background: transparent;
+
+            color: #d1d5db;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding:
+                0 11px;
+
+            font-size: 14px;
+
+            white-space: nowrap;
+        }
+
+
+        .sidebar-bottom button:hover {
+
+            background:
+                rgba(255, 255, 255, 0.09);
+
+            color: #ffffff;
+        }
+
+
+        .sidebar-brand-footer {
+
+            font-size: 11px;
+
+            color: #6b7280;
+
+            text-align: center;
+
+            padding:
+                7px 0 4px;
+
+            opacity: 0;
+
+            white-space: nowrap;
+
+            transition:
+                opacity 0.2s ease;
+        }
+
 
         .sidebar:hover .sidebar-brand-footer {
 
             opacity: 1;
+        }
 
+
+        /* =====================================================
+           MAIN AREA
+        ===================================================== */
+
+        .main {
+
+            flex: 1;
+
+            min-width: 0;
+
+            width: calc(100% - 82px);
+
+            min-height: 100vh;
+
+            background: #f4f7fb;
+
+            transition:
+                width 0.25s ease;
+        }
+
+
+        /* =====================================================
+           TOP HEADER
+        ===================================================== */
+
+        .top-header {
+
+            min-height: 62px;
+
+            background: #ffffff;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                10px 18px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 500;
+        }
+
+
+        /* =====================================================
+           MOBILE MENU BUTTON
+        ===================================================== */
+
+        .mobile-menu-btn {
+
+            display: none;
+
+            width: 38px;
+            height: 38px;
+
+            border: 1px solid #d1d5db;
+
+            background: #ffffff;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 20px;
+        }
+
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        .search-box {
+
+            flex: 1;
+
+            min-width: 120px;
+
+            max-width: 420px;
+
+            position: relative;
+        }
+
+
+        .search-box input {
+
+            width: 100%;
+
+            height: 38px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            padding:
+                0 14px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            background: #f9fafb;
+        }
+
+
+        .search-box input:focus {
+
+            border-color: #2563eb;
+
+            background: #ffffff;
         }
 
 
@@ -633,243 +583,513 @@
            TOOLBAR
         ===================================================== */
 
-        .top-header {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 14px;
-
-            min-height: 68px;
-
-        }
-
-
-        /* GLOBAL SEARCH */
-
-        .global-search {
-
-            flex: 1;
-
-            max-width: 520px;
-
-        }
-
-
-        /* TOOLBAR ACTIONS */
-
         .toolbar-actions {
 
             display: flex;
 
             align-items: center;
 
-            justify-content: flex-end;
-
             gap: 6px;
 
+            margin-left: auto;
+
             flex-wrap: nowrap;
-
         }
 
 
-        /* NORMAL TOOLBAR BUTTON */
+        .toolbar-actions button {
 
-        .toolbar-btn {
+            height: 36px;
 
-            min-width: 76px;
+            border:
+                1px solid #d1d5db;
 
-            height: 48px;
+            background: #ffffff;
 
-            padding: 5px 9px;
+            color: #374151;
 
-            display: flex;
+            border-radius: 7px;
 
-            flex-direction: column;
+            padding:
+                0 10px;
 
-            align-items: center;
+            cursor: pointer;
 
-            justify-content: center;
-
-            gap: 2px;
+            font-size: 13px;
 
             white-space: nowrap;
 
+            transition:
+                background 0.2s ease,
+                border 0.2s ease;
         }
 
 
-        .toolbar-btn span {
+        .toolbar-actions button:hover {
 
-            font-size: 17px;
+            background: #f3f4f6;
 
-            line-height: 18px;
-
-        }
-
-
-        .toolbar-btn small {
-
-            font-size: 10px;
-
-        }
-
-
-        /* ICON BUTTON */
-
-        .toolbar-icon-btn {
-
-            width: 42px;
-
-            height: 42px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            flex-shrink: 0;
-
-        }
-
-
-        /* COMPANY */
-
-        .toolbar-company {
-
-            height: 46px;
-
-            padding: 5px 10px;
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 7px;
-
-            white-space: nowrap;
-
-            flex-shrink: 0;
-
-        }
-
-
-        .toolbar-company-icon {
-
-            font-size: 18px;
-
-        }
-
-
-        .toolbar-company-text {
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: flex-start;
-
-            line-height: 15px;
-
-        }
-
-
-        .toolbar-company-text small {
-
-            font-size: 10px;
-
+            border-color: #9ca3af;
         }
 
 
         /* =====================================================
-           MOBILE
+           PAGE HEADER
         ===================================================== */
+
+        .page-header {
+
+            background: #ffffff;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            min-height: 66px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                12px 22px;
+
+            gap: 12px;
+        }
+
+
+        .page-header h1 {
+
+            margin: 0;
+
+            font-size: 22px;
+
+            color: #111827;
+        }
+
+
+        .new-btn {
+
+            border: none;
+
+            background: #2563eb;
+
+            color: #ffffff;
+
+            border-radius: 7px;
+
+            padding:
+                10px 16px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+            font-size: 13px;
+        }
+
+
+        .new-btn:hover {
+
+            background: #1d4ed8;
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        #content {
+
+            padding:
+                22px;
+
+            min-height:
+                calc(100vh - 128px);
+        }
+
+
+        /* =====================================================
+           GENERAL PANELS
+        ===================================================== */
+
+        .panel {
+
+            background: #ffffff;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+
+        .panel h2 {
+
+            margin-top: 0;
+
+            color: #111827;
+        }
+
+
+        /* =====================================================
+           FORMS
+        ===================================================== */
+
+        .panel form {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+
+        .panel label {
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #374151;
+
+            margin-top: 7px;
+        }
+
+
+        .panel input,
+        .panel select,
+        .panel textarea {
+
+            width: 100%;
+
+            min-height: 40px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            padding:
+                9px 11px;
+
+            font-size: 14px;
+
+            outline: none;
+
+            background: #ffffff;
+        }
+
+
+        .panel input:focus,
+        .panel select:focus,
+        .panel textarea:focus {
+
+            border-color: #2563eb;
+        }
+
+
+        .form-buttons {
+
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 15px;
+        }
+
+
+        .cancel-btn {
+
+            border:
+                1px solid #d1d5db;
+
+            background: #ffffff;
+
+            color: #374151;
+
+            border-radius: 7px;
+
+            padding:
+                10px 16px;
+
+            cursor: pointer;
+        }
+
+
+        .cancel-btn:hover {
+
+            background: #f3f4f6;
+        }
+
+
+        /* =====================================================
+           TABLES
+        ===================================================== */
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+
+        table th {
+
+            text-align: left;
+
+            padding:
+                12px 10px;
+
+            background: #f9fafb;
+
+            color: #374151;
+
+            font-size: 13px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+        }
+
+
+        table td {
+
+            padding:
+                12px 10px;
+
+            border-bottom:
+                1px solid #f0f0f0;
+
+            font-size: 13px;
+
+            color: #4b5563;
+        }
+
+
+        table tr:hover td {
+
+            background: #fafafa;
+        }
+
+
+        /* =====================================================
+           MOBILE OVERLAY
+        ===================================================== */
+
+        .mobile-overlay {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, 0.45);
+
+            z-index: 900;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .toolbar-actions {
+
+                gap: 4px;
+            }
+
+
+            .toolbar-actions button {
+
+                padding:
+                    0 7px;
+
+                font-size: 12px;
+            }
+
+        }
+
 
         @media (max-width: 900px) {
 
             .sidebar {
 
-                width: 250px;
+                position: fixed;
 
+                left: -250px;
+
+                top: 0;
+
+                width: 250px !important;
+
+                min-width: 250px !important;
+
+                height: 100vh;
+
+                transition:
+                    left 0.25s ease;
             }
+
 
             .sidebar:hover {
 
-                width: 250px;
+                width: 250px !important;
 
+                min-width: 250px !important;
             }
 
-            .sidebar .menu-label,
+
+            .sidebar.mobile-open {
+
+                left: 0;
+            }
+
+
             .sidebar .brand-name,
             .sidebar .company-text,
+            .sidebar .menu-label,
             .sidebar .sidebar-brand-footer {
 
                 opacity: 1;
 
                 transform: translateX(0);
-
             }
+
+
+            .main {
+
+                width: 100%;
+
+                min-width: 0;
+            }
+
+
+            .mobile-menu-btn {
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+            }
+
 
             .toolbar-actions {
 
-                gap: 4px;
+                overflow-x: auto;
 
+                max-width: 65vw;
+
+                scrollbar-width: none;
             }
 
-            .toolbar-btn {
 
-                min-width: 58px;
-
-            }
-
-            .toolbar-btn small {
+            .toolbar-actions::-webkit-scrollbar {
 
                 display: none;
-
             }
 
-            .toolbar-company-text {
+
+            .mobile-overlay {
 
                 display: none;
+            }
 
+
+            .mobile-overlay.active {
+
+                display: block;
+            }
+
+
+            #content {
+
+                padding:
+                    15px;
             }
 
         }
 
 
-        @media (max-width: 650px) {
+        @media (max-width: 600px) {
 
-            .toolbar-btn {
+            .top-header {
 
-                width: 40px;
+                padding:
+                    8px 10px;
 
-                min-width: 40px;
-
-                padding: 4px;
-
+                gap: 7px;
             }
 
-            .toolbar-company {
 
-                width: 42px;
-
-                padding: 4px;
-
-                justify-content: center;
-
-            }
-
-            .toolbar-company > span:last-child {
-
-                display: none;
-
-            }
-
-            .global-search {
+            .search-box {
 
                 max-width: none;
+            }
 
+
+            .toolbar-actions button {
+
+                height: 34px;
+
+                font-size: 11px;
+
+                padding:
+                    0 7px;
+            }
+
+
+            .page-header {
+
+                padding:
+                    10px 14px;
+            }
+
+
+            .page-header h1 {
+
+                font-size: 19px;
+            }
+
+
+            .page-header .new-btn {
+
+                padding:
+                    8px 11px;
+
+                font-size: 12px;
+            }
+
+
+            #content {
+
+                padding:
+                    10px;
+            }
+
+
+            .panel {
+
+                padding:
+                    14px;
+            }
+
+
+            table {
+
+                min-width: 600px;
             }
 
         }
@@ -883,15 +1103,15 @@
 
 
     <!-- =====================================================
-         APP WRAPPER
-    ====================================================== -->
+         APP SHELL
+    ===================================================== -->
 
     <div class="app-shell">
 
 
         <!-- =================================================
              SIDEBAR
-        ================================================== -->
+        ================================================= -->
 
         <aside
             class="sidebar"
@@ -901,7 +1121,7 @@
 
             <!-- BRAND -->
 
-            <div class="brand-row">
+            <div class="sidebar-brand">
 
                 <div class="brand-left">
 
@@ -911,7 +1131,7 @@
                     <div class="app-navigation">
 
                         <button
-                            class="nav-arrow"
+                            type="button"
                             onclick="goBack()"
                             title="Back"
                         >
@@ -919,7 +1139,7 @@
                         </button>
 
                         <button
-                            class="nav-arrow"
+                            type="button"
                             onclick="goForward()"
                             title="Forward"
                         >
@@ -927,8 +1147,8 @@
                         </button>
 
                         <button
-                            class="nav-arrow"
-                            onclick="location.reload()"
+                            type="button"
+                            onclick="refreshCurrentPage()"
                             title="Refresh"
                         >
                             ↻
@@ -937,362 +1157,267 @@
                     </div>
 
 
-                    <!-- LOGO -->
+                    <!-- BRAND -->
 
-                    <h2 class="brand-name">
-
-                        <span class="brand-thea">
-                            THEA
-                        </span>
-
-                        <span class="brand-books">
-                            Books
-                        </span>
-
-                    </h2>
+                    <div class="brand-name">
+                        THEA Books
+                    </div>
 
                 </div>
 
-
-                <!-- MOBILE MENU -->
-
-                <button
-                    class="mobile-menu-btn"
-                    onclick="toggleMobileMenu()"
-                    title="Menu"
-                >
-                    ☰
-                </button>
-
             </div>
-
 
 
             <!-- =================================================
                  COMPANY ACCOUNT
-            ================================================== -->
+            ================================================= -->
 
-            <div class="company-account">
+            <button
+                type="button"
+                onclick="showCompanyAccount()"
+                style="
+                    width:calc(100% - 16px);
+                    margin:8px;
+                    height:44px;
+                    border:none;
+                    background:#1f2937;
+                    color:#ffffff;
+                    border-radius:8px;
+                    cursor:pointer;
+                    display:flex;
+                    align-items:center;
+                    gap:13px;
+                    padding:0 11px;
+                    white-space:nowrap;
+                    overflow:hidden;
+                "
+            >
 
-                <button
-                    class="company-account-btn"
-                    onclick="showCompanyAccount()"
-                    title="Company Account"
+                <span
+                    style="
+                        width:24px;
+                        min-width:24px;
+                        text-align:center;
+                        font-size:18px;
+                    "
                 >
+                    🏢
+                </span>
 
-                    <span class="company-icon">
-                        🏢
-                    </span>
+                <span class="company-text">
+                    Company Account
+                </span>
 
-                    <span class="company-text">
-
-                        <strong id="currentCompanyName">
-                            Company Account
-                        </strong>
-
-                        <small id="currentCompanyStatus">
-                            Set up company
-                        </small>
-
-                    </span>
-
-                </button>
-
-            </div>
-
+            </button>
 
 
             <!-- =================================================
                  MAIN NAVIGATION
-            ================================================== -->
+            ================================================= -->
 
-            <nav id="mainNavigation">
+            <nav
+                id="mainNavigation"
+            >
 
-
-                <!-- DASHBOARD -->
 
                 <button
+                    type="button"
                     onclick="showPage('dashboard')"
-                    title="Dashboard"
                 >
-
-                    <span class="menu-icon">
-                        📊
-                    </span>
-
+                    <span>📊</span>
                     <span class="menu-label">
                         Dashboard
                     </span>
-
                 </button>
 
 
-
-                <!-- SALES -->
-
                 <button
+                    type="button"
                     onclick="showPage('sales')"
-                    title="Sales"
                 >
-
-                    <span class="menu-icon">
-                        🧾
-                    </span>
-
+                    <span>🧾</span>
                     <span class="menu-label">
                         Sales
                     </span>
-
                 </button>
 
 
-
-                <!-- PURCHASES -->
-
                 <button
+                    type="button"
                     onclick="showPage('purchases')"
-                    title="Purchases"
                 >
-
-                    <span class="menu-icon">
-                        🛒
-                    </span>
-
+                    <span>🛒</span>
                     <span class="menu-label">
                         Purchases
                     </span>
-
                 </button>
 
 
-
-                <!-- EXPENSES -->
-
                 <button
+                    type="button"
                     onclick="showPage('expenses')"
-                    title="Expenses"
                 >
-
-                    <span class="menu-icon">
-                        💰
-                    </span>
-
+                    <span>💰</span>
                     <span class="menu-label">
                         Expenses
                     </span>
-
                 </button>
 
 
-
-                <!-- CUSTOMERS -->
-
                 <button
+                    type="button"
                     onclick="showPage('customers')"
-                    title="Customers"
                 >
-
-                    <span class="menu-icon">
-                        👥
-                    </span>
-
+                    <span>👥</span>
                     <span class="menu-label">
                         Customers
                     </span>
-
                 </button>
 
 
-
-                <!-- VENDORS -->
-
                 <button
+                    type="button"
                     onclick="showPage('vendors')"
-                    title="Vendors"
                 >
-
-                    <span class="menu-icon">
-                        🏢
-                    </span>
-
+                    <span>🏢</span>
                     <span class="menu-label">
                         Vendors
                     </span>
-
                 </button>
 
 
-
-                <!-- INVENTORY -->
-
                 <button
+                    type="button"
                     onclick="showPage('inventory')"
-                    title="Inventory"
                 >
-
-                    <span class="menu-icon">
-                        📦
-                    </span>
-
+                    <span>📦</span>
                     <span class="menu-label">
                         Inventory
                     </span>
-
                 </button>
 
 
-
-                <!-- ACCOUNTING -->
-
                 <button
+                    type="button"
                     onclick="showPage('accounting')"
-                    title="Accounting"
                 >
-
-                    <span class="menu-icon">
-                        📚
-                    </span>
-
+                    <span>📚</span>
                     <span class="menu-label">
                         Accounting
                     </span>
-
                 </button>
 
 
-
-                <!-- RECEIVABLES -->
-
                 <button
+                    type="button"
                     onclick="showPage('receivables')"
-                    title="Accounts Receivable"
                 >
-
-                    <span class="menu-icon">
-                        💵
-                    </span>
-
+                    <span>💵</span>
                     <span class="menu-label">
                         Receivables
                     </span>
-
                 </button>
 
 
-
-                <!-- PAYABLES -->
-
                 <button
+                    type="button"
                     onclick="showPage('payables')"
-                    title="Accounts Payable"
                 >
-
-                    <span class="menu-icon">
-                        📋
-                    </span>
-
+                    <span>📋</span>
                     <span class="menu-label">
                         Payables
                     </span>
-
                 </button>
 
 
-
-                <!-- REPORTS -->
-
                 <button
+                    type="button"
                     onclick="showPage('reports')"
-                    title="Reports"
                 >
-
-                    <span class="menu-icon">
-                        📈
-                    </span>
-
+                    <span>📈</span>
                     <span class="menu-label">
                         Reports
                     </span>
-
                 </button>
+
 
             </nav>
 
 
-
             <!-- =================================================
                  SIDEBAR BOTTOM
-            ================================================== -->
+            ================================================= -->
 
             <div class="sidebar-bottom">
 
 
-                <!-- COMPANY SETTINGS -->
-
                 <button
+                    type="button"
                     onclick="showCompanyAccount()"
-                    title="Company Account"
                 >
 
-                    <span class="menu-icon">
+                    <span
+                        style="
+                            width:24px;
+                            min-width:24px;
+                            text-align:center;
+                            font-size:18px;
+                        "
+                    >
                         ⚙️
                     </span>
 
                     <span class="menu-label">
-                        Company Account
+                        Company
                     </span>
 
                 </button>
 
 
-                <!-- HELP -->
-
                 <button
-                    title="Help & Support"
-                    onclick="alert('THEA Books Help & Support')"
+                    type="button"
+                    onclick="alert('Help section coming soon.')"
                 >
 
-                    <span class="menu-icon">
+                    <span
+                        style="
+                            width:24px;
+                            min-width:24px;
+                            text-align:center;
+                            font-size:18px;
+                        "
+                    >
                         ❓
                     </span>
 
                     <span class="menu-label">
-                        Help & Support
+                        Help
                     </span>
 
                 </button>
 
 
-                <!-- SIDEBAR FOOTER -->
-
                 <div class="sidebar-brand-footer">
-
-                    <strong>
-                        THEA <span>Books</span>
-                    </strong>
-
-                    <small>
-                        Business Accounting System
-                    </small>
-
+                    THEA Books • ERP
                 </div>
 
+
             </div>
+
 
         </aside>
 
 
-
         <!-- =====================================================
-             MAIN AREA
-        ====================================================== -->
+             MAIN
+        ===================================================== -->
 
         <main class="main">
 
 
             <!-- =================================================
-                 TOP TOOLBAR
-            ================================================== -->
+                 TOP HEADER
+            ================================================= -->
 
             <header class="top-header">
 
@@ -1300,7 +1425,8 @@
                 <!-- MOBILE MENU -->
 
                 <button
-                    class="toolbar-menu-btn"
+                    type="button"
+                    class="mobile-menu-btn"
                     onclick="toggleMobileMenu()"
                     title="Menu"
                 >
@@ -1310,287 +1436,202 @@
 
                 <!-- SEARCH -->
 
-                <div class="global-search">
-
-                    <span class="search-icon">
-                        🔍
-                    </span>
+                <div class="search-box">
 
                     <input
-                        type="search"
+                        type="text"
                         id="globalSearch"
-                        placeholder="Search anything..."
-                        autocomplete="off"
+                        placeholder="Search..."
                     >
 
                 </div>
 
 
-                <!-- TOOLBAR ACTIONS -->
+                <!-- =================================================
+                     TOOLBAR ACTIONS
+                ================================================= -->
 
                 <div class="toolbar-actions">
 
 
-                    <!-- NEW INVOICE -->
-
                     <button
-                        class="toolbar-btn"
-                        onclick="openInvoiceForm()"
-                        title="New Invoice"
+                        type="button"
+                        onclick="showPage('sales')"
                     >
-
-                        <span>
-                            🧾
-                        </span>
-
-                        <small>
-                            Invoice
-                        </small>
-
+                        🧾 Invoice
                     </button>
 
 
-                    <!-- PURCHASE -->
-
                     <button
-                        class="toolbar-btn"
-                        onclick="openPurchaseForm()"
-                        title="New Purchase"
+                        type="button"
+                        onclick="showPage('purchases')"
                     >
-
-                        <span>
-                            🛒
-                        </span>
-
-                        <small>
-                            Purchase
-                        </small>
-
+                        🛒 Purchase
                     </button>
 
 
-                    <!-- EXPENSE -->
-
                     <button
-                        class="toolbar-btn"
-                        onclick="openExpenseForm()"
-                        title="Record Expense"
+                        type="button"
+                        onclick="showPage('expenses')"
                     >
-
-                        <span>
-                            💸
-                        </span>
-
-                        <small>
-                            Expense
-                        </small>
-
+                        💸 Expense
                     </button>
 
 
-                    <!-- CUSTOMER -->
-
                     <button
-                        class="toolbar-btn"
+                        type="button"
                         onclick="openCustomerForm()"
-                        title="Add Customer"
                     >
-
-                        <span>
-                            👥
-                        </span>
-
-                        <small>
-                            Customer
-                        </small>
-
+                        👥 Customer
                     </button>
 
 
-                    <!-- VENDOR -->
-
                     <button
-                        class="toolbar-btn"
+                        type="button"
                         onclick="openVendorForm()"
-                        title="Add Vendor"
                     >
-
-                        <span>
-                            🏢
-                        </span>
-
-                        <small>
-                            Vendor
-                        </small>
-
+                        🏢 Vendor
                     </button>
 
 
-                    <!-- PRODUCT -->
-
                     <button
-                        class="toolbar-btn"
+                        type="button"
                         onclick="openProductForm()"
-                        title="Add Product"
                     >
-
-                        <span>
-                            📦
-                        </span>
-
-                        <small>
-                            Product
-                        </small>
-
+                        📦 Product
                     </button>
 
 
-                    <!-- REPORTS -->
-
                     <button
-                        class="toolbar-btn"
-                        onclick="showReports()"
-                        title="Reports"
+                        type="button"
+                        onclick="showPage('reports')"
                     >
-
-                        <span>
-                            📈
-                        </span>
-
-                        <small>
-                            Reports
-                        </small>
-
+                        📈 Reports
                     </button>
 
 
-                    <!-- HELP -->
-
                     <button
-                        class="toolbar-icon-btn"
-                        onclick="alert('THEA Books Help & Support')"
-                        title="Help & Support"
+                        type="button"
+                        onclick="alert('Help section coming soon.')"
                     >
-                        ?
+                        ❓ Help
                     </button>
 
 
-                    <!-- SETTINGS -->
-
                     <button
-                        class="toolbar-icon-btn"
+                        type="button"
                         onclick="showCompanyAccount()"
-                        title="Settings"
                     >
-                        ⚙
+                        ⚙️ Settings
                     </button>
 
-
-                    <!-- COMPANY -->
 
                     <button
-                        class="toolbar-company"
+                        type="button"
                         onclick="showCompanyAccount()"
-                        title="Company Account"
                     >
-
-                        <span class="toolbar-company-icon">
-                            👤
-                        </span>
-
-                        <span class="toolbar-company-text">
-
-                            <strong id="toolbarCompanyName">
-                                Company
-                            </strong>
-
-                            <small>
-                                Admin
-                            </small>
-
-                        </span>
-
-                        <span>
-                            ▾
-                        </span>
-
+                        👤 Company
                     </button>
+
 
                 </div>
+
 
             </header>
 
 
-
             <!-- =================================================
                  PAGE HEADER
-            ================================================== -->
+            ================================================= -->
 
             <div class="page-header">
 
-                <div>
 
-                    <h1 id="pageTitle">
-                        Dashboard
-                    </h1>
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
 
-                    <p>
-                        Business Accounting System
-                    </p>
-
-                </div>
-
-
-                <!-- NEW TRANSACTION -->
 
                 <button
+                    type="button"
                     class="new-btn"
-                    onclick="openTransactionForm()"
+                    onclick="showPage('sales')"
                 >
                     + New Transaction
                 </button>
 
+
             </div>
 
 
-
             <!-- =================================================
-                 DYNAMIC CONTENT
-            ================================================== -->
+                 PAGE CONTENT
+            ================================================= -->
 
             <section id="content">
 
-                <!--
-                    Dashboard and all ERP pages
-                    are loaded here by app.js.
-                -->
+                <!-- JavaScript pages load here -->
 
             </section>
 
 
         </main>
 
-    </div>
 
+    </div>
 
 
     <!-- =====================================================
          MOBILE OVERLAY
-    ====================================================== -->
+    ===================================================== -->
 
     <div
-        id="mobileOverlay"
         class="mobile-overlay"
+        id="mobileOverlay"
         onclick="toggleMobileMenu()"
     ></div>
 
 
+    <!-- =====================================================
+         APP JAVASCRIPT
+    ===================================================== -->
+
+    <script
+        src="app.js?v=7"
+    ></script>
+
 
     <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
+         MOBILE MENU SUPPORT
+    ===================================================== -->
 
-    <script src="app.js?v=7"></script>
+    <script>
+
+        function toggleMobileMenu() {
+
+            const sidebar =
+                document.getElementById("sidebar");
+
+            const overlay =
+                document.getElementById("mobileOverlay");
+
+            if (!sidebar) {
+                return;
+            }
+
+            sidebar.classList.toggle("mobile-open");
+
+            if (overlay) {
+
+                overlay.classList.toggle(
+                    "active"
+                );
+
+            }
+
+        }
+
+    </script>
 
 
 </body>
