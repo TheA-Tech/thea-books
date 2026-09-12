@@ -4927,8 +4927,6 @@ function showCashFlow() {
 
 function showReports() {
 
-function showReports() {
-
     pageTitle.innerText = "Reports";
 
     /* =========================
