@@ -15,57 +15,132 @@ if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
 }
 
 async function loginUser() {
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
-    const message = document.getElementById("loginMessage");
 
-    if (!email || !password) {
-        message.textContent = "Please enter email and password.";
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const authKey =
+        document.getElementById("loginAuthKey").value.trim();
+
+    const message =
+        document.getElementById("loginMessage");
+
+
+    if (!email || !password || !authKey) {
+
+        message.textContent =
+            "Please enter email, password and Authentication Key.";
+
+        message.style.color = "#dc2626";
+
         return;
     }
+
 
     message.textContent = "Signing in...";
+    message.style.color = "#6b7280";
 
-    const { data, error } = await theaSupabase.auth.signInWithPassword({
-        email: email,
-        password: password
-    });
 
-    if (error) {
-        console.error(error);
-        message.textContent = error.message;
-        return;
+    try {
+
+        const { data, error } =
+            await theaSupabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        /* =========================
+           VERIFY THEA AUTH KEY
+        ========================= */
+
+        const { data: keyValid, error: keyError } =
+            await theaSupabase.rpc(
+                "verify_thea_auth_key",
+                {
+                    p_email: email,
+                    p_auth_key: authKey
+                }
+            );
+
+
+        if (keyError) {
+            console.error(
+                "Authentication Key verification error:",
+                keyError
+            );
+
+            await theaSupabase.auth.signOut();
+
+            message.textContent =
+                "Authentication Key verification failed.";
+
+            message.style.color = "#dc2626";
+
+            return;
+        }
+
+
+        if (!keyValid) {
+
+            await theaSupabase.auth.signOut();
+
+            message.textContent =
+                "Invalid Authentication Key.";
+
+            message.style.color = "#dc2626";
+
+            return;
+        }
+
+
+        /* =========================
+           LOGIN SUCCESS
+        ========================= */
+
+        console.log(
+            "Login successful:",
+            data.user.id
+        );
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display = "none";
+
+
+        await loadCompanyProfile();
+
+
+        message.textContent =
+            "Login successful.";
+
+        message.style.color = "#16a34a";
+
+
+        showPage("dashboard");
+
+
+    } catch (error) {
+
+        console.error(
+            "Login error:",
+            error
+        );
+
+        message.textContent =
+            error.message || "Login failed.";
+
+        message.style.color = "#dc2626";
     }
-
-    console.log("Login successful:", data.user.id);
-
-    document.getElementById("loginScreen").style.display = "none";
 }
-let products =
-    JSON.parse(localStorage.getItem("theaBooksProducts")) || [];
-
-function saveProducts() {
-    localStorage.setItem(
-        "theaBooksProducts",
-        JSON.stringify(products)
-    );
-}
-let transactions =
-    JSON.parse(localStorage.getItem("theaBooksTransactions")) || [];
-
-let invoices =
-    JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
-
-let customers =
-    JSON.parse(localStorage.getItem("theaBooksCustomers")) || [];
-
-function saveCustomers() {
-    localStorage.setItem(
-        "theaBooksCustomers",
-        JSON.stringify(customers)
-    );
-}
-
 function openCustomerForm() {
 
     pageTitle.innerText = "Add Customer";
