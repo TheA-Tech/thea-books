@@ -3988,17 +3988,29 @@ function showPage(page) {
 
     }
 
-    else if (page === "accounting") {
+   else if (page === "accounting") {
 
-        showAccounting();
+    showAccounting();
 
-    }
+}
 
-    else if (page === "reports") {
+else if (page === "receivables") {
 
-        showReports();
+    showReceivables();
 
-    }
+}
+
+else if (page === "payables") {
+
+    showPayables();
+
+}
+
+else if (page === "reports") {
+
+    showReports();
+
+}
 
 
     /* Close mobile menu after navigation */
