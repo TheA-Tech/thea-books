@@ -48,6 +48,17 @@ let companyAccount =
 
 async function loginUser() {
 
+    console.log("LOGIN BUTTON WORKING");
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const message =
+        document.getElementById("loginMessage");
+
 ```
 const email =
     document.getElementById("loginEmail").value.trim();
