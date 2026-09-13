@@ -3251,7 +3251,110 @@
 
                 </div>
 
+<!-- =================================================
+     OTP VERIFICATION FORM
+================================================= -->
 
+<div
+    id="otpVerificationContainer"
+    style="display: none;"
+>
+
+    <div class="login-heading">
+
+        <div class="login-welcome">
+            Verify your email
+        </div>
+
+        <h2>
+            Enter verification code
+        </h2>
+
+        <p>
+            We sent a 6-digit verification code to
+            <strong id="otpEmail"></strong>
+        </p>
+
+    </div>
+
+
+    <div class="login-field">
+
+        <label for="loginOTP">
+            Verification Code
+        </label>
+
+        <div class="login-input-wrapper">
+
+            <span class="login-input-icon">
+                🔐
+            </span>
+
+            <input
+                type="text"
+                id="loginOTP"
+                placeholder="Enter 6-digit code"
+                inputmode="numeric"
+                maxlength="6"
+                autocomplete="one-time-code"
+            >
+
+        </div>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="login-submit"
+        onclick="verifyLoginOTP()"
+    >
+
+        <span>
+            Verify Code
+        </span>
+
+        <span>
+            →
+        </span>
+
+    </button>
+
+
+    <div
+        id="otpMessage"
+        class="login-message"
+    ></div>
+
+
+    <div class="auth-switch">
+
+        Didn't receive the code?
+
+        <button
+            type="button"
+            onclick="resendLoginOTP()"
+        >
+            Resend Code
+        </button>
+
+    </div>
+
+
+    <div class="auth-switch">
+
+        <button
+            type="button"
+            onclick="backToLoginForm()"
+        >
+            ← Back to Sign In
+        </button>
+
+    </div>
+
+</div>
+
+    
                 <!-- =================================================
                      SIGN UP FORM
                 ================================================= -->
