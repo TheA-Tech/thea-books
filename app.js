@@ -148,8 +148,7 @@ try {
         error.message || "Login failed.";
 
     message.style.color = "#dc2626";
-}
-```
+   }
 
 }
 
