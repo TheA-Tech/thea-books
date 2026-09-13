@@ -190,6 +190,339 @@ async function loginUser() {
     }
 }
 
+/* =================================================
+   OTP VERIFICATION
+================================================= */
+
+function showOTPForm(email) {
+
+    const loginForm =
+        document.getElementById("loginFormContainer");
+
+    const otpForm =
+        document.getElementById(
+            "otpVerificationContainer"
+        );
+
+    const otpEmail =
+        document.getElementById("otpEmail");
+
+
+    if (loginForm) {
+        loginForm.style.display = "none";
+    }
+
+
+    if (otpForm) {
+        otpForm.style.display = "block";
+    }
+
+
+    if (otpEmail) {
+        otpEmail.textContent = email;
+    }
+
+
+    const otpInput =
+        document.getElementById("loginOTP");
+
+    if (otpInput) {
+        otpInput.value = "";
+        otpInput.focus();
+    }
+}
+
+
+/* =================================================
+   VERIFY LOGIN OTP
+================================================= */
+
+async function verifyLoginOTP() {
+
+    const otpInput =
+        document.getElementById("loginOTP");
+
+    const message =
+        document.getElementById("otpMessage");
+
+
+    const otp =
+        otpInput.value.trim();
+
+
+    if (!/^\d{6}$/.test(otp)) {
+
+        message.textContent =
+            "Please enter the 6-digit verification code.";
+
+        message.style.color =
+            "#dc2626";
+
+        return;
+    }
+
+
+    message.textContent =
+        "Verifying code...";
+
+    message.style.color =
+        "#6b7280";
+
+
+    try {
+
+        if (!theaSupabase) {
+
+            throw new Error(
+                "Authentication service is not available."
+            );
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await theaSupabase.functions.invoke(
+                "verify-login-otp",
+                {
+                    body: {
+                        otp: otp
+                    }
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Verify OTP error:",
+                error
+            );
+
+            throw new Error(
+                error.message ||
+                "Unable to verify code."
+            );
+        }
+
+
+        if (!data || !data.success) {
+
+            throw new Error(
+                data?.error ||
+                "Incorrect verification code."
+            );
+        }
+
+
+        console.log(
+            "OTP verification successful."
+        );
+
+
+        message.textContent =
+            "Verification successful.";
+
+        message.style.color =
+            "#16a34a";
+
+
+        /* =========================
+           OPEN DASHBOARD
+        ========================= */
+
+        const loginScreen =
+            document.getElementById("loginScreen");
+
+        if (loginScreen) {
+            loginScreen.style.display = "none";
+        }
+
+
+        const appShell =
+            document.querySelector(".app-shell");
+
+        if (appShell) {
+            appShell.style.display = "flex";
+        }
+
+
+        await loadCompanyProfile();
+
+
+        showPage("dashboard");
+
+
+    } catch (error) {
+
+        console.error(
+            "OTP verification error:",
+            error
+        );
+
+
+        message.textContent =
+            error.message ||
+            "Verification failed.";
+
+        message.style.color =
+            "#dc2626";
+    }
+}
+
+
+/* =================================================
+   RESEND LOGIN OTP
+================================================= */
+
+async function resendLoginOTP() {
+
+    const message =
+        document.getElementById("otpMessage");
+
+
+    message.textContent =
+        "Sending new verification code...";
+
+    message.style.color =
+        "#6b7280";
+
+
+    try {
+
+        if (!theaSupabase) {
+
+            throw new Error(
+                "Authentication service is not available."
+            );
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await theaSupabase.functions.invoke(
+                "send-login-otp"
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Resend OTP error:",
+                error
+            );
+
+            throw new Error(
+                error.message ||
+                "Unable to resend verification code."
+            );
+        }
+
+
+        if (!data || !data.success) {
+
+            throw new Error(
+                data?.error ||
+                "Unable to resend verification code."
+            );
+        }
+
+
+        const otpInput =
+            document.getElementById("loginOTP");
+
+        if (otpInput) {
+            otpInput.value = "";
+            otpInput.focus();
+        }
+
+
+        message.textContent =
+            "A new verification code has been sent to your email.";
+
+        message.style.color =
+            "#16a34a";
+
+
+    } catch (error) {
+
+        console.error(
+            "Resend OTP error:",
+            error
+        );
+
+
+        message.textContent =
+            error.message ||
+            "Unable to resend verification code.";
+
+        message.style.color =
+            "#dc2626";
+    }
+}
+
+
+/* =================================================
+   BACK TO LOGIN FORM
+================================================= */
+
+async function backToLoginForm() {
+
+    try {
+
+        if (theaSupabase) {
+            await theaSupabase.auth.signOut();
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Sign out error:",
+            error
+        );
+    }
+
+
+    const otpForm =
+        document.getElementById(
+            "otpVerificationContainer"
+        );
+
+    const loginForm =
+        document.getElementById(
+            "loginFormContainer"
+        );
+
+
+    if (otpForm) {
+        otpForm.style.display = "none";
+    }
+
+
+    if (loginForm) {
+        loginForm.style.display = "block";
+    }
+
+
+    const otpInput =
+        document.getElementById("loginOTP");
+
+    if (otpInput) {
+        otpInput.value = "";
+    }
+
+
+    const otpMessage =
+        document.getElementById("otpMessage");
+
+    if (otpMessage) {
+        otpMessage.textContent = "";
+    }
+}
+
 function openCustomerForm() {
 
     pageTitle.innerText = "Add Customer";
