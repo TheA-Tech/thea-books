@@ -59,16 +59,6 @@ async function loginUser() {
     const message =
         document.getElementById("loginMessage");
 
-```
-const email =
-    document.getElementById("loginEmail").value.trim();
-
-const password =
-    document.getElementById("loginPassword").value;
-
-const message =
-    document.getElementById("loginMessage");
-
 
 if (!email || !password) {
 
