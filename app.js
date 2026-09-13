@@ -60,96 +60,134 @@ async function loginUser() {
         document.getElementById("loginMessage");
 
 
-if (!email || !password) {
+    if (!email || !password) {
+
+        message.textContent =
+            "Please enter your email and password.";
+
+        message.style.color = "#dc2626";
+
+        return;
+    }
+
 
     message.textContent =
-        "Please enter your email and password.";
+        "Signing in...";
 
-    message.style.color = "#dc2626";
-
-    return;
-}
+    message.style.color =
+        "#6b7280";
 
 
-message.textContent = "Signing in...";
-message.style.color = "#6b7280";
+    try {
+
+        if (!theaSupabase) {
+
+            throw new Error(
+                "Authentication service is not available."
+            );
+        }
 
 
-try {
+        /* =========================
+           STEP 1 — PASSWORD LOGIN
+        ========================= */
 
-    if (!theaSupabase) {
+        const { data, error } =
+            await theaSupabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
 
-        throw new Error(
-            "Authentication service is not available."
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (!data || !data.user) {
+
+            throw new Error(
+                "Unable to sign in. Please try again."
+            );
+        }
+
+
+        console.log(
+            "Password verified:",
+            data.user.id
         );
-    }
 
 
-    const { data, error } =
-        await theaSupabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+        /* =========================
+           STEP 2 — SEND OTP
+        ========================= */
+
+        message.textContent =
+            "Sending verification code...";
+
+        message.style.color =
+            "#6b7280";
 
 
-    if (error) {
-        throw error;
-    }
+        const {
+            data: otpData,
+            error: otpError
+        } =
+            await theaSupabase.functions.invoke(
+                "send-login-otp"
+            );
 
 
-    if (!data || !data.user) {
+        if (otpError) {
 
-        throw new Error(
-            "Unable to sign in. Please try again."
+            console.error(
+                "Send OTP error:",
+                otpError
+            );
+
+            throw new Error(
+                otpError.message ||
+                "Unable to send verification code."
+            );
+        }
+
+
+        if (!otpData || !otpData.success) {
+
+            throw new Error(
+                otpData?.error ||
+                "Unable to send verification code."
+            );
+        }
+
+
+        console.log(
+            "OTP sent successfully."
         );
+
+
+        /* =========================
+           STEP 3 — SHOW OTP SCREEN
+        ========================= */
+
+        showOTPForm(email);
+
+
+    } catch (error) {
+
+        console.error(
+            "Login error:",
+            error
+        );
+
+
+        message.textContent =
+            error.message ||
+            "Login failed.";
+
+        message.style.color =
+            "#dc2626";
     }
-
-
-    console.log(
-        "Login successful:",
-        data.user.id
-    );
-
-
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
-
-
-    const appShell =
-        document.querySelector(".app-shell");
-
-    if (appShell) {
-        appShell.style.display = "flex";
-    }
-
-
-    await loadCompanyProfile();
-
-
-    message.textContent =
-        "Login successful.";
-
-    message.style.color = "#16a34a";
-
-
-    showPage("dashboard");
-
-
-} catch (error) {
-
-    console.error(
-        "Login error:",
-        error
-    );
-
-
-    message.textContent =
-        error.message || "Login failed.";
-
-    message.style.color = "#dc2626";
-   }
-
 }
 
 function openCustomerForm() {
