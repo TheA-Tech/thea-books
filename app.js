@@ -48,131 +48,110 @@ let companyAccount =
 
 async function loginUser() {
 
-    const email =
-        document.getElementById("loginEmail").value.trim();
+```
+const email =
+    document.getElementById("loginEmail").value.trim();
 
-    const password =
-        document.getElementById("loginPassword").value;
+const password =
+    document.getElementById("loginPassword").value;
 
-    const authKey =
-        document.getElementById("loginAuthKey").value.trim();
-
-    const message =
-        document.getElementById("loginMessage");
+const message =
+    document.getElementById("loginMessage");
 
 
-    if (!email || !password || !authKey) {
+if (!email || !password) {
 
-        message.textContent =
-            "Please enter email, password and Authentication Key.";
+    message.textContent =
+        "Please enter your email and password.";
 
-        message.style.color = "#dc2626";
+    message.style.color = "#dc2626";
 
-        return;
-    }
-
-
-    message.textContent = "Signing in...";
-    message.style.color = "#6b7280";
-
-
-    try {
-
-        const { data, error } =
-            await theaSupabase.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
-
-
-        if (error) {
-            throw error;
-        }
-
-
-        /* =========================
-           VERIFY THEA AUTH KEY
-        ========================= */
-
-        const { data: keyValid, error: keyError } =
-            await theaSupabase.rpc(
-                "verify_thea_auth_key",
-                {
-                    p_email: email,
-                    p_auth_key: authKey
-                }
-            );
-
-
-        if (keyError) {
-            console.error(
-                "Authentication Key verification error:",
-                keyError
-            );
-
-            await theaSupabase.auth.signOut();
-
-            message.textContent =
-                "Authentication Key verification failed.";
-
-            message.style.color = "#dc2626";
-
-            return;
-        }
-
-
-        if (!keyValid) {
-
-            await theaSupabase.auth.signOut();
-
-            message.textContent =
-                "Invalid Authentication Key.";
-
-            message.style.color = "#dc2626";
-
-            return;
-        }
-
-
-        /* =========================
-           LOGIN SUCCESS
-        ========================= */
-
-        console.log(
-            "Login successful:",
-            data.user.id
-        );
-
-        document.getElementById(
-            "loginScreen"
-        ).style.display = "none";
-
-
-        await loadCompanyProfile();
-
-
-        message.textContent =
-            "Login successful.";
-
-        message.style.color = "#16a34a";
-
-
-        showPage("dashboard");
-
-
-    } catch (error) {
-
-        console.error(
-            "Login error:",
-            error
-        );
-
-        message.textContent =
-            error.message || "Login failed.";
-
-        message.style.color = "#dc2626";
-    }
+    return;
 }
+
+
+message.textContent = "Signing in...";
+message.style.color = "#6b7280";
+
+
+try {
+
+    if (!theaSupabase) {
+
+        throw new Error(
+            "Authentication service is not available."
+        );
+    }
+
+
+    const { data, error } =
+        await theaSupabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+
+    if (error) {
+        throw error;
+    }
+
+
+    if (!data || !data.user) {
+
+        throw new Error(
+            "Unable to sign in. Please try again."
+        );
+    }
+
+
+    console.log(
+        "Login successful:",
+        data.user.id
+    );
+
+
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "none";
+
+
+    const appShell =
+        document.querySelector(".app-shell");
+
+    if (appShell) {
+        appShell.style.display = "flex";
+    }
+
+
+    await loadCompanyProfile();
+
+
+    message.textContent =
+        "Login successful.";
+
+    message.style.color = "#16a34a";
+
+
+    showPage("dashboard");
+
+
+} catch (error) {
+
+    console.error(
+        "Login error:",
+        error
+    );
+
+
+    message.textContent =
+        error.message || "Login failed.";
+
+    message.style.color = "#dc2626";
+}
+```
+
+}
+
 function openCustomerForm() {
 
     pageTitle.innerText = "Add Customer";
