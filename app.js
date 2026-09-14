@@ -11674,103 +11674,65 @@ async function signupUser() {
             session.user.id
         );
 
-/* =========================
-   REFRESH AUTH SESSION
-========================= */
 
-const {
-    data: refreshedSession,
-    error: refreshError
-} = await theaSupabase.auth.refreshSession();
+        /* =========================
+           CREATE COMPANY
+        ========================= */
 
-if (refreshError) {
-    throw refreshError;
-}
+        message.textContent =
+            "Creating your company account...";
 
-if (
-    !refreshedSession ||
-    !refreshedSession.session
-) {
-    throw new Error(
-        "Authentication session could not be established."
-    );
-}
 
-console.log(
-    "Authenticated session refreshed:",
-    refreshedSession.session.user.id
-);
+        const {
+            data: company,
+            error: companyError
+        } =
+            await theaSupabase
+                .from("companies")
+                .insert({
 
-const accessToken =
-    refreshedSession.session.access_token;
+                    name:
+                        businessName,
 
-const tokenPayload =
-    JSON.parse(
-        atob(
-            accessToken.split(".")[1]
-        )
-    );
+                    owner_name:
+                        businessName,
 
-console.log(
-    "JWT ROLE:",
-    tokenPayload.role
-);
+                    phone:
+                        phone,
 
-console.log(
-    "JWT USER ID:",
-    tokenPayload.sub
-);        
-       /* =========================
-   CREATE COMPANY
-========================= */
+                    email:
+                        email,
 
-message.textContent =
-    "Creating your company account...";
+                    currency:
+                        "PKR"
 
-const {
-    data: company,
-    error: companyError
-} =
-    await theaSupabase
-        .from("companies")
-        .insert({
+                })
+                .select("id")
+                .single();
 
-            name:
-                businessName,
 
-            owner_name:
-                businessName,
+        if (companyError) {
+            throw companyError;
+        }
 
-            phone:
-                phone,
 
-            email:
-                email,
+        if (
+            !company ||
+            !company.id
+        ) {
 
-            currency:
-                "PKR"
+            throw new Error(
+                "Company account could not be created."
+            );
+        }
 
-        })
-        .select("id")
-        .single();
 
-if (companyError) {
-    throw companyError;
-}
+        console.log(
+            "Company created:",
+            company.id
+        );
 
-if (
-    !company ||
-    !company.id
-) {
-    throw new Error(
-        "Company account could not be created."
-    );
-}
 
-console.log(
-    "Company created:",
-    company.id
-);
         /* =========================
            CREATE USER PROFILE
         ========================= */
@@ -11808,7 +11770,7 @@ console.log(
 
 
         /* =========================
-           SAVE OTP VERIFICATION STATE
+           SAVE LOGIN STATE
         ========================= */
 
         sessionStorage.setItem(
@@ -11830,14 +11792,21 @@ console.log(
 
 
         /* =========================
-           SUCCESS
+           LOAD COMPANY PROFILE
         ========================= */
 
-        message.textContent =
-            "Account created successfully.";
+        try {
 
-        message.style.color =
-            "#16a34a";
+            await loadCompanyProfile();
+
+        } catch (profileError) {
+
+            console.error(
+                "Company profile load error:",
+                profileError
+            );
+
+        }
 
 
         /* =========================
@@ -11855,28 +11824,6 @@ console.log(
             );
 
 
-        /* =========================
-           LOAD COMPANY PROFILE
-        ========================= */
-
-        try {
-
-            await loadCompanyProfile();
-
-        } catch (profileError) {
-
-            console.error(
-                "Company profile load error after signup:",
-                profileError
-            );
-
-        }
-
-
-        /* =========================
-           OPEN APPLICATION
-        ========================= */
-
         if (loginScreen) {
 
             loginScreen.style.display =
@@ -11893,29 +11840,12 @@ console.log(
         }
 
 
-        /* =========================
-           OPEN DASHBOARD
-        ========================= */
-
-        try {
-
-            showPage("dashboard");
-
-        } catch (dashboardError) {
-
-            console.error(
-                "Dashboard opening error:",
-                dashboardError
-            );
-
-        }
+        showPage("dashboard");
 
 
         console.log(
             "Signup completed successfully."
         );
-```
-
 
 
     } catch (error) {
@@ -11934,4 +11864,3 @@ console.log(
             "#dc2626";
     }
 }
-
