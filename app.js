@@ -11312,3 +11312,333 @@ function showLoginForm() {
 
 }
 
+/* =====================================================
+   CREATE NEW COMPANY ACCOUNT
+===================================================== */
+
+async function signupUser() {
+
+    const businessName =
+        document.getElementById("signupBusinessName").value.trim();
+
+    const email =
+        document.getElementById("signupEmail").value.trim();
+
+    const phone =
+        document.getElementById("signupPhone").value.trim();
+
+    const password =
+        document.getElementById("signupPassword").value;
+
+    const confirmPassword =
+        document.getElementById("signupConfirmPassword").value;
+
+    const message =
+        document.getElementById("signupMessage");
+
+
+    /* =========================
+       BASIC VALIDATION
+    ========================= */
+
+    if (
+        !businessName ||
+        !email ||
+        !phone ||
+        !password ||
+        !confirmPassword
+    ) {
+
+        message.textContent =
+            "Please complete all fields.";
+
+        message.style.color =
+            "#dc2626";
+
+        return;
+    }
+
+
+    if (password !== confirmPassword) {
+
+        message.textContent =
+            "Passwords do not match.";
+
+        message.style.color =
+            "#dc2626";
+
+        return;
+    }
+
+
+    if (password.length < 6) {
+
+        message.textContent =
+            "Password must be at least 6 characters.";
+
+        message.style.color =
+            "#dc2626";
+
+        return;
+    }
+
+
+    message.textContent =
+        "Creating your account...";
+
+    message.style.color =
+        "#6b7280";
+
+
+    try {
+
+        if (!theaSupabase) {
+
+            throw new Error(
+                "Authentication service is not available."
+            );
+        }
+
+
+        /* =========================
+           CREATE SUPABASE AUTH USER
+        ========================= */
+
+        const {
+            data: authData,
+            error: authError
+        } =
+            await theaSupabase.auth.signUp({
+
+                email: email,
+
+                password: password
+
+            });
+
+
+        if (authError) {
+            throw authError;
+        }
+
+
+        if (
+            !authData ||
+            !authData.user
+        ) {
+
+            throw new Error(
+                "Unable to create your account."
+            );
+        }
+
+
+        const user =
+            authData.user;
+
+
+        console.log(
+            "Auth account created:",
+            user.id
+        );
+
+
+        /* =========================
+           CHECK SESSION
+        ========================= */
+
+        const {
+            data: {
+                session
+            }
+        } =
+            await theaSupabase.auth.getSession();
+
+
+        if (!session) {
+
+            throw new Error(
+                "Account created, but session was not established. Please check your email if email confirmation is enabled."
+            );
+        }
+
+
+        /* =========================
+           CREATE COMPANY
+        ========================= */
+
+        message.textContent =
+            "Creating company profile...";
+
+
+        const {
+            data: company,
+            error: companyError
+        } =
+            await theaSupabase
+                .from("companies")
+                .insert({
+
+                    name:
+                        businessName,
+
+                    owner_name:
+                        businessName,
+
+                    phone:
+                        phone,
+
+                    email:
+                        email,
+
+                    currency:
+                        "PKR"
+
+                })
+                .select()
+                .single();
+
+
+        if (companyError) {
+            throw companyError;
+        }
+
+
+        if (
+            !company ||
+            !company.id
+        ) {
+
+            throw new Error(
+                "Company account could not be created."
+            );
+        }
+
+
+        console.log(
+            "Company created:",
+            company.id
+        );
+
+
+        /* =========================
+           CREATE USER PROFILE
+        ========================= */
+
+        message.textContent =
+            "Setting up your profile...";
+
+
+        const {
+            error: profileError
+        } =
+            await theaSupabase
+                .from("profiles")
+                .insert({
+
+                    id:
+                        user.id,
+
+                    company_id:
+                        company.id,
+
+                    full_name:
+                        businessName,
+
+                    role:
+                        "Owner"
+
+                });
+
+
+        if (profileError) {
+            throw profileError;
+        }
+
+
+        console.log(
+            "Profile created successfully."
+        );
+
+
+        /* =========================
+           SIGN OUT AFTER SIGNUP
+        ========================= */
+
+        await theaSupabase.auth.signOut();
+
+
+        /* =========================
+           SUCCESS MESSAGE
+        ========================= */
+
+        message.textContent =
+            "Account created successfully. Please sign in.";
+
+        message.style.color =
+            "#16a34a";
+
+
+        /* =========================
+           RESET FORM
+        ========================= */
+
+        document
+            .getElementById("signupBusinessName")
+            .value = "";
+
+        document
+            .getElementById("signupEmail")
+            .value = "";
+
+        document
+            .getElementById("signupPhone")
+            .value = "";
+
+        document
+            .getElementById("signupPassword")
+            .value = "";
+
+        document
+            .getElementById("signupConfirmPassword")
+            .value = "";
+
+
+        /* =========================
+           GO TO LOGIN
+        ========================= */
+
+        setTimeout(() => {
+
+            showLoginForm();
+
+            const loginEmail =
+                document.getElementById(
+                    "loginEmail"
+                );
+
+            if (loginEmail) {
+                loginEmail.value = email;
+            }
+
+            message.textContent = "";
+
+        }, 1200);
+
+
+    } catch (error) {
+
+        console.error(
+            "Signup error:",
+            error
+        );
+
+
+        message.textContent =
+            error.message ||
+            "Unable to create your account.";
+
+        message.style.color =
+            "#dc2626";
+    }
+}
