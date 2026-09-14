@@ -5223,11 +5223,12 @@ function showSoftwareSettings() {
 
             <div class="settings-grid">
 
-                <button type="button"
-    class="settings-card"
-    onclick="showInvoiceSettings()">
+                <button
+                    type="button"
+                    class="settings-card"
+                    onclick="showInvoiceSettings()">
 
-    <span class="settings-icon">🧾</span>
+                    <span class="settings-icon">🧾</span>
 
                     <span>
                         <strong>Company Profile</strong>
@@ -5239,9 +5240,10 @@ function showSoftwareSettings() {
                 </button>
 
 
-                <button type="button"
+                <button
+                    type="button"
                     class="settings-card"
-                    onclick="showInvoiceSettings()"
+                    onclick="showInvoiceSettings()">
 
                     <span class="settings-icon">🧾</span>
 
@@ -5255,11 +5257,12 @@ function showSoftwareSettings() {
                 </button>
 
 
-                <button type="button"
-    class="settings-card"
-    onclick="showCurrencySettings()">
+                <button
+                    type="button"
+                    class="settings-card"
+                    onclick="showCurrencySettings()">
 
-    <span class="settings-icon">💱</span>
+                    <span class="settings-icon">💱</span>
 
                     <span>
                         <strong>Currency</strong>
@@ -5271,11 +5274,12 @@ function showSoftwareSettings() {
                 </button>
 
 
-               <button type="button"
-    class="settings-card"
-    onclick="showFinancialSettings()">
+                <button
+                    type="button"
+                    class="settings-card"
+                    onclick="showFinancialSettings()">
 
-    <span class="settings-icon">📊</span>
+                    <span class="settings-icon">📊</span>
 
                     <span>
                         <strong>Financial Settings</strong>
@@ -5294,11 +5298,12 @@ function showSoftwareSettings() {
 
             <div class="settings-grid">
 
-               <button type="button"
-    class="settings-card"
-    onclick="showSecuritySettings()">
+                <button
+                    type="button"
+                    class="settings-card"
+                    onclick="showSecuritySettings()">
 
-    <span class="settings-icon">🔐</span>
+                    <span class="settings-icon">🔐</span>
 
                     <span>
                         <strong>Security</strong>
@@ -5310,11 +5315,12 @@ function showSoftwareSettings() {
                 </button>
 
 
-                <button type="button"
-    class="settings-card"
-    onclick="showCloudSync()">
+                <button
+                    type="button"
+                    class="settings-card"
+                    onclick="showCloudSync()">
 
-    <span class="settings-icon">☁️</span>
+                    <span class="settings-icon">☁️</span>
 
                     <span>
                         <strong>Cloud & Sync</strong>
@@ -5325,11 +5331,154 @@ function showSoftwareSettings() {
 
                 </button>
 
+
+                <button
+                    type="button"
+                    class="settings-card"
+                    onclick="logoutUser()">
+
+                    <span class="settings-icon">🚪</span>
+
+                    <span>
+                        <strong>Logout</strong>
+                        <small>
+                            Sign out of your THEA Books account.
+                        </small>
+                    </span>
+
+                </button>
+
             </div>
 
         </div>
     `;
 }
+
+
+async function logoutUser() {
+
+    const confirmLogout =
+        confirm(
+            "Are you sure you want to logout?"
+        );
+
+    if (!confirmLogout) {
+        return;
+    }
+
+
+    try {
+
+        if (theaSupabase) {
+
+            const {
+                error
+            } =
+                await theaSupabase.auth.signOut();
+
+            if (error) {
+                throw error;
+            }
+        }
+
+
+        /* =========================
+           CLEAR OTP VERIFICATION
+        ========================= */
+
+        sessionStorage.removeItem(
+            "theaOtpVerifiedUser"
+        );
+
+        sessionStorage.removeItem(
+            "theaPendingOtpEmail"
+        );
+
+
+        /* =========================
+           SHOW LOGIN SCREEN
+        ========================= */
+
+        const loginScreen =
+            document.getElementById("loginScreen");
+
+        const appShell =
+            document.querySelector(".app-shell");
+
+
+        if (loginScreen) {
+            loginScreen.style.display = "flex";
+        }
+
+
+        if (appShell) {
+            appShell.style.display = "none";
+        }
+
+
+        /* =========================
+           RESET LOGIN FORM
+        ========================= */
+
+        const loginForm =
+            document.getElementById(
+                "loginFormContainer"
+            );
+
+        const otpForm =
+            document.getElementById(
+                "otpVerificationContainer"
+            );
+
+
+        if (loginForm) {
+            loginForm.style.display = "block";
+        }
+
+
+        if (otpForm) {
+            otpForm.style.display = "none";
+        }
+
+
+        const loginMessage =
+            document.getElementById(
+                "loginMessage"
+            );
+
+        if (loginMessage) {
+            loginMessage.textContent = "";
+        }
+
+
+        const otpMessage =
+            document.getElementById(
+                "otpMessage"
+            );
+
+        if (otpMessage) {
+            otpMessage.textContent = "";
+        }
+
+
+        console.log(
+            "User logged out successfully."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Logout error:",
+            error
+        );
+
+        alert(
+            "Unable to logout. Please try again."
+        );
+    }
+}
+
 
 function showCompanyAccount() {
 
