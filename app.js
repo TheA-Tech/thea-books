@@ -11360,33 +11360,57 @@ async function completeConfirmedSignup() {
            CREATE COMPANY
         ========================= */
 
-        const {
-            data: company,
-            error: companyError
-        } =
-            await theaSupabase
-                .from("companies")
-                .insert({
+       const companyId =
+    crypto.randomUUID();
 
-                    name:
-                        signupData.businessName,
 
-                    owner_name:
-                        signupData.businessName,
+const {
+    error: companyError
+} =
+    await theaSupabase
+        .from("companies")
+        .insert({
 
-                    phone:
-                        signupData.phone,
+            id:
+                companyId,
 
-                    email:
-                        signupData.email,
+            name:
+                businessName,
 
-                    currency:
-                        "PKR"
+            owner_name:
+                businessName,
 
-                })
-                .select()
-                .single();
+            phone:
+                phone,
 
+            email:
+                email,
+
+            currency:
+                "PKR"
+
+        });
+
+
+if (companyError) {
+
+    console.error(
+        "COMPANY INSERT ERROR FULL:",
+        JSON.stringify(
+            companyError,
+            null,
+            2
+        )
+    );
+
+    throw companyError;
+}
+
+
+console.log(
+    "Company created:",
+    companyId
+);
 
         if (companyError) {
             throw companyError;
@@ -11416,7 +11440,7 @@ async function completeConfirmedSignup() {
                         session.user.id,
 
                     company_id:
-                        company.id,
+                        companyid,
 
                     full_name:
                         signupData.businessName,
