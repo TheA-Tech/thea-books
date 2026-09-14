@@ -11338,7 +11338,7 @@ async function signupUser() {
 
 
     /* =========================
-       BASIC VALIDATION
+       VALIDATION
     ========================= */
 
     if (
@@ -11401,7 +11401,28 @@ async function signupUser() {
 
 
         /* =========================
-           CREATE SUPABASE AUTH USER
+           SAVE PENDING COMPANY DATA
+        ========================= */
+
+        localStorage.setItem(
+            "theaPendingSignup",
+            JSON.stringify({
+
+                businessName:
+                    businessName,
+
+                email:
+                    email,
+
+                phone:
+                    phone
+
+            })
+        );
+
+
+        /* =========================
+           CREATE AUTH ACCOUNT
         ========================= */
 
         const {
@@ -11410,9 +11431,18 @@ async function signupUser() {
         } =
             await theaSupabase.auth.signUp({
 
-                email: email,
+                email:
+                    email,
 
-                password: password
+                password:
+                    password,
+
+                options: {
+
+                    emailRedirectTo:
+                        "https://thea-tech.github.io/thea-books/"
+
+                }
 
             });
 
@@ -11433,197 +11463,45 @@ async function signupUser() {
         }
 
 
-        const user =
-            authData.user;
-
-
         console.log(
-            "Auth account created:",
-            user.id
+            "Signup account created:",
+            authData.user.id
         );
 
 
         /* =========================
-           CHECK SESSION
-        ========================= */
-
-        const {
-            data: {
-                session
-            }
-        } =
-            await theaSupabase.auth.getSession();
-
-
-        if (!session) {
-
-            throw new Error(
-                "Account created, but session was not established. Please check your email if email confirmation is enabled."
-            );
-        }
-
-
-        /* =========================
-           CREATE COMPANY
+           EMAIL CONFIRMATION REQUIRED
         ========================= */
 
         message.textContent =
-            "Creating company profile...";
-
-
-        const {
-            data: company,
-            error: companyError
-        } =
-            await theaSupabase
-                .from("companies")
-                .insert({
-
-                    name:
-                        businessName,
-
-                    owner_name:
-                        businessName,
-
-                    phone:
-                        phone,
-
-                    email:
-                        email,
-
-                    currency:
-                        "PKR"
-
-                })
-                .select()
-                .single();
-
-
-        if (companyError) {
-            throw companyError;
-        }
-
-
-        if (
-            !company ||
-            !company.id
-        ) {
-
-            throw new Error(
-                "Company account could not be created."
-            );
-        }
-
-
-        console.log(
-            "Company created:",
-            company.id
-        );
-
-
-        /* =========================
-           CREATE USER PROFILE
-        ========================= */
-
-        message.textContent =
-            "Setting up your profile...";
-
-
-        const {
-            error: profileError
-        } =
-            await theaSupabase
-                .from("profiles")
-                .insert({
-
-                    id:
-                        user.id,
-
-                    company_id:
-                        company.id,
-
-                    full_name:
-                        businessName,
-
-                    role:
-                        "Owner"
-
-                });
-
-
-        if (profileError) {
-            throw profileError;
-        }
-
-
-        console.log(
-            "Profile created successfully."
-        );
-
-
-        /* =========================
-           SIGN OUT AFTER SIGNUP
-        ========================= */
-
-        await theaSupabase.auth.signOut();
-
-
-        /* =========================
-           SUCCESS MESSAGE
-        ========================= */
-
-        message.textContent =
-            "Account created successfully. Please sign in.";
+            "Account created. Please check your email and confirm your account.";
 
         message.style.color =
             "#16a34a";
 
 
         /* =========================
-           RESET FORM
+           DISABLE BUTTON
         ========================= */
 
-        document
-            .getElementById("signupBusinessName")
-            .value = "";
+        const signupButton =
+            document.querySelector(
+                ".signup-submit"
+            );
 
-        document
-            .getElementById("signupEmail")
-            .value = "";
+        if (signupButton) {
 
-        document
-            .getElementById("signupPhone")
-            .value = "";
+            signupButton.disabled =
+                true;
 
-        document
-            .getElementById("signupPassword")
-            .value = "";
+            signupButton.style.opacity =
+                "0.6";
 
-        document
-            .getElementById("signupConfirmPassword")
-            .value = "";
-
-
-        /* =========================
-           GO TO LOGIN
-        ========================= */
-
-        setTimeout(() => {
-
-            showLoginForm();
-
-            const loginEmail =
-                document.getElementById(
-                    "loginEmail"
-                );
-
-            if (loginEmail) {
-                loginEmail.value = email;
-            }
-
-            message.textContent = "";
-
-        }, 1200);
+            signupButton.querySelector(
+                "span"
+            ).textContent =
+                "Check Your Email";
+        }
 
 
     } catch (error) {
@@ -11631,6 +11509,15 @@ async function signupUser() {
         console.error(
             "Signup error:",
             error
+        );
+
+
+        /* =========================
+           REMOVE PENDING DATA
+        ========================= */
+
+        localStorage.removeItem(
+            "theaPendingSignup"
         );
 
 
