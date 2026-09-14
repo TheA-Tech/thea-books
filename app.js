@@ -11684,6 +11684,15 @@ async function signupUser() {
             session.user.id
         );
 
+        await theaSupabase.auth.setSession({
+    access_token: session.access_token,
+    refresh_token: session.refresh_token
+});
+
+console.log(
+    "Signup session explicitly set before company insert:",
+    session.user.id
+);
 
         /* =========================
            CREATE COMPANY
