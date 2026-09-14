@@ -196,6 +196,11 @@ async function loginUser() {
 
 function showOTPForm(email) {
 
+    sessionStorage.setItem(
+        "theaPendingOtpEmail",
+        email
+    );
+    
     const loginForm =
         document.getElementById("loginFormContainer");
 
@@ -320,7 +325,32 @@ async function verifyLoginOTP() {
             "OTP verification successful."
         );
 
+        /* =========================
+           SAVE OTP VERIFICATION
+        ========================= */
 
+        const {
+            data: { session: verifiedSession }
+        } = await theaSupabase.auth.getSession();
+
+        if (
+            verifiedSession &&
+            verifiedSession.user
+        ) {
+
+            sessionStorage.setItem(
+                "theaOtpVerifiedUser",
+                String(
+                    verifiedSession.user.id
+                )
+            );
+
+        }
+
+        sessionStorage.removeItem(
+            "theaPendingOtpEmail"
+        );
+        
         message.textContent =
             "Verification successful.";
 
@@ -10603,11 +10633,52 @@ async function checkLogin() {
             throw error;
         }
 
-        if (session) {
 
-            /* =========================
-               USER IS LOGGED IN
-            ========================= */
+        /* =========================
+           NO ACTIVE SESSION
+        ========================= */
+
+        if (!session) {
+
+            sessionStorage.removeItem(
+                "theaOtpVerifiedUser"
+            );
+
+            sessionStorage.removeItem(
+                "theaPendingOtpEmail"
+            );
+
+            loginScreen.style.display = "flex";
+
+            appShell.style.display = "none";
+
+            return;
+        }
+
+
+        /* =========================
+           CHECK OTP VERIFICATION
+        ========================= */
+
+        const verifiedUser =
+            sessionStorage.getItem(
+                "theaOtpVerifiedUser"
+            );
+
+        const pendingOtpEmail =
+            sessionStorage.getItem(
+                "theaPendingOtpEmail"
+            );
+
+
+        /* =========================
+           OTP ALREADY VERIFIED
+        ========================= */
+
+        if (
+            verifiedUser ===
+            String(session.user.id)
+        ) {
 
             loginScreen.style.display = "none";
 
@@ -10615,15 +10686,28 @@ async function checkLogin() {
 
             await loadCompanyProfile();
 
+            return;
+        }
+
+
+        /* =========================
+           OTP NOT VERIFIED
+        ========================= */
+
+        loginScreen.style.display = "flex";
+
+        appShell.style.display = "none";
+
+
+        if (pendingOtpEmail) {
+
+            showOTPForm(
+                pendingOtpEmail
+            );
+
         } else {
 
-            /* =========================
-               USER IS LOGGED OUT
-            ========================= */
-
-            loginScreen.style.display = "flex";
-
-            appShell.style.display = "none";
+            showLoginForm();
 
         }
 
