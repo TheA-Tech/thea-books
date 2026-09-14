@@ -11501,6 +11501,7 @@ function showLoginForm() {
 
 }
 
+```js
 /* =====================================================
    CREATE NEW COMPANY ACCOUNT
 ===================================================== */
@@ -11590,27 +11591,6 @@ async function signupUser() {
 
 
         /* =========================
-           SAVE PENDING COMPANY DATA
-        ========================= */
-
-        localStorage.setItem(
-            "theaPendingSignup",
-            JSON.stringify({
-
-                businessName:
-                    businessName,
-
-                email:
-                    email,
-
-                phone:
-                    phone
-
-            })
-        );
-
-
-        /* =========================
            CREATE AUTH ACCOUNT
         ========================= */
 
@@ -11624,14 +11604,7 @@ async function signupUser() {
                     email,
 
                 password:
-                    password,
-
-                options: {
-
-                    emailRedirectTo:
-                        "https://thea-tech.github.io/thea-books/"
-
-                }
+                    password
 
             });
 
@@ -11659,38 +11632,212 @@ async function signupUser() {
 
 
         /* =========================
-           EMAIL CONFIRMATION REQUIRED
+           GET SESSION
+        ========================= */
+
+        let session =
+            authData.session;
+
+
+        if (!session) {
+
+            const {
+                data: sessionData,
+                error: sessionError
+            } =
+                await theaSupabase.auth.getSession();
+
+
+            if (sessionError) {
+                throw sessionError;
+            }
+
+
+            session =
+                sessionData.session;
+        }
+
+
+        if (
+            !session ||
+            !session.user
+        ) {
+
+            throw new Error(
+                "Account created, but login session was not established."
+            );
+        }
+
+
+        console.log(
+            "Signup session established:",
+            session.user.id
+        );
+
+
+        /* =========================
+           CREATE COMPANY
         ========================= */
 
         message.textContent =
-            "Account created. Please check your email and confirm your account.";
+            "Creating your company account...";
+
+
+        const {
+            data: company,
+            error: companyError
+        } =
+            await theaSupabase
+                .from("companies")
+                .insert({
+
+                    name:
+                        businessName,
+
+                    owner_name:
+                        businessName,
+
+                    phone:
+                        phone,
+
+                    email:
+                        email,
+
+                    currency:
+                        "PKR"
+
+                })
+                .select()
+                .single();
+
+
+        if (companyError) {
+            throw companyError;
+        }
+
+
+        if (
+            !company ||
+            !company.id
+        ) {
+
+            throw new Error(
+                "Company account could not be created."
+            );
+        }
+
+
+        console.log(
+            "Company created:",
+            company.id
+        );
+
+
+        /* =========================
+           CREATE USER PROFILE
+        ========================= */
+
+        const {
+            error: profileError
+        } =
+            await theaSupabase
+                .from("profiles")
+                .insert({
+
+                    id:
+                        session.user.id,
+
+                    company_id:
+                        company.id,
+
+                    full_name:
+                        businessName,
+
+                    role:
+                        "Owner"
+
+                });
+
+
+        if (profileError) {
+            throw profileError;
+        }
+
+
+        console.log(
+            "Profile created successfully."
+        );
+
+
+        /* =========================
+           SAVE OTP VERIFICATION STATE
+        ========================= */
+
+        sessionStorage.setItem(
+            "theaOtpVerifiedUser",
+            String(
+                session.user.id
+            )
+        );
+
+
+        sessionStorage.removeItem(
+            "theaPendingOtpEmail"
+        );
+
+
+        localStorage.removeItem(
+            "theaPendingSignup"
+        );
+
+
+        /* =========================
+           SUCCESS
+        ========================= */
+
+        message.textContent =
+            "Account created successfully.";
 
         message.style.color =
             "#16a34a";
 
 
         /* =========================
-           DISABLE BUTTON
+           OPEN DASHBOARD
         ========================= */
 
-        const signupButton =
-            document.querySelector(
-                ".signup-submit"
+        const loginScreen =
+            document.getElementById(
+                "loginScreen"
             );
 
-        if (signupButton) {
+        const appShell =
+            document.querySelector(
+                ".app-shell"
+            );
 
-            signupButton.disabled =
-                true;
 
-            signupButton.style.opacity =
-                "0.6";
-
-            signupButton.querySelector(
-                "span"
-            ).textContent =
-                "Check Your Email";
+        if (loginScreen) {
+            loginScreen.style.display =
+                "none";
         }
+
+
+        if (appShell) {
+            appShell.style.display =
+                "flex";
+        }
+
+
+        await loadCompanyProfile();
+
+
+        showPage("dashboard");
+
+
+        console.log(
+            "Signup completed successfully."
+        );
 
 
     } catch (error) {
@@ -11698,15 +11845,6 @@ async function signupUser() {
         console.error(
             "Signup error:",
             error
-        );
-
-
-        /* =========================
-           REMOVE PENDING DATA
-        ========================= */
-
-        localStorage.removeItem(
-            "theaPendingSignup"
         );
 
 
@@ -11718,3 +11856,4 @@ async function signupUser() {
             "#dc2626";
     }
 }
+```
