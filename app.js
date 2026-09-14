@@ -11720,14 +11720,6 @@ console.log(
     "JWT USER ID:",
     tokenPayload.sub
 );        
-        /* =========================
-           CREATE COMPANY
-        ========================= */
-
-        message.textContent =
-            "Creating your company account...";
-
-
        /* =========================
    CREATE COMPANY
 ========================= */
@@ -11735,16 +11727,13 @@ console.log(
 message.textContent =
     "Creating your company account...";
 
-const companyId =
-    crypto.randomUUID();
-
-const { error: companyError } =
+const {
+    data: company,
+    error: companyError
+} =
     await theaSupabase
         .from("companies")
         .insert({
-
-            id:
-                companyId,
 
             name:
                 businessName,
@@ -11761,17 +11750,27 @@ const { error: companyError } =
             currency:
                 "PKR"
 
-        });
+        })
+        .select("id")
+        .single();
 
 if (companyError) {
     throw companyError;
 }
 
+if (
+    !company ||
+    !company.id
+) {
+    throw new Error(
+        "Company account could not be created."
+    );
+}
+
 console.log(
     "Company created:",
-    companyId
+    company.id
 );
-
         /* =========================
            CREATE USER PROFILE
         ========================= */
@@ -11787,7 +11786,7 @@ console.log(
                         session.user.id,
 
                     company_id:
-                        companyId,
+                        company.id,
 
                     full_name:
                         businessName,
@@ -11841,7 +11840,6 @@ console.log(
             "#16a34a";
 
 
-        ```js
         /* =========================
            OPEN DASHBOARD
         ========================= */
