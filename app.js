@@ -11802,6 +11802,7 @@ async function signupUser() {
             "#16a34a";
 
 
+        ```js
         /* =========================
            OPEN DASHBOARD
         ========================= */
@@ -11817,27 +11818,67 @@ async function signupUser() {
             );
 
 
+        /* =========================
+           LOAD COMPANY PROFILE
+        ========================= */
+
+        try {
+
+            await loadCompanyProfile();
+
+        } catch (profileError) {
+
+            console.error(
+                "Company profile load error after signup:",
+                profileError
+            );
+
+        }
+
+
+        /* =========================
+           OPEN APPLICATION
+        ========================= */
+
         if (loginScreen) {
+
             loginScreen.style.display =
                 "none";
+
         }
 
 
         if (appShell) {
+
             appShell.style.display =
                 "flex";
+
         }
 
 
-        await loadCompanyProfile();
+        /* =========================
+           OPEN DASHBOARD
+        ========================= */
 
+        try {
 
-        showPage("dashboard");
+            showPage("dashboard");
+
+        } catch (dashboardError) {
+
+            console.error(
+                "Dashboard opening error:",
+                dashboardError
+            );
+
+        }
 
 
         console.log(
             "Signup completed successfully."
         );
+```
+
 
 
     } catch (error) {
