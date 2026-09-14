@@ -11682,7 +11682,28 @@ async function signupUser() {
         message.textContent =
             "Creating your company account...";
 
+const {
+    data: {
+        session: currentSession
+    },
+    error: currentSessionError
+} = await theaSupabase.auth.getSession();
 
+console.log(
+    "CURRENT SESSION BEFORE COMPANY INSERT:",
+    currentSession
+);
+
+console.log(
+    "CURRENT USER BEFORE COMPANY INSERT:",
+    currentSession?.user?.id
+);
+
+console.log(
+    "CURRENT SESSION ERROR:",
+    currentSessionError
+);
+        
         const {
             data: company,
             error: companyError
