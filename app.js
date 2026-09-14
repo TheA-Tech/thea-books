@@ -11728,55 +11728,49 @@ console.log(
             "Creating your company account...";
 
 
-        const {
-            data: company,
-            error: companyError
-        } =
-            await theaSupabase
-                .from("companies")
-                .insert({
+       /* =========================
+   CREATE COMPANY
+========================= */
 
-                    name:
-                        businessName,
+message.textContent =
+    "Creating your company account...";
 
-                    owner_name:
-                        businessName,
+const companyId =
+    crypto.randomUUID();
 
-                    phone:
-                        phone,
+const { error: companyError } =
+    await theaSupabase
+        .from("companies")
+        .insert({
 
-                    email:
-                        email,
+            id:
+                companyId,
 
-                    currency:
-                        "PKR"
+            name:
+                businessName,
 
-                })
-                .select()
-                .single();
+            owner_name:
+                businessName,
 
+            phone:
+                phone,
 
-        if (companyError) {
-            throw companyError;
-        }
+            email:
+                email,
 
+            currency:
+                "PKR"
 
-        if (
-            !company ||
-            !company.id
-        ) {
+        });
 
-            throw new Error(
-                "Company account could not be created."
-            );
-        }
+if (companyError) {
+    throw companyError;
+}
 
-
-        console.log(
-            "Company created:",
-            company.id
-        );
-
+console.log(
+    "Company created:",
+    companyId
+);
 
         /* =========================
            CREATE USER PROFILE
@@ -11793,7 +11787,7 @@ console.log(
                         session.user.id,
 
                     company_id:
-                        company.id,
+                        companyId,
 
                     full_name:
                         businessName,
