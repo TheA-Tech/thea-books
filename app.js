@@ -11700,7 +11700,26 @@ console.log(
     "Authenticated session refreshed:",
     refreshedSession.session.user.id
 );
-        
+
+const accessToken =
+    refreshedSession.session.access_token;
+
+const tokenPayload =
+    JSON.parse(
+        atob(
+            accessToken.split(".")[1]
+        )
+    );
+
+console.log(
+    "JWT ROLE:",
+    tokenPayload.role
+);
+
+console.log(
+    "JWT USER ID:",
+    tokenPayload.sub
+);        
         /* =========================
            CREATE COMPANY
         ========================= */
