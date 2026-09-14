@@ -11674,7 +11674,33 @@ async function signupUser() {
             session.user.id
         );
 
+/* =========================
+   REFRESH AUTH SESSION
+========================= */
 
+const {
+    data: refreshedSession,
+    error: refreshError
+} = await theaSupabase.auth.refreshSession();
+
+if (refreshError) {
+    throw refreshError;
+}
+
+if (
+    !refreshedSession ||
+    !refreshedSession.session
+) {
+    throw new Error(
+        "Authentication session could not be established."
+    );
+}
+
+console.log(
+    "Authenticated session refreshed:",
+    refreshedSession.session.user.id
+);
+        
         /* =========================
            CREATE COMPANY
         ========================= */
