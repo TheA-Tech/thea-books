@@ -10804,7 +10804,36 @@ async function checkLogin() {
             return;
         }
 
+/* =========================
+   COMPLETE EMAIL CONFIRMED SIGNUP
+========================= */
 
+const pendingSignup =
+    localStorage.getItem(
+        "theaPendingSignup"
+    );
+
+if (pendingSignup) {
+
+    const signupCompleted =
+        await completeConfirmedSignup();
+
+    if (signupCompleted) {
+
+        loginScreen.style.display =
+            "none";
+
+        appShell.style.display =
+            "flex";
+
+        await loadCompanyProfile();
+
+        showPage("dashboard");
+
+        return;
+    }
+}
+        
         /* =========================
            CHECK OTP VERIFICATION
         ========================= */
@@ -11273,6 +11302,166 @@ document.addEventListener("DOMContentLoaded", function () {
     checkLogin();
 });
 
+async function completeConfirmedSignup() {
+
+    const pendingSignup =
+        localStorage.getItem(
+            "theaPendingSignup"
+        );
+
+    if (!pendingSignup) {
+        return false;
+    }
+
+
+    try {
+
+        const signupData =
+            JSON.parse(
+                pendingSignup
+            );
+
+
+        const {
+            data: {
+                session
+            },
+            error: sessionError
+        } =
+            await theaSupabase.auth.getSession();
+
+
+        if (sessionError) {
+            throw sessionError;
+        }
+
+
+        if (!session) {
+            return false;
+        }
+
+
+        console.log(
+            "Email confirmed. Creating company..."
+        );
+
+
+        /* =========================
+           CREATE COMPANY
+        ========================= */
+
+        const {
+            data: company,
+            error: companyError
+        } =
+            await theaSupabase
+                .from("companies")
+                .insert({
+
+                    name:
+                        signupData.businessName,
+
+                    owner_name:
+                        signupData.businessName,
+
+                    phone:
+                        signupData.phone,
+
+                    email:
+                        signupData.email,
+
+                    currency:
+                        "PKR"
+
+                })
+                .select()
+                .single();
+
+
+        if (companyError) {
+            throw companyError;
+        }
+
+
+        if (!company || !company.id) {
+
+            throw new Error(
+                "Company could not be created."
+            );
+        }
+
+
+        /* =========================
+           CREATE PROFILE
+        ========================= */
+
+        const {
+            error: profileError
+        } =
+            await theaSupabase
+                .from("profiles")
+                .insert({
+
+                    id:
+                        session.user.id,
+
+                    company_id:
+                        company.id,
+
+                    full_name:
+                        signupData.businessName,
+
+                    role:
+                        "Owner"
+
+                });
+
+
+        if (profileError) {
+            throw profileError;
+        }
+
+
+        /* =========================
+           MARK EMAIL CONFIRMATION
+           AS VERIFIED LOGIN
+        ========================= */
+
+        sessionStorage.setItem(
+            "theaOtpVerifiedUser",
+            String(
+                session.user.id
+            )
+        );
+
+
+        /* =========================
+           REMOVE PENDING SIGNUP
+        ========================= */
+
+        localStorage.removeItem(
+            "theaPendingSignup"
+        );
+
+
+        console.log(
+            "Company and profile created successfully."
+        );
+
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "Confirmed signup error:",
+            error
+        );
+
+        return false;
+    }
+}
 /* =====================================================
    AUTH SCREEN SWITCHING
 ===================================================== */
