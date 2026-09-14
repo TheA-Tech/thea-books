@@ -5814,8 +5814,18 @@ async function loadCompanyProfile() {
             .single();
 
         if (companyError) {
-            throw companyError;
-        }
+
+    console.error(
+        "COMPANY INSERT ERROR FULL:",
+        JSON.stringify(
+            companyError,
+            null,
+            2
+        )
+    );
+
+    throw companyError;
+}
 
         if (!company) {
             return;
