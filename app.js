@@ -4709,12 +4709,16 @@ function savePurchases() {
 
 
 function saveCompanyAccount() {
+
+    if (!window.theaCurrentUserId) {
+        return;
+    }
+
     localStorage.setItem(
-        "theaBooksCompany",
+        "theaBooksCompany_" + window.theaCurrentUserId,
         JSON.stringify(companyAccount)
     );
 }
-
 
 /* =========================
    COMPANY ACCOUNT
@@ -5778,6 +5782,9 @@ async function loadCompanyProfile() {
             return;
         }
 
+        window.theaCurrentUserId =
+    session.user.id;
+        
         const {
             data: profile,
             error: profileError
