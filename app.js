@@ -11722,79 +11722,61 @@ console.log(
            CREATE COMPANY
         ========================= */
 
-        message.textContent =
-            "Creating your company account...";
+message.textContent =
+    "Creating your company account...";
+
+
+const companyId =
+    crypto.randomUUID();
+
 
 const {
-    data: {
-        session: currentSession
-    },
-    error: currentSessionError
-} = await theaSupabase.auth.getSession();
+    error: companyError
+} =
+    await theaSupabase
+        .from("companies")
+        .insert({
+
+            id:
+                companyId,
+
+            name:
+                businessName,
+
+            owner_name:
+                businessName,
+
+            phone:
+                phone,
+
+            email:
+                email,
+
+            currency:
+                "PKR"
+
+        });
+
+
+if (companyError) {
+
+    console.error(
+        "COMPANY INSERT ERROR FULL:",
+        JSON.stringify(
+            companyError,
+            null,
+            2
+        )
+    );
+
+    throw companyError;
+}
+
 
 console.log(
-    "CURRENT SESSION BEFORE COMPANY INSERT:",
-    currentSession
+    "Company created:",
+    companyId
 );
-
-console.log(
-    "CURRENT USER BEFORE COMPANY INSERT:",
-    currentSession?.user?.id
-);
-
-console.log(
-    "CURRENT SESSION ERROR:",
-    currentSessionError
-);
-        
-        const {
-            data: company,
-            error: companyError
-        } =
-            await theaSupabase
-                .from("companies")
-                .insert({
-
-                    name:
-                        businessName,
-
-                    owner_name:
-                        businessName,
-
-                    phone:
-                        phone,
-
-                    email:
-                        email,
-
-                    currency:
-                        "PKR"
-
-                })
-                .select("id")
-                .single();
-
-
-        if (companyError) {
-            throw companyError;
-        }
-
-
-        if (
-            !company ||
-            !company.id
-        ) {
-
-            throw new Error(
-                "Company account could not be created."
-            );
-        }
-
-
-        console.log(
-            "Company created:",
-            company.id
-        );
 
 
         /* =========================
@@ -11812,7 +11794,7 @@ console.log(
                         session.user.id,
 
                     company_id:
-                        company.id,
+                        companyId,
 
                     full_name:
                         businessName,
