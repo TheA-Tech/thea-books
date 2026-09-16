@@ -36,15 +36,14 @@ let transactions =
 let invoices =
     JSON.parse(localStorage.getItem("theaBooksInvoices")) || [];
 
-let companyAccount =
-    JSON.parse(localStorage.getItem("theaBooksCompany")) || {
-        name: "",
-        owner: "",
-        phone: "",
-        email: "",
-        address: "",
-        currency: "PKR"
-    };
+let companyAccount = {
+    name: "",
+    owner: "",
+    phone: "",
+    email: "",
+    address: "",
+    currency: "PKR"
+};
 
 async function loginUser() {
 
